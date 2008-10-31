@@ -1,0 +1,14 @@
+#summary Coding Guidelines for iDiMP Project
+
+= Introduction =
+
+Below are several guidelines for coding style which should apply to our project.
+
+
+= Details =
+
+http://developer.apple.com/documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html
+
+http://webkit.org/coding/coding-style.html
+
+http://trac.adiumx.com/wiki/CodingStyle
