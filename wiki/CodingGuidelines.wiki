@@ -7,8 +7,8 @@ Below are several guidelines for coding style which should apply to our project.
 
 = Details =
 
-http://developer.apple.com/documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html
+Apple: http://developer.apple.com/documentation/Cocoa/Conceptual/CodingGuidelines/CodingGuidelines.html
 
-http://webkit.org/coding/coding-style.html
+WebKit: http://webkit.org/coding/coding-style.html
 
-http://trac.adiumx.com/wiki/CodingStyle
+Adium: http://trac.adiumx.com/wiki/CodingStyle
