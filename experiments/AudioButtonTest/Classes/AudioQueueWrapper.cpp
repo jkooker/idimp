@@ -21,8 +21,6 @@ static void AQBufferCallbackFunction(void* in, AudioQueueRef inQ, AudioQueueBuff
 }
 
 AudioQueueWrapper::AudioQueueWrapper() :
-    m_playPtr(0),
-    m_numSamplesToPlay(DURATION_IN_SECONDS * SAMPLE_RATE), // includes both channels?
     m_samplesPerFramePerChannel(512),
     m_audioPlayerShouldStopImmediately(true),
     m_pcmBuffer(NULL)

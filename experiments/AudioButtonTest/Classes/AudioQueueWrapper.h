@@ -124,8 +124,6 @@ public:
     void resume();
         
 protected:
-    UInt32 m_playPtr;
-    UInt32 m_numSamplesToPlay;
     AudioQueueRef m_audioQueue;
     AudioStreamBasicDescription m_dataFormat;
     UInt32 m_samplesPerFramePerChannel;
