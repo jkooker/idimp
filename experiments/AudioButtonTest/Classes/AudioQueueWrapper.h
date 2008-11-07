@@ -114,7 +114,7 @@ public:
     AudioQueueWrapper();
     virtual ~AudioQueueWrapper();
         
-    int InitQueue();    
+    int InitPlayback();    
     void AQBufferCallback(AudioQueueRef inQ, AudioQueueBufferRef outQB);
     
     bool isRunning() const;    

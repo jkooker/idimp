@@ -23,7 +23,7 @@
     //{
     m_audioQueue = NULL;
     m_audioQueue = new AudioQueueWrapper();
-    m_audioQueue->InitQueue();
+    m_audioQueue->InitPlayback();
     //}
     //return self;
     

@@ -36,31 +36,6 @@ AudioQueueWrapper::AudioQueueWrapper() :
     m_dataFormat.mBitsPerChannel = 16;
 }
 
-int AudioQueueWrapper::InitQueue()
-{
-    printf("AudioQueueWrapper::InitQueue\n");
-    UInt32 err = AudioQueueNewOutput(&m_dataFormat, 
-                                     AQBufferCallbackFunction,
-                                     this,
-                                     NULL,
-                                     kCFRunLoopCommonModes,
-                                     0,
-                                     &m_audioQueue);
-    if (err) return err;
-    
-    UInt32 bufferSize = m_samplesPerFramePerChannel * m_dataFormat.mBytesPerFrame;
-    for (int i = 0; i < NUM_AUDIO_DATA_BUFFERS; i++)
-    {
-        printf("going to allocate buffer %d\n", i);
-        err = AudioQueueAllocateBuffer(m_audioQueue, bufferSize, &m_buffers[i]);
-        printf("allocated buffer %d\n", i);
-        if (err) return err;
-        AQBufferCallback(m_audioQueue, m_buffers[i]);
-    }
-    printf("AudioQueueWrapper::InitQueue finished\n");
-    return 0;
-}
-
 AudioQueueWrapper::~AudioQueueWrapper() 
 {
     printf("AudioQueueWrapper::~AudioQueueWrapper\n");
@@ -73,6 +48,30 @@ AudioQueueWrapper::~AudioQueueWrapper()
     {
         AudioQueueDispose(m_audioQueue, TRUE);
     }
+}
+
+int AudioQueueWrapper::InitPlayback()
+{
+    printf("AudioQueueWrapper::InitPlayback\n");
+    UInt32 err = AudioQueueNewOutput(&m_dataFormat, 
+                                     AQBufferCallbackFunction,
+                                     this,
+                                     NULL,
+                                     kCFRunLoopCommonModes,
+                                     0,
+                                     &m_audioQueue);
+    if (err) return err;
+    
+    UInt32 bufferSize = m_samplesPerFramePerChannel * m_dataFormat.mBytesPerFrame;
+    for (int i = 0; i < NUM_AUDIO_DATA_BUFFERS; i++)
+    {
+        err = AudioQueueAllocateBuffer(m_audioQueue, bufferSize, &m_buffers[i]);
+        printf("allocated buffer %d\n", i);
+        if (err) return err;
+        AQBufferCallback(m_audioQueue, m_buffers[i]);
+    }
+    printf("AudioQueueWrapper::InitPlayback finished\n");
+    return 0;
 }
 
 void AudioQueueWrapper::AQBufferCallback(AudioQueueRef inQ, AudioQueueBufferRef outQB)
