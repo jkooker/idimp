@@ -40,7 +40,6 @@ protected:
     UInt32 m_samplesPerFramePerChannel;
     bool m_audioPlayerShouldStopImmediately;
     AudioQueueBufferRef m_buffers[NUM_AUDIO_DATA_BUFFERS];
-    short* m_pcmBuffer;
     Oscillator m_osc;
 };
 

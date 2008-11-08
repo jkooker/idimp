@@ -22,8 +22,7 @@ static void AQBufferCallbackFunction(void* in, AudioQueueRef inQ, AudioQueueBuff
 
 AudioQueueWrapper::AudioQueueWrapper() :
     m_samplesPerFramePerChannel(512),
-    m_audioPlayerShouldStopImmediately(true),
-    m_pcmBuffer(NULL)
+    m_audioPlayerShouldStopImmediately(true)
 {
     printf("AudioQueueWrapper::AudioQueueWrapper\n");
     m_dataFormat.mSampleRate = SAMPLE_RATE;
@@ -39,11 +38,6 @@ AudioQueueWrapper::AudioQueueWrapper() :
 AudioQueueWrapper::~AudioQueueWrapper() 
 {
     printf("AudioQueueWrapper::~AudioQueueWrapper\n");
-    if (m_pcmBuffer != NULL)
-    {
-        delete m_pcmBuffer;
-        m_pcmBuffer = NULL;
-    }
     if (m_audioQueue != NULL)
     {
         AudioQueueDispose(m_audioQueue, TRUE);
