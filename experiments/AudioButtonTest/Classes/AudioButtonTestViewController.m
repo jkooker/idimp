@@ -15,18 +15,15 @@
 @synthesize recordButton;
 @synthesize playIsOn;
 @synthesize recordIsOn;
+@synthesize _frequencySlider;
+@synthesize _frequencyTextField;
 
 - (void) myInit
 {   
     NSLog(@"AudioButtonTestViewController init");
-    //if ((self = [super init])) 
-    //{
     m_audioQueue = NULL;
     m_audioQueue = new AudioQueueWrapper();
     m_audioQueue->InitPlayback();
-    //}
-    //return self;
-    
 }
 
 - (void) dealloc
@@ -57,12 +54,13 @@
 */
 
 
-/*
 // Implement viewDidLoad to do additional setup after loading the view.
 - (void)viewDidLoad {
+    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)DEFAULT_FREQUENCY_IN_HZ]];
+    [_frequencySlider setValue:(float)DEFAULT_FREQUENCY_IN_HZ animated:NO];
+    
     [super viewDidLoad];
 }
-*/
 
 // respond to a tap on the Play button. If stopped, start playing. If playing, stop.
 - (IBAction) playOrStop: (id) sender {
@@ -102,6 +100,13 @@
     }
     
     recordIsOn = !recordIsOn;
+}
+
+- (IBAction) frequencySliderChanged: (id) sender
+{
+    float freq = [_frequencySlider value];
+    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
+    m_audioQueue->m_osc.setFreq(freq);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

@@ -21,7 +21,8 @@ static const int BYTES_PER_SAMPLE = 2;
 class AudioQueueWrapper 
 {
 public:
-
+    Oscillator m_osc;
+    
     AudioQueueWrapper();
     virtual ~AudioQueueWrapper();
         
@@ -40,7 +41,6 @@ protected:
     UInt32 m_samplesPerFramePerChannel;
     bool m_audioPlayerShouldStopImmediately;
     AudioQueueBufferRef m_buffers[NUM_AUDIO_DATA_BUFFERS];
-    Oscillator m_osc;
 };
 
 #endif // AUDIO_QUEUE_WRAPPER_H
