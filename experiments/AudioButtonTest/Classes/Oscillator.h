@@ -22,8 +22,9 @@ class Oscillator
 {   
 public:
     Oscillator() :
+        m_freq(DEFAULT_FREQUENCY_IN_HZ),
         m_wavetable(NULL),
-        m_hop(DEFAULT_FREQUENCY_IN_HZ * WAVETABLE_POINTS / SAMPLE_RATE),
+        m_hop(m_freq * WAVETABLE_POINTS / SAMPLE_RATE),
         m_nextSampleIndex(0.0)
     {
         printf("Oscillator::Oscillator\n");
@@ -44,8 +45,11 @@ public:
         }
     }
     
-    void setFreq(double freq)
+    float getFreq() { return m_freq; }
+    
+    void setFreq(float freq)
     {
+        m_freq = freq;
         m_nextSampleIndex -= m_hop;
         m_hop = freq * WAVETABLE_POINTS / SAMPLE_RATE;
         m_nextSampleIndex += m_hop;
@@ -57,18 +61,6 @@ public:
         {
             m_nextSampleIndex -= WAVETABLE_POINTS;
         }
-    }
-    
-    double nextSample()
-    {
-        // rounding
-        double sample = m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
-        m_nextSampleIndex += m_hop;
-        if (m_nextSampleIndex >= WAVETABLE_POINTS)
-        {
-            m_nextSampleIndex -= WAVETABLE_POINTS;
-        }
-        return sample;
     }
     
     void nextSampleBuffer(short* buffer, int numSamples, int numChannels) // buffer size should be numSamples * numChannels
@@ -95,7 +87,7 @@ public:
     
     
 protected:
-
+    float m_freq;
     double* m_wavetable;
     double m_hop;
     double m_nextSampleIndex;

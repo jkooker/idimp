@@ -56,8 +56,9 @@
 
 // Implement viewDidLoad to do additional setup after loading the view.
 - (void)viewDidLoad {
-    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)DEFAULT_FREQUENCY_IN_HZ]];
-    [_frequencySlider setValue:(float)DEFAULT_FREQUENCY_IN_HZ animated:NO];
+    float freq = m_audioQueue->m_osc.getFreq();
+    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
+    [_frequencySlider setValue:freq animated:NO];
     
     [super viewDidLoad];
 }
@@ -104,9 +105,9 @@
 
 - (IBAction) frequencySliderChanged: (id) sender
 {
-    float freq = [_frequencySlider value];
-    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
-    m_audioQueue->m_osc.setFreq(freq);
+    int freq = (int)[_frequencySlider value]; // for simplicity right now, use only integer values
+    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", freq]];
+    m_audioQueue->m_osc.setFreq((float)freq);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
