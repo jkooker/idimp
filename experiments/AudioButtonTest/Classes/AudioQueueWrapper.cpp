@@ -13,6 +13,9 @@
 #import <unistd.h>
 #import <sys/types.h>
 
+static const int NUM_CHANNELS = 2;
+static const int MAX_AMPLITUDE = 32767;
+
 static void AQBufferCallbackFunction(void* in, AudioQueueRef inQ, AudioQueueBufferRef outQB)
 {
     //printf("AQBufferCallbackFunction\n");
@@ -76,7 +79,7 @@ void AudioQueueWrapper::AQBufferCallback(AudioQueueRef inQ, AudioQueueBufferRef 
     if (m_samplesPerFramePerChannel > 0)
     {
         outQB->mAudioDataByteSize = 4 * m_samplesPerFramePerChannel;
-        m_osc.nextSampleBuffer(coreAudioBuffer, m_samplesPerFramePerChannel, NUM_CHANNELS);
+        m_osc.nextSampleBuffer(coreAudioBuffer, m_samplesPerFramePerChannel, NUM_CHANNELS, MAX_AMPLITUDE);
     }
     AudioQueueEnqueueBuffer(inQ, outQB, 0, NULL);
 }

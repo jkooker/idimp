@@ -13,11 +13,9 @@
 static const double SAMPLE_RATE = 44100.0;
 static const double PI = 3.14159265359;
 static const double TWO_PI = (2 * PI);
-static const double DEFAULT_FREQUENCY_IN_HZ  = 440.0;
-static const double DURATION_IN_SECONDS  = 4.0;
-static const int NUM_CHANNELS = 2;
+static const float DEFAULT_FREQUENCY_IN_HZ  = 440.0;
+static const float DEFAULT_AMPLITUDE = 1.0;
 static const int WAVETABLE_POINTS = 2048;
-
 class Oscillator
 {   
 public:
@@ -25,7 +23,8 @@ public:
         m_freq(DEFAULT_FREQUENCY_IN_HZ),
         m_wavetable(NULL),
         m_hop(m_freq * WAVETABLE_POINTS / SAMPLE_RATE),
-        m_nextSampleIndex(0.0)
+        m_nextSampleIndex(0.0),
+        m_amp(DEFAULT_AMPLITUDE)
     {
         printf("Oscillator::Oscillator\n");
         m_wavetable = new double[WAVETABLE_POINTS];
@@ -45,6 +44,10 @@ public:
         }
     }
     
+    float getAmp() { return m_amp; }
+    
+    void setAmp(float amp) { m_amp = amp; }
+    
     float getFreq() { return m_freq; }
     
     void setFreq(float freq)
@@ -63,14 +66,14 @@ public:
         }
     }
     
-    void nextSampleBuffer(short* buffer, int numSamples, int numChannels) // buffer size should be numSamples * numChannels
+    void nextSampleBuffer(short* buffer, int numSamples, int numChannels, int scale) // buffer size should be numSamples * numChannels
     {
+        float ampScalar = scale * m_amp;
         //printf("Oscillator::nextSampleBuffer\n");
-        int scale = 1 << 14; // 1/2 of max value of 2^15 so we don't clip - could set amplitude as a parameter
         for (int n = 0; n < numSamples; n++)
         {
             // rounding
-            double sample = scale * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
+            double sample = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
             m_nextSampleIndex += m_hop;
             if (m_nextSampleIndex >= WAVETABLE_POINTS)
             {
@@ -91,6 +94,7 @@ protected:
     double* m_wavetable;
     double m_hop;
     double m_nextSampleIndex;
+    float m_amp;
 };
 
 #endif // OSCILLATOR_H
