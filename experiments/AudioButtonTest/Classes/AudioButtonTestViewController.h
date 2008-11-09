@@ -11,23 +11,23 @@
 
 @interface AudioButtonTestViewController : UIViewController {
 
-    IBOutlet UIButton* playButton;
-    IBOutlet UIButton* recordButton;
+    IBOutlet UIButton* _playButton;
+    IBOutlet UIButton* _recordButton;
     IBOutlet UISlider* _frequencySlider;
     IBOutlet UITextField* _frequencyTextField;
     IBOutlet UISegmentedControl* _waveformSelector;
-    BOOL playIsOn;
-    BOOL recordIsOn;
-    AudioQueueWrapper* m_audioQueue;
+    BOOL _playIsOn;
+    BOOL _recordIsOn;
+    AudioQueueWrapper* _audioQueue;
 }
 
-@property (nonatomic, retain) IBOutlet UIButton* playButton;
-@property (nonatomic, retain) IBOutlet UIButton* recordButton;
+@property (nonatomic, retain) IBOutlet UIButton* _playButton;
+@property (nonatomic, retain) IBOutlet UIButton* _recordButton;
 @property (nonatomic, retain) IBOutlet UISlider* _frequencySlider;
 @property (nonatomic, retain) IBOutlet UITextField* _frequencyTextField;
 @property (nonatomic, retain) IBOutlet UISegmentedControl* _waveformSelector;
-@property (readwrite) BOOL playIsOn;
-@property (readwrite) BOOL recordIsOn;
+@property (readwrite) BOOL _playIsOn;
+@property (readwrite) BOOL _recordIsOn;
 
 - (void) myInit;
 - (void) dealloc;

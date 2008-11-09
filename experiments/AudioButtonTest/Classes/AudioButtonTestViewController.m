@@ -11,10 +11,10 @@
 
 @implementation AudioButtonTestViewController
 
-@synthesize playButton;
-@synthesize recordButton;
-@synthesize playIsOn;
-@synthesize recordIsOn;
+@synthesize _playButton;
+@synthesize _recordButton;
+@synthesize _playIsOn;
+@synthesize _recordIsOn;
 @synthesize _frequencySlider;
 @synthesize _frequencyTextField;
 @synthesize _waveformSelector;
@@ -22,18 +22,18 @@
 - (void) myInit
 {   
     NSLog(@"AudioButtonTestViewController myInit");
-    m_audioQueue = NULL;
-    m_audioQueue = new AudioQueueWrapper();
-    m_audioQueue->InitPlayback();
+    _audioQueue = NULL;
+    _audioQueue = new AudioQueueWrapper();
+    _audioQueue->InitPlayback();
 }
 
 - (void) dealloc
 {   
     NSLog(@"AudioButtonTestViewController dealloc");
-    if (m_audioQueue != NULL)
+    if (_audioQueue != NULL)
     {
-        delete m_audioQueue;
-        m_audioQueue = NULL;
+        delete _audioQueue;
+        _audioQueue = NULL;
     }
     [super dealloc];
 }
@@ -57,7 +57,7 @@
 
 // Implement viewDidLoad to do additional setup after loading the view.
 - (void)viewDidLoad {
-    float freq = m_audioQueue->m_osc.getFreq();
+    float freq = _audioQueue->m_osc.getFreq();
     [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
     [_frequencySlider setValue:freq animated:NO];
     
@@ -69,20 +69,20 @@
 
 	NSLog(@"playOrStop called:");
     
-    if (playIsOn)
+    if (_playIsOn)
     {
-        [self.playButton setTitle: @"Play" forState: UIControlStateNormal ];
-        [self.playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
-        m_audioQueue->pause();
+        [_playButton setTitle: @"Play" forState: UIControlStateNormal ];
+        [_playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
+        _audioQueue->pause();
     }
     else
     {
-        [self.playButton setTitle: @"Stop" forState: UIControlStateNormal ];
-        [self.playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
-        m_audioQueue->play();
+        [_playButton setTitle: @"Stop" forState: UIControlStateNormal ];
+        [_playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
+        _audioQueue->play();
     }
     
-    playIsOn = !playIsOn;
+    _playIsOn = !_playIsOn;
 }
 
 // respond to a tap on the Record button. If stopped, start recording. If recording, stop.
@@ -90,31 +90,31 @@
 
 	NSLog(@"recordOrStop called:");
     
-    if (recordIsOn)
+    if (_recordIsOn)
     {
-        [self.recordButton setTitle: @"Record" forState: UIControlStateNormal ];
-        [self.recordButton setTitle: @"Record" forState: UIControlStateHighlighted ];
+        [_recordButton setTitle: @"Record" forState: UIControlStateNormal ];
+        [_recordButton setTitle: @"Record" forState: UIControlStateHighlighted ];
     }
     else
     {
-        [self.recordButton setTitle: @"Stop" forState: UIControlStateNormal ];
-        [self.recordButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
+        [_recordButton setTitle: @"Stop" forState: UIControlStateNormal ];
+        [_recordButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
     }
     
-    recordIsOn = !recordIsOn;
+    _recordIsOn = !_recordIsOn;
 }
 
 - (IBAction) frequencySliderChanged: (id) sender
 {
     int freq = (int)[_frequencySlider value]; // for simplicity right now, use only integer values
     [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", freq]];
-    m_audioQueue->m_osc.setFreq((float)freq);
+    _audioQueue->m_osc.setFreq((float)freq);
 }
 
 - (IBAction) waveformSelected: (id) sender
 {
     NSLog(@"waveformSelected called:");
-    m_audioQueue->m_osc.setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
+    _audioQueue->m_osc.setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
