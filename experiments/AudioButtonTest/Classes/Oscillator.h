@@ -16,10 +16,17 @@ static const double TWO_PI = (2 * PI);
 static const float DEFAULT_FREQUENCY_IN_HZ  = 440.0;
 static const float DEFAULT_AMPLITUDE = 1.0;
 static const int WAVETABLE_POINTS = 2048;
+
 class Oscillator
 {   
 public:
+    enum Waveform {
+        Sinusoid = 0,
+        SquareWave = 1
+    };
+
     Oscillator() :
+        m_waveform(Sinusoid),
         m_freq(DEFAULT_FREQUENCY_IN_HZ),
         m_wavetable(NULL),
         m_hop(m_freq * WAVETABLE_POINTS / SAMPLE_RATE),
@@ -28,10 +35,7 @@ public:
     {
         printf("Oscillator::Oscillator\n");
         m_wavetable = new double[WAVETABLE_POINTS];
-        for (int i = 0; i < WAVETABLE_POINTS; i++)
-        {
-            m_wavetable[i] = cos(TWO_PI * i / WAVETABLE_POINTS);
-        }
+        setWaveform(m_waveform);
     }
     
     virtual ~Oscillator()
@@ -66,6 +70,37 @@ public:
         }
     }
     
+    Waveform getWaveform() { return m_waveform; }
+    
+    void setWaveform(Waveform wave)
+    {
+        switch (wave)
+        {
+            case SquareWave:
+            {
+                int halftable = WAVETABLE_POINTS / 2;
+                for (int i = 0; i < halftable; i++)
+                {
+                    m_wavetable[i] = 1.0;
+                }   
+                for (int i = halftable; i < WAVETABLE_POINTS; i++)
+                {
+                    m_wavetable[i] = -1.0;
+                }            
+                break;
+            }
+            default:    
+            case Sinusoid:
+            {
+                for (int i = 0; i < WAVETABLE_POINTS; i++)
+                {
+                    m_wavetable[i] = cos(TWO_PI * i / WAVETABLE_POINTS);
+                }            
+                break;
+            }
+        }
+    }
+    
     void nextSampleBuffer(short* buffer, int numSamples, int numChannels, int scale) // buffer size should be numSamples * numChannels
     {
         float ampScalar = scale * m_amp;
@@ -90,6 +125,7 @@ public:
     
     
 protected:
+    Waveform m_waveform;
     float m_freq;
     double* m_wavetable;
     double m_hop;
