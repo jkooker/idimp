@@ -17,10 +17,11 @@
 @synthesize recordIsOn;
 @synthesize _frequencySlider;
 @synthesize _frequencyTextField;
+@synthesize _waveformSelector;
 
 - (void) myInit
 {   
-    NSLog(@"AudioButtonTestViewController init");
+    NSLog(@"AudioButtonTestViewController myInit");
     m_audioQueue = NULL;
     m_audioQueue = new AudioQueueWrapper();
     m_audioQueue->InitPlayback();
@@ -66,7 +67,7 @@
 // respond to a tap on the Play button. If stopped, start playing. If playing, stop.
 - (IBAction) playOrStop: (id) sender {
 
-	NSLog (@"playOrStop called:");
+	NSLog(@"playOrStop called:");
     
     if (playIsOn)
     {
@@ -87,7 +88,7 @@
 // respond to a tap on the Record button. If stopped, start recording. If recording, stop.
 - (IBAction) recordOrStop: (id) sender {
 
-	NSLog (@"recordOrStop called:");
+	NSLog(@"recordOrStop called:");
     
     if (recordIsOn)
     {
@@ -108,6 +109,12 @@
     int freq = (int)[_frequencySlider value]; // for simplicity right now, use only integer values
     [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", freq]];
     m_audioQueue->m_osc.setFreq((float)freq);
+}
+
+- (IBAction) waveformSelected: (id) sender
+{
+    NSLog(@"waveformSelected called:");
+    m_audioQueue->m_osc.setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
