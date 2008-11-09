@@ -72,11 +72,13 @@
     if (playIsOn)
     {
         [self.playButton setTitle: @"Play" forState: UIControlStateNormal ];
+        [self.playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
         m_audioQueue->pause();
     }
     else
     {
         [self.playButton setTitle: @"Stop" forState: UIControlStateNormal ];
+        [self.playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
         m_audioQueue->play();
     }
     
@@ -91,10 +93,12 @@
     if (recordIsOn)
     {
         [self.recordButton setTitle: @"Record" forState: UIControlStateNormal ];
+        [self.recordButton setTitle: @"Record" forState: UIControlStateHighlighted ];
     }
     else
     {
         [self.recordButton setTitle: @"Stop" forState: UIControlStateNormal ];
+        [self.recordButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
     }
     
     recordIsOn = !recordIsOn;
