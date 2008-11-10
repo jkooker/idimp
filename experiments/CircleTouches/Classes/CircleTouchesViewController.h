@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CircleTouchesViewController : UIViewController {
+@interface CircleTouchesViewController : UIViewController <UIAccelerometerDelegate> {
 
 }
+
+- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration;
 
 @end
 
