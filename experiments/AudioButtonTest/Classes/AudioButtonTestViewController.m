@@ -23,9 +23,7 @@
 {   
     NSLog(@"AudioButtonTestViewController myInit");
     _audioQueue = NULL;
-    _audioQueue = new AudioQueueWrapper();
-    _audioQueue->InitPlayback();
-}
+    _audioQueue = new AudioQueueWrapper();}
 
 - (void) dealloc
 {   

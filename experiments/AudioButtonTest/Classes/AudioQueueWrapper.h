@@ -27,7 +27,8 @@ public:
     virtual ~AudioQueueWrapper();
         
     int InitPlayback();    
-    void AQBufferCallback(AudioQueueRef inQ, AudioQueueBufferRef outQB);
+    void InitDebugFile();    
+    void PlaybackCallback(AudioQueueRef inQ, AudioQueueBufferRef outQB);
     
     bool isRunning() const;    
     void play();    
@@ -36,11 +37,13 @@ public:
     void resume();
         
 protected:
-    AudioQueueRef m_audioQueue;
+    AudioQueueRef m_audioQueueOutput;
     AudioStreamBasicDescription m_dataFormat;
     UInt32 m_samplesPerFramePerChannel;
     bool m_audioPlayerShouldStopImmediately;
     AudioQueueBufferRef m_buffers[NUM_AUDIO_DATA_BUFFERS];
+    AudioFileID m_debugFileID;
+    SInt64 m_debugFileByteOffset;
 };
 
 #endif // AUDIO_QUEUE_WRAPPER_H
