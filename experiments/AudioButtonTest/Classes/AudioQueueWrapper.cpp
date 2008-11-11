@@ -13,6 +13,8 @@
 #import <unistd.h>
 #import <sys/types.h>
 
+//#define _DEBUG_
+
 static const int NUM_CHANNELS = 2;
 static const int MAX_AMPLITUDE = 32767;
 static const char* DEBUG_FILE_NAME = "debug.wav";
@@ -41,7 +43,9 @@ AudioQueueWrapper::AudioQueueWrapper() :
     m_dataFormat.mChannelsPerFrame = NUM_CHANNELS;
     m_dataFormat.mBitsPerChannel = 16;
     
+#ifdef _DEBUG_
     InitDebugFile();
+#endif
     InitPlayback();
 }
 
@@ -123,6 +127,7 @@ void AudioQueueWrapper::PlaybackCallback(AudioQueueRef inQ, AudioQueueBufferRef 
     }
     AudioQueueEnqueueBuffer(inQ, outQB, 0, NULL);
     
+#ifdef _DEBUG_  
     // write to debug file
     UInt32 numBytes = m_samplesPerFramePerChannel * m_dataFormat.mBytesPerFrame;
     OSStatus result = noErr;
@@ -140,6 +145,7 @@ void AudioQueueWrapper::PlaybackCallback(AudioQueueRef inQ, AudioQueueBufferRef 
         printf("Warning: some bytes were not written to the debug file\n");
     }
     m_debugFileByteOffset += numBytes;
+#endif
 }
 
 bool AudioQueueWrapper::isRunning() const
