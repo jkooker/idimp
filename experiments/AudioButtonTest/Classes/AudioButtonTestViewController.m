@@ -9,6 +9,8 @@
 #import "AudioButtonTestViewController.h"
 //#import "AudioQueueWrapper.h"
 
+static const float kAccelerometerInterval = 0.005;
+
 @implementation AudioButtonTestViewController
 
 @synthesize _playButton;
@@ -58,6 +60,10 @@
     float freq = _audioQueue->m_osc.getFreq();
     [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
     [_frequencySlider setValue:freq animated:NO];
+    
+     // Set up accelerometer
+    [[UIAccelerometer sharedAccelerometer] setUpdateInterval:kAccelerometerInterval]; // in seconds
+    [[UIAccelerometer sharedAccelerometer] setDelegate:self];
     
     [super viewDidLoad];
 }
@@ -124,6 +130,15 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
     // Release anything that's not essential, such as cached data
+}
+
+- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
+{
+    // change view's background color based on z value.
+    double angleZY = atan2(acceleration.y, acceleration.z);
+    //NSLog(@"accel: x = %2.2f, y = %2.2f, z = %2.2f, angleZY = %2.2f", acceleration.x, acceleration.y, acceleration.z, angleZY);
+    
+    _audioQueue->m_osc.setAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
 }
 
 @end

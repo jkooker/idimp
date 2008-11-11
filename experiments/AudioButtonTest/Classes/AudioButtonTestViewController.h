@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AudioQueueWrapper.h"
 
-@interface AudioButtonTestViewController : UIViewController {
+@interface AudioButtonTestViewController : UIViewController <UIAccelerometerDelegate> {
 
     IBOutlet UIButton* _playButton;
     IBOutlet UIButton* _recordButton;
@@ -35,6 +35,8 @@
 - (IBAction) recordOrStop: (id) sender;
 - (IBAction) frequencySliderChanged: (id) sender;
 - (IBAction) waveformSelected: (id) sender;
+- (void) accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration;
+
 
 @end
 
