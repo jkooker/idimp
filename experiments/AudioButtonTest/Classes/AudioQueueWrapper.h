@@ -14,6 +14,7 @@
 #import <stdlib.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import "Oscillator.h"
+#import "AudioEffect.h"
 
 static const int NUM_AUDIO_DATA_BUFFERS = 3;
 static const int BYTES_PER_SAMPLE = 2;
@@ -22,6 +23,7 @@ class AudioQueueWrapper
 {
 public:
     Oscillator m_osc;
+    AmplitudeScale* m_effect;
     
     AudioQueueWrapper();
     virtual ~AudioQueueWrapper();

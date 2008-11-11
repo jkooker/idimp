@@ -9,7 +9,7 @@
 #import "AudioButtonTestViewController.h"
 //#import "AudioQueueWrapper.h"
 
-static const float kAccelerometerInterval = 0.005;
+static const float kAccelerometerInterval = 0.01;
 
 @implementation AudioButtonTestViewController
 
@@ -138,7 +138,7 @@ static const float kAccelerometerInterval = 0.005;
     double angleZY = atan2(acceleration.y, acceleration.z);
     //NSLog(@"accel: x = %2.2f, y = %2.2f, z = %2.2f, angleZY = %2.2f", acceleration.x, acceleration.y, acceleration.z, angleZY);
     
-    _audioQueue->m_osc.setAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
+    _audioQueue->m_effect->setAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
 }
 
 @end

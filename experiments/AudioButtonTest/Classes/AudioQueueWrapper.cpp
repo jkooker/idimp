@@ -32,7 +32,8 @@ AudioQueueWrapper::AudioQueueWrapper() :
     m_samplesPerFramePerChannel(NUM_BUFFER_SAMPLES),
     m_audioPlayerShouldStopImmediately(true),
     m_debugFileID(0),
-    m_debugFileByteOffset(0)
+    m_debugFileByteOffset(0),
+    m_effect(NULL)
 {
     printf("AudioQueueWrapper::AudioQueueWrapper\n");
     m_dataFormat.mSampleRate = SAMPLE_RATE;
@@ -43,6 +44,8 @@ AudioQueueWrapper::AudioQueueWrapper() :
     m_dataFormat.mBytesPerFrame = 4; // 2 2-byte samples per channel
     m_dataFormat.mChannelsPerFrame = NUM_CHANNELS;
     m_dataFormat.mBitsPerChannel = 16;
+    
+    m_effect = new AmplitudeScale();
     
 #ifdef _DEBUG_
     InitDebugFile();
@@ -60,6 +63,10 @@ AudioQueueWrapper::~AudioQueueWrapper()
     if (m_debugFileID > 0)
     {
         AudioFileClose(m_debugFileID);
+    }
+    if (m_effect != NULL)
+    {
+        delete m_effect;
     }
 }
 
@@ -125,6 +132,7 @@ void AudioQueueWrapper::PlaybackCallback(AudioQueueRef inQ, AudioQueueBufferRef 
     {
         outQB->mAudioDataByteSize = 4 * m_samplesPerFramePerChannel;
         m_osc.nextSampleBuffer(coreAudioBuffer, m_samplesPerFramePerChannel, NUM_CHANNELS, MAX_AMPLITUDE);
+        m_effect->Process(coreAudioBuffer, m_samplesPerFramePerChannel, NUM_CHANNELS);
     }
     AudioQueueEnqueueBuffer(inQ, outQB, 0, NULL);
     
