@@ -19,6 +19,7 @@ static const int NUM_CHANNELS = 2;
 static const int MAX_AMPLITUDE = 32767;
 static const char* DEBUG_FILE_NAME = "debug.wav";
 static const CFStringEncoding DEFAULT_STRING_ENCODING = kCFStringEncodingMacRoman;
+static const int NUM_BUFFER_SAMPLES = 512; // values less than this seem to result in buffer underflows or no audio at all :(
 
 static void PlaybackCallbackFunction(void* in, AudioQueueRef inQ, AudioQueueBufferRef outQB)
 {
@@ -28,7 +29,7 @@ static void PlaybackCallbackFunction(void* in, AudioQueueRef inQ, AudioQueueBuff
 
 AudioQueueWrapper::AudioQueueWrapper() :
     m_audioQueueOutput(NULL),
-    m_samplesPerFramePerChannel(512),
+    m_samplesPerFramePerChannel(NUM_BUFFER_SAMPLES),
     m_audioPlayerShouldStopImmediately(true),
     m_debugFileID(0),
     m_debugFileByteOffset(0)
@@ -117,7 +118,7 @@ void AudioQueueWrapper::InitDebugFile()
 
 void AudioQueueWrapper::PlaybackCallback(AudioQueueRef inQ, AudioQueueBufferRef outQB)
 {
-    //printf("AudioQueueWrapper::AQBufferCallback\n");
+    //printf("AudioQueueWrapper::AQBufferCallback inQ = %d, outQB = %d\n", inQ, outQB);
     short* coreAudioBuffer = (short*) outQB->mAudioData;
 
     if (m_samplesPerFramePerChannel > 0)
