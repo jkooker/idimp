@@ -50,7 +50,11 @@ public:
     
     float getAmp() { return m_amp; }
     
-    void setAmp(float amp) { m_amp = amp; }
+    void setAmp(float amp) 
+    { 
+        //printf("Oscillator::setAmp amp = %f\n", amp);
+        m_amp = amp; 
+    }
     
     float getFreq() { return m_freq; }
     
@@ -108,7 +112,7 @@ public:
     void nextSampleBuffer(short* buffer, int numSamples, int numChannels, int scale) // buffer size should be numSamples * numChannels
     {
         float ampScalar = scale * m_amp;
-        //printf("Oscillator::nextSampleBuffer\n");
+        //printf("Oscillator::nextSampleBuffer ampScalar = %f\n", ampScalar);
         for (int n = 0; n < numSamples; n++)
         {
             // rounding
