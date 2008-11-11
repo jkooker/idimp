@@ -56,6 +56,12 @@ public:
     
     void setFreq(float freq)
     {
+        // check for valid range
+        if (freq < 20 || freq > 20000) 
+        {
+            printf("Oscillator::setFreq frequency out of range: %f\n", freq);
+            return;
+        }
         m_freq = freq;
         m_nextSampleIndex -= m_hop;
         m_hop = freq * WAVETABLE_POINTS / SAMPLE_RATE;
@@ -69,9 +75,7 @@ public:
             m_nextSampleIndex -= WAVETABLE_POINTS;
         }
     }
-    
-    Waveform getWaveform() { return m_waveform; }
-    
+
     void setWaveform(Waveform wave)
     {
         switch (wave)
