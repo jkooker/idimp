@@ -16,6 +16,7 @@ static const double TWO_PI = (2 * PI);
 static const float DEFAULT_FREQUENCY_IN_HZ  = 440.0;
 static const float DEFAULT_AMPLITUDE = 1.0;
 static const int WAVETABLE_POINTS = 2048;
+static const int MAX_AMPLITUDE_16_BITS = 32767;
 
 class Oscillator
 {   
@@ -61,7 +62,7 @@ public:
     void setFreq(float freq)
     {
         // check for valid range
-        if (freq < 20 || freq > 20000) 
+        if (freq < 0 || freq > 20000) // TODO: it would be nice to handle negative frequencies - need to handle table wrap-around
         {
             printf("Oscillator::setFreq frequency out of range: %f\n", freq);
             return;

@@ -18,7 +18,9 @@ static const float kAccelerometerInterval = 0.01;
 @synthesize _playIsOn;
 @synthesize _recordIsOn;
 @synthesize _frequencySlider;
+@synthesize _ringModFreqSlider;
 @synthesize _frequencyTextField;
+@synthesize _ringModFreqTextField;
 @synthesize _waveformSelector;
 
 - (void) myInit
@@ -60,6 +62,10 @@ static const float kAccelerometerInterval = 0.01;
     float freq = _audioQueue->m_osc.getFreq();
     [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
     [_frequencySlider setValue:freq animated:NO];
+    
+    float modFreq = _audioQueue->m_ringModEffect->getModFreq();
+    [_ringModFreqTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)modFreq]];
+    [_ringModFreqSlider setValue:modFreq animated:NO];
     
      // Set up accelerometer
     [[UIAccelerometer sharedAccelerometer] setUpdateInterval:kAccelerometerInterval]; // in seconds
@@ -115,6 +121,13 @@ static const float kAccelerometerInterval = 0.01;
     _audioQueue->m_osc.setFreq((float)freq);
 }
 
+- (IBAction) ringModFreqSliderChanged: (id) sender
+{
+    int freq = (int)[_ringModFreqSlider value]; // for simplicity right now, use only integer values
+    [_ringModFreqTextField setText:[[NSString alloc] initWithFormat:@"%d", freq]];
+    _audioQueue->m_ringModEffect->setModFreq((float)freq);
+}
+
 - (IBAction) waveformSelected: (id) sender
 {
     NSLog(@"waveformSelected called:");
@@ -134,11 +147,15 @@ static const float kAccelerometerInterval = 0.01;
 
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {
-    // change view's background color based on z value.
     double angleZY = atan2(acceleration.y, acceleration.z);
-    //NSLog(@"accel: x = %2.2f, y = %2.2f, z = %2.2f, angleZY = %2.2f", acceleration.x, acceleration.y, acceleration.z, angleZY);
+    //double angleXZ = atan2(acceleration.z, acceleration.x);
+    //NSLog(@"accel: x = %2.2f, y = %2.2f, z = %2.2f, angleXZ = %2.2f, angleZY = %2.2f", acceleration.x, acceleration.y, acceleration.z, angleZY, angleXZ);
     
-    _audioQueue->m_effect->setAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
+    // change amplitude based on rotation around X axis
+    _audioQueue->m_ampEffect->setAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
+    //_audioQueue->m_ringModEffect->setModAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
+    
+    //_audioQueue->m_ringModEffect->setModFreq(1000 * ((angleXZ / PI) >= 0 ? (angleXZ / PI) : -(angleXZ / PI)));
 }
 
 @end
