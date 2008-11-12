@@ -25,7 +25,7 @@ static const float circleRadius = 80;
 {
     //NSLog(@"awakeFromNib");
     
-    self.touchPoints = [NSMutableArray arrayWithCapacity:4]; // probably a maximum of 4 fingers on screen at a time.
+    self.touchPoints = [NSMutableArray arrayWithCapacity:5]; // the 6th touch point causes a touchCancelled event
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -122,5 +122,15 @@ static const float circleRadius = 80;
 
     [self setNeedsDisplay];
 }
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    //NSLog(@"touchesCancelled");
+    
+    [touchPoints removeAllObjects];
+    
+    [self setNeedsDisplay];
+}
+
 
 @end
