@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface AnimationPlaygroundViewController : UIViewController {
-
+    UIView *myViewIWantToAnimate;
 }
 
 - (IBAction)animate:(id)sender;

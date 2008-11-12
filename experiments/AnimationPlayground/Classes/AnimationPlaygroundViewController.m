@@ -12,8 +12,12 @@
 
 - (IBAction)animate:(id)sender
 {
+    // clean up last animation
+    [myViewIWantToAnimate removeFromSuperview];
+    [myViewIWantToAnimate release];
+
     CGRect rect = CGRectMake(0.0f, 0.0f, 320.0f, 100.0f);
-    UIView *myViewIWantToAnimate = [ [ UIView alloc ] initWithFrame: rect ]; // Make the view.
+    myViewIWantToAnimate = [ [ UIView alloc ] initWithFrame: rect ]; // Make the view.
     [self.view addSubview:myViewIWantToAnimate];
     myViewIWantToAnimate.backgroundColor = [ UIColor blueColor ]; // Set the background color blue.
 
@@ -23,6 +27,8 @@
     [ UIView setAnimationDuration: 1.0f ]; // Set the duration to 1 second.
     myViewIWantToAnimate.frame = CGRectMake(rect.origin.x, rect.origin.y + 60.0f, rect.size.width, rect.size.height); // Set the frame 60 pixels down.
     [ UIView commitAnimations ]; // Animate!
+    
+    // probably need to wait here until the last animation is complete.
 
     /* Animate the view back to it's original spot on the screen */
     [ UIView beginAnimations: nil context: nil ]; // Tell UIView we're ready to start animations.
