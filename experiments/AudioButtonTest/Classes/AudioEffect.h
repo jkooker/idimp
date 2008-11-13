@@ -33,26 +33,29 @@ public:
     
     virtual void Process(short* buffer, int numSamples, int numChannels)
     {
-        //printf("AmplitudeScale::Process m_oldAmp = %f, m_amp = %f\n", m_oldAmp, m_amp);
-        float amplitudeDelta = m_amp - m_oldAmp;
+        float goalAmp = m_amp;
+        float amplitudeDelta = goalAmp - m_oldAmp;
+        //printf("AmplitudeScale::Process m_oldAmp = %f, goalAmp = %f, delta = %f\n", m_oldAmp, goalAmp, amplitudeDelta);
         for (int n = 0; n < numSamples; n++)
         {
-            float percentage = (numSamples - n) / numSamples;
-            float amp = m_amp - (amplitudeDelta * percentage);
-            //printf("amp = %f\n", amp);
+            float percentage = n / (float)numSamples;
+            float amp = m_oldAmp + (amplitudeDelta * percentage);
+            //printf("amp = %f, percentage = %f\n", amp, percentage);
             for (int ch = 0; ch < numChannels; ch++)
             {
                 int index = (2 * n) + ch;
                 buffer[index] = (short)(amp * buffer[index]);            
             }
         }
-        m_oldAmp = m_amp;
+        m_oldAmp = goalAmp;
     }
+    
+    float getAmp() { return m_amp; }
     
     void setAmp(float amp)
     {
-        //printf("AmplitudeScale::Process setAmp amp = %f, m_amp = %f, m_oldAmp = %f\n", amp, m_amp, m_oldAmp);
-        m_oldAmp = m_amp;
+        //printf("AmplitudeScale::setAmp amp = %f, m_amp = %f, m_oldAmp = %f\n", amp, m_amp, m_oldAmp);
+        //m_oldAmp = m_amp;
         m_amp = amp;
     }
     
