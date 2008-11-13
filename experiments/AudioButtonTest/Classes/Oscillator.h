@@ -90,11 +90,11 @@ public:
                 int halftable = WAVETABLE_POINTS / 2;
                 for (int i = 0; i < halftable; i++)
                 {
-                    m_wavetable[i] = 1.0;
+                    m_wavetable[i] = 0.7;//1.0;
                 }   
                 for (int i = halftable; i < WAVETABLE_POINTS; i++)
                 {
-                    m_wavetable[i] = -1.0;
+                    m_wavetable[i] = -0.7;//-1.0;
                 }            
                 break;
             }
