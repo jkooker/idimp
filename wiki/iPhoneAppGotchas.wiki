@@ -2,7 +2,7 @@
 
 = Introduction =
 
-It was a tricky process getting our iPhone apps building and running on our iPod touch devices. Here are a few tips we learned along the way
+It was a tricky process getting our iPhone apps building and running on our iPod touch devices. Here are a few tips we learned along the way.
 
 
 = Running ADC Examples =
