@@ -1,0 +1,30 @@
+#summary iPhone App Gotchas
+
+= Introduction =
+
+It was a tricky process getting our iPhone apps building and running on our iPod touch devices. Here are a few tips we learned along the way
+
+
+= Running ADC Examples =
+
+Here's what I do every time I download something from Apple Developer Connection (ADC - http://developer.apple.com/ ) and want to run it on my device:
+
+== Edit Info.plist ==
+Modify the bundle identifier of your app to match our team's domain:
+
+|| *Key* || *Value* ||
+|| Bundle identifier || edu.ucsd.cse.${PRODUCT_NAME:identifier} ||
+
+
+== Edit Project Settings ==
+
+From the *Project* menu, select *Edit Project Settings*
+
+Your variables should be the following (this is what copying straight out of the window produces):
+{{{
+CODE_SIGN_IDENTITY = iPhone Developer: John Kooker
+CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+PROVISIONING_PROFILE = DefaultProfileUuid
+}}}
+
+<img src="http://img.skitch.com/20081114-pddg9dp58hwfk697493qnerp79.png" alt="signingsettings"/>
