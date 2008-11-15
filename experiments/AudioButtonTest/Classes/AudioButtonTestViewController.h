@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AudioQueueWrapper.h"
+#import "AudioEngine.h"
 
 @interface AudioButtonTestViewController : UIViewController <UIAccelerometerDelegate> {
 
@@ -23,6 +24,7 @@
     BOOL _playIsOn;
     BOOL _recordIsOn;
     AudioQueueWrapper* _audioQueue;
+    AudioEngine* _audioEngine;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton* _playButton;

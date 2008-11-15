@@ -29,7 +29,10 @@ static const float kAccelerometerInterval = 0.01;
 {   
     NSLog(@"AudioButtonTestViewController myInit");
     _audioQueue = NULL;
-    _audioQueue = new AudioQueueWrapper();}
+    _audioQueue = new AudioQueueWrapper();
+    _audioEngine = NULL;
+    //_audioEngine = new AudioEngine();
+}
 
 - (void) dealloc
 {   
@@ -38,6 +41,11 @@ static const float kAccelerometerInterval = 0.01;
     {
         delete _audioQueue;
         _audioQueue = NULL;
+    }
+    if (_audioEngine != NULL)
+    {
+        delete _audioEngine;
+        _audioEngine = NULL;
     }
     [super dealloc];
 }
@@ -106,16 +114,33 @@ static const float kAccelerometerInterval = 0.01;
 
 	NSLog(@"recordOrStop called:");
     
-    if (_recordIsOn)
+    if (_recordIsOn) 
     {
+        _audioQueue->recordPause();
+
+		// now that recording has stopped, deactivate the audio session
+		//AudioSessionSetActive (false);
         [_recordButton setTitle: @"Record" forState: UIControlStateNormal ];
         [_recordButton setTitle: @"Record" forState: UIControlStateHighlighted ];
-    }
+        
+	}
     else
     {
+		// before instantiating the recording audio queue object, 
+		//	set the audio session category
+		UInt32 sessionCategory = kAudioSessionCategory_RecordAudio;
+		AudioSessionSetProperty( kAudioSessionProperty_AudioCategory,
+                                 sizeof (sessionCategory),
+                                 &sessionCategory);
+			
+        // activate the audio session immediately before recording starts
+		//AudioSessionSetActive (true);
+		_audioQueue->recordStart();
+        
         [_recordButton setTitle: @"Stop" forState: UIControlStateNormal ];
         [_recordButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
-    }
+
+	}
     
     _recordIsOn = !_recordIsOn;
 }
@@ -147,7 +172,8 @@ static const float kAccelerometerInterval = 0.01;
     _audioQueue->m_osc.setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
+{
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }

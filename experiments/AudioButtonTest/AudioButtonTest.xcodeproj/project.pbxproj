@@ -35,6 +35,7 @@
 		322C10C90EBEB24C007EAA49 /* AudioQueueWrapper.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = AudioQueueWrapper.h; sourceTree = "<group>"; };
 		327368B40EBED9EF0016810D /* AudioQueueWrapper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = AudioQueueWrapper.cpp; sourceTree = "<group>"; };
 		327369000EBEE0B20016810D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
+		3299EEE90ECF832A00008176 /* AudioEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioEngine.h; path = ../AudioEngine.h; sourceTree = "<group>"; };
 		32A877EF0EC40C680061E235 /* Oscillator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Oscillator.h; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* AudioButtonTest_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioButtonTest_Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -58,6 +59,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				3299EEE90ECF832A00008176 /* AudioEngine.h */,
 				32A877EF0EC40C680061E235 /* Oscillator.h */,
 				327368B40EBED9EF0016810D /* AudioQueueWrapper.cpp */,
 				322C10C90EBEB24C007EAA49 /* AudioQueueWrapper.h */,
