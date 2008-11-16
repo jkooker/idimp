@@ -17,7 +17,6 @@
 static const int NUM_RECORDING_BUFFERS = 1;
 static const int NUM_CHANNELS = 1; // mono for now
 
-
 class AudioEngine
 {
 public:
@@ -72,11 +71,11 @@ public:
         }
         
         // Describe format
-        m_audioFormat.mSampleRate			= 44100.00;
-        m_audioFormat.mFormatID			= kAudioFormatLinearPCM;
-        m_audioFormat.mFormatFlags		= kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-        m_audioFormat.mFramesPerPacket	= 1;
-        m_audioFormat.mChannelsPerFrame	= NUM_CHANNELS;
+        m_audioFormat.mSampleRate           = 44100.00;
+        m_audioFormat.mFormatID			    = kAudioFormatLinearPCM;
+        m_audioFormat.mFormatFlags          = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+        m_audioFormat.mFramesPerPacket      = 1;
+        m_audioFormat.mChannelsPerFrame     = NUM_CHANNELS;
         m_audioFormat.mBitsPerChannel		= 16;
         m_audioFormat.mBytesPerPacket		= 2 * NUM_CHANNELS;
         m_audioFormat.mBytesPerFrame		= 2 * NUM_CHANNELS;
@@ -105,7 +104,6 @@ public:
             printf("AudioEngine::AudioEngine could not set input format: status = %d\n", status);
         }
         
-        
         // Set input callback
         AURenderCallbackStruct callbackStruct;
         callbackStruct.inputProc = recordingCallback;
@@ -120,7 +118,6 @@ public:
         {
             printf("AudioEngine::AudioEngine could not set input callback: status = %d\n", status);
         }
-
         
         // Set output callback
         callbackStruct.inputProc = playbackCallback;
@@ -153,6 +150,8 @@ public:
         {
             printf("AudioEngine::AudioEngine could not initialize audio unit: status = %d\n", status);
         }    
+        
+        print_audio_unit_properties();
     }
     
     ~AudioEngine()
@@ -227,15 +226,6 @@ public:
         
         //AudioBufferList *bufferList; // <- Fill this up with buffers (you will want to malloc it, as it's a dynamic-length list)
         
-        /*AudioBufferList bufferList;
-        bufferList.mNumberBuffers = NUM_RECORDING_BUFFERS;
-        for (int i = 0; i < NUM_RECORDING_BUFFERS; i++)
-        {
-            // allocate buffer
-            bufferList.mBuffers[i].mNumberChannels = NUM_CHANNELS;
-            bufferList.mBuffers[i].mDataByteSize = inNumberFrames;
-            bufferList.mBuffers[i].mData = new short[inNumberFrames];
-        }*/
         if (m_inputBufferList == NULL)
         {
             allocate_input_buffers(inNumberFrames);
@@ -324,7 +314,7 @@ private:
 
     void allocate_input_buffers(UInt32 inNumberFrames)
     {
-        printf("AudioEngine::allocate_input_buffers\n");
+        printf("AudioEngine::allocate_input_buffers: inNumberFrames = %d\n", inNumberFrames);
                
         // malloc buffer list(s)
         UInt32 propsize = offsetof(AudioBufferList, mBuffers[0]) + (sizeof(AudioBuffer) * m_audioFormat.mChannelsPerFrame);
@@ -343,6 +333,39 @@ private:
             m_recordedData = malloc(bufferSizeInBytes);
             m_recordedDataSizeInBytes = bufferSizeInBytes;
         }
+    }
+    
+    void print_audio_unit_properties()
+    {
+        print_audio_unit_uint32_property(kAudioUnitProperty_SampleRate, kAudioUnitScope_Global, "kAudioUnitProperty_SampleRate");
+        print_audio_unit_uint32_property(kAudioUnitProperty_ElementCount, kAudioUnitScope_Global, "kAudioUnitProperty_ElementCount");
+        print_audio_unit_uint32_property(kAudioUnitProperty_Latency, kAudioUnitScope_Global, "kAudioUnitProperty_Latency");
+        print_audio_unit_uint32_property(kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global, "kAudioUnitProperty_SupportedNumChannels");
+        print_audio_unit_uint32_property(kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, "kAudioUnitProperty_MaximumFramesPerSlice");
+    }
+    
+    void print_audio_unit_uint32_property(AudioUnitPropertyID inID, AudioUnitScope inScope, const char* propertyDisplayName)
+    {
+        UInt32 propValue = 0;
+        UInt32 propValueSize = sizeof(propValue);
+        OSStatus status = AudioUnitGetProperty(m_audioUnit,
+                                               inID,
+                                               inScope,
+                                               0,
+                                               &propValue,
+                                               &propValueSize);
+        if (status != noErr)
+        {
+            // -- error codes --
+            // kAudioUnitErr_InvalidProperty	-10879
+            // kAudioUnitErr_InvalidScope       -10866
+            printf("AudioEngine::print_audio_unit_uint32_property could not get property %s: status = %d\n", propertyDisplayName, status);
+        }
+        else
+        {
+            printf("%s = %d\n", propertyDisplayName, propValue);
+        }
+
     }
     
     AudioComponentInstance m_audioUnit;
