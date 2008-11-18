@@ -15,7 +15,7 @@
 
 // audio format constants
 //static const float SAMPLE_RATE = 44100;
-static const int NUM_CHANNELS = 1; // stereo may or may not be possible...
+static const int NUM_CHANNELS = 2;
 static const int BIT_DEPTH_IN_BYTES = 2;
 static const int BIT_DEPTH = 8 * BIT_DEPTH_IN_BYTES;
 static const int FORMAT_ID = kAudioFormatLinearPCM;
@@ -156,14 +156,14 @@ public:
         {
             for (UInt32 i = 0; i < m_inputBufferList->mNumberBuffers; i++)
             {
-                free(m_inputBufferList->mBuffers[i].mData);
+                free (m_inputBufferList->mBuffers[i].mData);
             }
-            free(m_inputBufferList);
+            delete (m_inputBufferList);
             m_inputBufferList = NULL;
         }
         if (m_recordedData != NULL)
         {
-            free(m_recordedData);
+            free (m_recordedData);
             m_recordedData = NULL;
         }
     }
@@ -228,6 +228,8 @@ public:
                                           m_inputBufferList);
         if (status != noErr)
         {
+            // -- error codes --
+            // paramErr = -50,  /*error in user parameter list*/
             printf("AudioEngine::recordingCallbackHelper could not render audio unit: status = %d\n", status);
         }
         
@@ -296,18 +298,20 @@ private:
     {
         printf("AudioEngine::allocate_input_buffers: inNumberFrames = %d\n", inNumberFrames);
                
-        // malloc buffer list(s)
-        UInt32 propsize = offsetof(AudioBufferList, mBuffers[0]) + (sizeof(AudioBuffer) * m_audioFormat.mChannelsPerFrame);
-        m_inputBufferList = (AudioBufferList*)malloc(propsize);
-        m_inputBufferList->mNumberBuffers = m_audioFormat.mChannelsPerFrame;
         UInt32 bufferSizeInBytes = inNumberFrames * m_audioFormat.mBytesPerFrame;
+        
+        // allocate buffer list
+        m_inputBufferList = new AudioBufferList; 
+        //m_inputBufferList->mNumberBuffers = m_audioFormat.mChannelsPerFrame;
+        m_inputBufferList->mNumberBuffers = 1; // 1 because we're using interleaved data - all channels will go in one buffer
         for (UInt32 i = 0; i < m_inputBufferList->mNumberBuffers; i++)
         {
+            printf("AudioEngine::allocate_input_buffers: i = %d, m_inputBufferList->mBuffers[i] = %d\n", i, m_inputBufferList->mBuffers[i]);
             m_inputBufferList->mBuffers[i].mNumberChannels = NUM_CHANNELS;
             m_inputBufferList->mBuffers[i].mDataByteSize = bufferSizeInBytes;
-            m_inputBufferList->mBuffers[i].mData = malloc(bufferSizeInBytes);
-        }   
-        
+            m_inputBufferList->mBuffers[i].mData = malloc(bufferSizeInBytes); // could write this with new/delete...
+        }
+                
         if (m_recordedData == NULL)
         {
             m_recordedData = malloc(bufferSizeInBytes);
