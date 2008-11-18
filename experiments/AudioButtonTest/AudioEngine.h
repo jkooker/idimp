@@ -43,102 +43,26 @@ public:
         // Get component
         AudioComponent inputComponent = AudioComponentFindNext(NULL, &desc);
         
-        // Get audio units
+        // Get audio unit
         OSStatus status = AudioComponentInstanceNew(inputComponent, &m_audioUnit);
         if (status != noErr)
         {
             printf("AudioEngine::AudioEngine could not create new audio component: status = %d\n", status);
         }
         
-        // Enable IO for recording
-        UInt32 flag = 1;
-        status = AudioUnitSetProperty(m_audioUnit, 
-                                      kAudioOutputUnitProperty_EnableIO, 
-                                      kAudioUnitScope_Input, 
-                                      kInputBus,
-                                      &flag, 
-                                      sizeof(flag));
-        if (status != noErr)
-        {
-            printf("AudioEngine::AudioEngine could not could not enable recording: status = %d\n", status);
-        }
+        // enable IO for recording
+        enable_recording();
+                
+        // enable IO for playback
+        enable_playback();
         
-        // Enable IO for playback
-        status = AudioUnitSetProperty(m_audioUnit, 
-                                      kAudioOutputUnitProperty_EnableIO, 
-                                      kAudioUnitScope_Output, 
-                                      kOutputBus,
-                                      &flag, 
-                                      sizeof(flag));
-        if (status != noErr)
-        {
-            printf("AudioEngine::AudioEngine could not enable playback: status = %d\n", status);
-        }
-        
-        // Describe format
-        m_audioFormat.mSampleRate       = SAMPLE_RATE;
-        m_audioFormat.mFormatID		    = FORMAT_ID;
-        m_audioFormat.mFormatFlags      = FORMAT_FLAGS;
-        m_audioFormat.mFramesPerPacket  = FORMAT_FRAMES_PER_PACKET;
-        m_audioFormat.mChannelsPerFrame = NUM_CHANNELS;
-        m_audioFormat.mBitsPerChannel	= BIT_DEPTH;
-        m_audioFormat.mBytesPerPacket	= BIT_DEPTH_IN_BYTES * NUM_CHANNELS;
-        m_audioFormat.mBytesPerFrame	= BIT_DEPTH_IN_BYTES * NUM_CHANNELS;  
-              
-        // Apply output format
-        status = AudioUnitSetProperty(m_audioUnit, 
-                                      kAudioUnitProperty_StreamFormat, 
-                                      kAudioUnitScope_Output, 
-                                      kInputBus, 
-                                      &m_audioFormat, 
-                                      sizeof(m_audioFormat));
-        if (status != noErr)
-        {
-            printf("AudioEngine::AudioEngine could not set output format: status = %d\n", status);
-        }
-        
-        // Apply input format
-        status = AudioUnitSetProperty(m_audioUnit, 
-                                      kAudioUnitProperty_StreamFormat, 
-                                      kAudioUnitScope_Input, 
-                                      kOutputBus, 
-                                      &m_audioFormat, 
-                                      sizeof(m_audioFormat));
-        if (status != noErr)
-        {
-            printf("AudioEngine::AudioEngine could not set input format: status = %d\n", status);
-        }
-        
-        // Set input callback
-        AURenderCallbackStruct callbackStruct;
-        callbackStruct.inputProc = recordingCallback;
-        callbackStruct.inputProcRefCon = this;
-        status = AudioUnitSetProperty(m_audioUnit, 
-                                      kAudioOutputUnitProperty_SetInputCallback, 
-                                      kAudioUnitScope_Global, 
-                                      kInputBus, 
-                                      &callbackStruct, 
-                                      sizeof(callbackStruct));
-        if (status != noErr)
-        {
-            printf("AudioEngine::AudioEngine could not set input callback: status = %d\n", status);
-        }
-        
-        // Set output callback
-        callbackStruct.inputProc = playbackCallback;
-        callbackStruct.inputProcRefCon = this;
-        status = AudioUnitSetProperty(m_audioUnit, 
-                                      kAudioUnitProperty_SetRenderCallback, 
-                                      kAudioUnitScope_Global, 
-                                      kOutputBus,
-                                      &callbackStruct, 
-                                      sizeof(callbackStruct));
-        if (status != noErr)
-        {
-            printf("AudioEngine::AudioEngine could not set output callback: status = %d\n", status);
-        }
-        
-        // Initialize
+        // init audio format for input and output
+        init_audio_format();
+                        
+        // set input and output callbacks
+        init_callbacks();
+                
+        // initialize
         status = AudioUnitInitialize(m_audioUnit);
         if (status != noErr)
         {
@@ -151,7 +75,11 @@ public:
     ~AudioEngine()
     {
         printf("AudioEngine::~AudioEngine\n");
+        
+        // uninitialize audio unit
         AudioUnitUninitialize(m_audioUnit);
+        
+        // free input buffer list used to retrieve recorded data
         if (m_inputBufferList != NULL)
         {
             for (UInt32 i = 0; i < m_inputBufferList->mNumberBuffers; i++)
@@ -161,6 +89,8 @@ public:
             delete (m_inputBufferList);
             m_inputBufferList = NULL;
         }
+        
+        // free buffer for recorded data
         if (m_recordedData != NULL)
         {
             free (m_recordedData);
@@ -319,6 +249,107 @@ private:
         }
     }
     
+    void enable_playback()
+    {
+        // enable IO for playback
+        UInt32 flag = 1;
+        OSStatus status = AudioUnitSetProperty(m_audioUnit, 
+                                               kAudioOutputUnitProperty_EnableIO, 
+                                               kAudioUnitScope_Output, 
+                                               kOutputBus,
+                                               &flag, 
+                                               sizeof(flag));
+        if (status != noErr)
+        {
+            printf("AudioEngine::enable_playback failed: status = %d\n", status);
+        }
+    }
+    
+    void enable_recording()
+    {
+        // Enable IO for recording
+        UInt32 flag = 1;
+        OSStatus status = AudioUnitSetProperty(m_audioUnit, 
+                                               kAudioOutputUnitProperty_EnableIO, 
+                                               kAudioUnitScope_Input, 
+                                               kInputBus,
+                                               &flag, 
+                                               sizeof(flag));
+        if (status != noErr)
+        {
+            printf("AudioEngine::enable_recording failed: status = %d\n", status);
+        }
+    }
+    
+    void init_audio_format()
+    {
+        // Describe format
+        m_audioFormat.mSampleRate       = SAMPLE_RATE;
+        m_audioFormat.mFormatID		    = FORMAT_ID;
+        m_audioFormat.mFormatFlags      = FORMAT_FLAGS;
+        m_audioFormat.mFramesPerPacket  = FORMAT_FRAMES_PER_PACKET;
+        m_audioFormat.mChannelsPerFrame = NUM_CHANNELS;
+        m_audioFormat.mBitsPerChannel	= BIT_DEPTH;
+        m_audioFormat.mBytesPerPacket	= BIT_DEPTH_IN_BYTES * NUM_CHANNELS;
+        m_audioFormat.mBytesPerFrame	= BIT_DEPTH_IN_BYTES * NUM_CHANNELS;  
+              
+        // Apply output format
+        OSStatus status = AudioUnitSetProperty(m_audioUnit, 
+                                               kAudioUnitProperty_StreamFormat, 
+                                               kAudioUnitScope_Output, 
+                                               kInputBus, 
+                                               &m_audioFormat, 
+                                               sizeof(m_audioFormat));
+        if (status != noErr)
+        {
+            printf("AudioEngine::init_audio_format could not set output format: status = %d\n", status);
+        }
+        
+        // Apply input format
+        status = AudioUnitSetProperty(m_audioUnit, 
+                                      kAudioUnitProperty_StreamFormat, 
+                                      kAudioUnitScope_Input, 
+                                      kOutputBus, 
+                                      &m_audioFormat, 
+                                      sizeof(m_audioFormat));
+        if (status != noErr)
+        {
+            printf("AudioEngine::init_audio_format could not set input format: status = %d\n", status);
+        }
+    }
+    
+    void init_callbacks()
+    {
+        // Set input callback
+        AURenderCallbackStruct callbackStruct;
+        callbackStruct.inputProc = recordingCallback;
+        callbackStruct.inputProcRefCon = this;
+        OSStatus status = AudioUnitSetProperty(m_audioUnit, 
+                                               kAudioOutputUnitProperty_SetInputCallback, 
+                                               kAudioUnitScope_Global, 
+                                               kInputBus, 
+                                               &callbackStruct, 
+                                               sizeof(callbackStruct));
+        if (status != noErr)
+        {
+            printf("AudioEngine::init_callbacks could not set input callback: status = %d\n", status);
+        }
+        
+        // Set output callback
+        callbackStruct.inputProc = playbackCallback;
+        callbackStruct.inputProcRefCon = this;
+        status = AudioUnitSetProperty(m_audioUnit, 
+                                      kAudioUnitProperty_SetRenderCallback, 
+                                      kAudioUnitScope_Global, 
+                                      kOutputBus,
+                                      &callbackStruct, 
+                                      sizeof(callbackStruct));
+        if (status != noErr)
+        {
+            printf("AudioEngine::init_callbacks could not set output callback: status = %d\n", status);
+        }
+    }
+    
     static void print_audio_unit_properties(AudioUnit unit, const char* name)
     {
         printf("AudioEngine Audio Unit Properties for %s\n", name);
@@ -352,7 +383,7 @@ private:
         }
     }
     
-    AudioComponentInstance m_audioUnit;
+    AudioUnit m_audioUnit;
     AudioStreamBasicDescription m_audioFormat;
     AudioBufferList* m_inputBufferList;
     void* m_recordedData;
