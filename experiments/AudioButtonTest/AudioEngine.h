@@ -133,17 +133,6 @@ public:
             printf("AudioEngine::AudioEngine could not set output callback: status = %d\n", status);
         }
         
-        /*// Disable buffer allocation for the recorder (optional - do this if we want to pass in our own)
-        flag = 0;
-        status = AudioUnitSetProperty(m_audioUnit, 
-                                      kAudioUnitProperty_ShouldAllocateBuffer,
-                                      kAudioUnitScope_Output, 
-                                      kInputBus,
-                                      &flag, 
-                                      sizeof(flag));
-        
-        // TODO: Allocate our own buffers if we want*/
-        
         // Initialise
         status = AudioUnitInitialize(m_audioUnit);
         if (status != noErr)
@@ -151,7 +140,7 @@ public:
             printf("AudioEngine::AudioEngine could not initialize audio unit: status = %d\n", status);
         }    
         
-        print_audio_unit_properties();
+        print_audio_unit_properties(m_audioUnit, "REMOTE IO");
     }
     
     ~AudioEngine()
@@ -335,20 +324,21 @@ private:
         }
     }
     
-    void print_audio_unit_properties()
+    static void print_audio_unit_properties(AudioUnit unit, const char* name)
     {
-        print_audio_unit_uint32_property(kAudioUnitProperty_SampleRate, kAudioUnitScope_Global, "kAudioUnitProperty_SampleRate");
-        print_audio_unit_uint32_property(kAudioUnitProperty_ElementCount, kAudioUnitScope_Global, "kAudioUnitProperty_ElementCount");
-        print_audio_unit_uint32_property(kAudioUnitProperty_Latency, kAudioUnitScope_Global, "kAudioUnitProperty_Latency");
-        print_audio_unit_uint32_property(kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global, "kAudioUnitProperty_SupportedNumChannels");
-        print_audio_unit_uint32_property(kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, "kAudioUnitProperty_MaximumFramesPerSlice");
+        printf("AudioEngine Audio Unit Properties for %s\n", name);
+        print_audio_unit_uint32_property(unit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Global, "kAudioUnitProperty_SampleRate");
+        print_audio_unit_uint32_property(unit, kAudioUnitProperty_ElementCount, kAudioUnitScope_Global, "kAudioUnitProperty_ElementCount");
+        print_audio_unit_uint32_property(unit, kAudioUnitProperty_Latency, kAudioUnitScope_Global, "kAudioUnitProperty_Latency");
+        print_audio_unit_uint32_property(unit, kAudioUnitProperty_SupportedNumChannels, kAudioUnitScope_Global, "kAudioUnitProperty_SupportedNumChannels");
+        print_audio_unit_uint32_property(unit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, "kAudioUnitProperty_MaximumFramesPerSlice");
     }
     
-    void print_audio_unit_uint32_property(AudioUnitPropertyID inID, AudioUnitScope inScope, const char* propertyDisplayName)
+    static void print_audio_unit_uint32_property(AudioUnit unit, AudioUnitPropertyID inID, AudioUnitScope inScope, const char* propertyDisplayName)
     {
         UInt32 propValue = 0;
         UInt32 propValueSize = sizeof(propValue);
-        OSStatus status = AudioUnitGetProperty(m_audioUnit,
+        OSStatus status = AudioUnitGetProperty(unit,
                                                inID,
                                                inScope,
                                                0,
@@ -365,7 +355,6 @@ private:
         {
             printf("%s = %d\n", propertyDisplayName, propValue);
         }
-
     }
     
     AudioComponentInstance m_audioUnit;
