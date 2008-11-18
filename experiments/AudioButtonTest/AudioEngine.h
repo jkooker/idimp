@@ -5,8 +5,6 @@
  *  Created by Michelle Daniels on 11/15/08.
  *  Copyright 2008 UCSD. All rights reserved.
  *
- *  Note: use of RemoteIO audio unit based on code from here:
- *  http://michael.tyson.id.au/2008/11/04/using-remoteio-audio-unit/
  */
 
 #ifndef AUDIO_ENGINE_H
@@ -14,8 +12,15 @@
 
 #define kOutputBus 0
 #define kInputBus 1
-static const int NUM_RECORDING_BUFFERS = 1;
-static const int NUM_CHANNELS = 1; // mono for now
+
+// audio format constants
+//static const float SAMPLE_RATE = 44100;
+static const int NUM_CHANNELS = 1; // stereo may or may not be possible...
+static const int BIT_DEPTH_IN_BYTES = 2;
+static const int BIT_DEPTH = 8 * BIT_DEPTH_IN_BYTES;
+static const int FORMAT_ID = kAudioFormatLinearPCM;
+static const int FORMAT_FRAMES_PER_PACKET = 1;
+static const int FORMAT_FLAGS = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
 
 class AudioEngine
 {
@@ -71,16 +76,16 @@ public:
         }
         
         // Describe format
-        m_audioFormat.mSampleRate           = 44100.00;
-        m_audioFormat.mFormatID			    = kAudioFormatLinearPCM;
-        m_audioFormat.mFormatFlags          = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-        m_audioFormat.mFramesPerPacket      = 1;
-        m_audioFormat.mChannelsPerFrame     = NUM_CHANNELS;
-        m_audioFormat.mBitsPerChannel		= 16;
-        m_audioFormat.mBytesPerPacket		= 2 * NUM_CHANNELS;
-        m_audioFormat.mBytesPerFrame		= 2 * NUM_CHANNELS;
-        
-        // Apply (output?) format
+        m_audioFormat.mSampleRate       = SAMPLE_RATE;
+        m_audioFormat.mFormatID		    = FORMAT_ID;
+        m_audioFormat.mFormatFlags      = FORMAT_FLAGS;
+        m_audioFormat.mFramesPerPacket  = FORMAT_FRAMES_PER_PACKET;
+        m_audioFormat.mChannelsPerFrame = NUM_CHANNELS;
+        m_audioFormat.mBitsPerChannel	= BIT_DEPTH;
+        m_audioFormat.mBytesPerPacket	= BIT_DEPTH_IN_BYTES * NUM_CHANNELS;
+        m_audioFormat.mBytesPerFrame	= BIT_DEPTH_IN_BYTES * NUM_CHANNELS;  
+              
+        // Apply output format
         status = AudioUnitSetProperty(m_audioUnit, 
                                       kAudioUnitProperty_StreamFormat, 
                                       kAudioUnitScope_Output, 
@@ -92,7 +97,7 @@ public:
             printf("AudioEngine::AudioEngine could not set output format: status = %d\n", status);
         }
         
-        // Apply (input?) format
+        // Apply input format
         status = AudioUnitSetProperty(m_audioUnit, 
                                       kAudioUnitProperty_StreamFormat, 
                                       kAudioUnitScope_Input, 
@@ -133,7 +138,7 @@ public:
             printf("AudioEngine::AudioEngine could not set output callback: status = %d\n", status);
         }
         
-        // Initialise
+        // Initialize
         status = AudioUnitInitialize(m_audioUnit);
         if (status != noErr)
         {
@@ -209,20 +214,12 @@ public:
         //printf("AudioEngine::recordingCallbackHelper: inBusNumber = %d, inNumberFrames = %d, ioData = %d\n", inBusNumber, inNumberFrames, ioData);
         //printf("inTimeStamp->mSampleTime = %d, mHostTime = %d, mRateScalar = %d, mFlags = %d\n", inTimeStamp->mSampleTime, inTimeStamp->mHostTime, inTimeStamp->mRateScalar, inTimeStamp->mFlags);
 
-        // TODO: Use inRefCon to access our interface object to do stuff
-        // Then, use inNumberFrames to figure out how much data is available, and make
-        // that much space available in buffers in an AudioBufferList.
-        
-        //AudioBufferList *bufferList; // <- Fill this up with buffers (you will want to malloc it, as it's a dynamic-length list)
-        
         if (m_inputBufferList == NULL)
         {
             allocate_input_buffers(inNumberFrames);
         }
         
-        // Then:
-        // Obtain recorded samples
-        
+        // fill buffer list with recorded samples
         OSStatus status = AudioUnitRender(m_audioUnit, 
                                           ioActionFlags, 
                                           inTimeStamp, 
@@ -234,8 +231,6 @@ public:
             printf("AudioEngine::recordingCallbackHelper could not render audio unit: status = %d\n", status);
         }
         
-        // Now, we have the samples we just read sitting in buffers in bufferList
-        //DoStuffWithTheRecordedAudio(bufferList);
         memcpy(m_recordedData, m_inputBufferList->mBuffers[0].mData, m_inputBufferList->mBuffers[0].mDataByteSize);
         
         //printf("AudioEngine::recordingCallbackHelper FINISHED\n");
@@ -271,15 +266,11 @@ public:
         //printf("AudioEngine::playbackCallbackHelper: inBusNumber = %d, inNumberFrames = %d, ioData = %d\n", inBusNumber, inNumberFrames, ioData);
         //printf("ioData->mNumberBuffers = %d\n", ioData->mNumberBuffers);
 
-        // Notes: ioData contains buffers (may be more than one!)
-        // Fill them up as much as you can. Remember to set the size value in each buffer to match how
-        // much data is in the buffer.
-        
         for (int i = 0; i < ioData->mNumberBuffers; i++)
         {
             //printf("buffer %d: mNumberChannels = %d, mDataByteSize = %d, mData = %d\n", i, ioData->mBuffers[i].mNumberChannels, ioData->mBuffers[i].mDataByteSize, ioData->mBuffers[i].mData);
 
-            //ioData->mBuffers[i].mNumberChannels = NUM_CHANNELS;
+            ioData->mBuffers[i].mNumberChannels = NUM_CHANNELS;
             if (m_recordedData != NULL && m_recordedDataSizeInBytes <= ioData->mBuffers[i].mDataByteSize)
             {
                 memcpy(ioData->mBuffers[i].mData, m_recordedData, m_recordedDataSizeInBytes);
