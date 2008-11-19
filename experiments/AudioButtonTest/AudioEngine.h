@@ -138,46 +138,11 @@ public:
         //printf("AudioEngine::recordingCallback\n");
 
         AudioEngine* engine = (AudioEngine*)inRefCon;
-        return engine->recordingCallbackHelper(ioActionFlags,
-                                               inTimeStamp,
-                                               inBusNumber,
-                                               inNumberFrames,
-                                               ioData);
-    }
-    
-    OSStatus recordingCallbackHelper(AudioUnitRenderActionFlags *ioActionFlags, 
-                                     const AudioTimeStamp *inTimeStamp, 
-                                     UInt32 inBusNumber, 
-                                     UInt32 inNumberFrames, 
-                                     AudioBufferList *ioData) 
-    {
-        //printf("AudioEngine::recordingCallbackHelper: inBusNumber = %d, inNumberFrames = %d, ioData = %d\n", inBusNumber, inNumberFrames, ioData);
-        //printf("inTimeStamp->mSampleTime = %d, mHostTime = %d, mRateScalar = %d, mFlags = %d\n", inTimeStamp->mSampleTime, inTimeStamp->mHostTime, inTimeStamp->mRateScalar, inTimeStamp->mFlags);
-
-        if (m_inputBufferList == NULL)
-        {
-            allocate_input_buffers(inNumberFrames);
-        }
-        
-        // fill buffer list with recorded samples
-        OSStatus status = AudioUnitRender(m_audioUnit, 
-                                          ioActionFlags, 
-                                          inTimeStamp, 
-                                          inBusNumber, 
-                                          inNumberFrames, 
-                                          m_inputBufferList);
-        if (status != noErr)
-        {
-            // -- error codes --
-            // paramErr = -50,  /*error in user parameter list*/
-            printf("AudioEngine::recordingCallbackHelper could not render audio unit: status = %d\n", status);
-        }
-        
-        memcpy(m_recordedData, m_inputBufferList->mBuffers[0].mData, m_inputBufferList->mBuffers[0].mDataByteSize);
-        
-        //printf("AudioEngine::recordingCallbackHelper FINISHED\n");
-        
-        return noErr;
+        return engine->recording_callback(ioActionFlags,
+                                          inTimeStamp,
+                                          inBusNumber,
+                                          inNumberFrames,
+                                          ioData);
     }
     
     static OSStatus playbackCallback(void *inRefCon, 
@@ -190,57 +155,12 @@ public:
         //printf("AudioEngine::playbackCallback\n");
 
         AudioEngine* engine = (AudioEngine*)inRefCon;
-        return engine->playbackCallbackHelper(ioActionFlags, 
-                                              inTimeStamp, 
-                                              inBusNumber, 
-                                              inNumberFrames, 
-                                              ioData);
-       
-        return noErr;
+        return engine->playback_callback(ioActionFlags, 
+                                         inTimeStamp, 
+                                         inBusNumber, 
+                                         inNumberFrames, 
+                                         ioData);
     }
-    
-    OSStatus playbackCallbackHelper(AudioUnitRenderActionFlags *ioActionFlags, 
-                                    const AudioTimeStamp *inTimeStamp, 
-                                    UInt32 inBusNumber, 
-                                    UInt32 inNumberFrames, 
-                                    AudioBufferList *ioData) 
-    {    
-        //printf("AudioEngine::playbackCallbackHelper: inBusNumber = %d, inNumberFrames = %d, ioData = %d\n", inBusNumber, inNumberFrames, ioData);
-        //printf("ioData->mNumberBuffers = %d\n", ioData->mNumberBuffers);
-
-        for (int i = 0; i < ioData->mNumberBuffers; i++)
-        {
-            //printf("buffer %d: mNumberChannels = %d, mDataByteSize = %d, mData = %d\n", i, ioData->mBuffers[i].mNumberChannels, ioData->mBuffers[i].mDataByteSize, ioData->mBuffers[i].mData);
-
-            ioData->mBuffers[i].mNumberChannels = m_audioFormat.mChannelsPerFrame;
-            if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
-            {
-                printf("AudioEngine::playbackCallbackHelper: nothing to play - inserting silence!\n");
-                
-                // fill the buffer with silence
-                memset(ioData->mBuffers[i].mData, 0, ioData->mBuffers[i].mDataByteSize);
-            }
-            else if (m_recordedDataSizeInBytes <= ioData->mBuffers[i].mDataByteSize)
-            {
-                memcpy(ioData->mBuffers[i].mData, m_recordedData, m_recordedDataSizeInBytes);
-                // NOTE: should not blindly copy all of recorded data - need to make sure that the size of the buffers provided 
-                // by the callback aren't smaller than the amount of recorded data first
-                ioData->mBuffers[i].mDataByteSize = m_recordedDataSizeInBytes;
-            }
-            else 
-            {
-                printf("AudioEngine::playbackCallbackHelper playback buffer not large enough: m_recordedDataSizeInBytes = %d, buffer size = %d\n", m_recordedDataSizeInBytes, ioData->mBuffers[i].mDataByteSize);
-            }
-        }
-        
-#ifdef WRITE_DEBUG_FILE
-        m_debugFile->WriteAudioBuffers(ioData);
-#endif
-        //printf("AudioEngine::playbackCallbackHelper FINISHED\n");
-        
-        return noErr;
-    }
-
     
 private:
 
@@ -393,6 +313,84 @@ private:
         {
             printf("%s = %d\n", propertyDisplayName, propValue);
         }
+    }
+    
+    OSStatus playback_callback(AudioUnitRenderActionFlags *ioActionFlags, 
+                               const AudioTimeStamp *inTimeStamp, 
+                               UInt32 inBusNumber, 
+                               UInt32 inNumberFrames, 
+                               AudioBufferList *ioData) 
+    {    
+        //printf("AudioEngine::playback_callback: inBusNumber = %d, inNumberFrames = %d, ioData = %d\n", inBusNumber, inNumberFrames, ioData);
+        //printf("ioData->mNumberBuffers = %d\n", ioData->mNumberBuffers);
+
+        for (int i = 0; i < ioData->mNumberBuffers; i++)
+        {
+            //printf("buffer %d: mNumberChannels = %d, mDataByteSize = %d, mData = %d\n", i, ioData->mBuffers[i].mNumberChannels, ioData->mBuffers[i].mDataByteSize, ioData->mBuffers[i].mData);
+
+            ioData->mBuffers[i].mNumberChannels = m_audioFormat.mChannelsPerFrame;
+            if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
+            {
+                printf("AudioEngine::playback_callback: nothing to play - inserting silence!\n");
+                
+                // fill the buffer with silence
+                memset(ioData->mBuffers[i].mData, 0, ioData->mBuffers[i].mDataByteSize);
+            }
+            else if (m_recordedDataSizeInBytes <= ioData->mBuffers[i].mDataByteSize)
+            {
+                memcpy(ioData->mBuffers[i].mData, m_recordedData, m_recordedDataSizeInBytes);
+                // NOTE: should not blindly copy all of recorded data - need to make sure that the size of the buffers provided 
+                // by the callback aren't smaller than the amount of recorded data first
+                ioData->mBuffers[i].mDataByteSize = m_recordedDataSizeInBytes;
+            }
+            else 
+            {
+                printf("AudioEngine::playback_callback playback buffer not large enough: m_recordedDataSizeInBytes = %d, buffer size = %d\n", m_recordedDataSizeInBytes, ioData->mBuffers[i].mDataByteSize);
+            }
+        }
+        
+#ifdef WRITE_DEBUG_FILE
+        m_debugFile->WriteAudioBuffers(ioData);
+#endif
+        //printf("AudioEngine::playback_callback FINISHED\n");
+        
+        return noErr;
+    }
+    
+      
+    OSStatus recording_callback(AudioUnitRenderActionFlags *ioActionFlags, 
+                                const AudioTimeStamp *inTimeStamp, 
+                                UInt32 inBusNumber, 
+                                UInt32 inNumberFrames, 
+                                AudioBufferList *ioData) 
+    {
+        //printf("AudioEngine::recording_callback: inBusNumber = %d, inNumberFrames = %d, ioData = %d\n", inBusNumber, inNumberFrames, ioData);
+        //printf("inTimeStamp->mSampleTime = %d, mHostTime = %d, mRateScalar = %d, mFlags = %d\n", inTimeStamp->mSampleTime, inTimeStamp->mHostTime, inTimeStamp->mRateScalar, inTimeStamp->mFlags);
+
+        if (m_inputBufferList == NULL)
+        {
+            allocate_input_buffers(inNumberFrames);
+        }
+        
+        // fill buffer list with recorded samples
+        OSStatus status = AudioUnitRender(m_audioUnit, 
+                                          ioActionFlags, 
+                                          inTimeStamp, 
+                                          inBusNumber, 
+                                          inNumberFrames, 
+                                          m_inputBufferList);
+        if (status != noErr)
+        {
+            // -- error codes --
+            // paramErr = -50,  /*error in user parameter list*/
+            printf("AudioEngine::recording_callback could not render audio unit: status = %d\n", status);
+        }
+        
+        memcpy(m_recordedData, m_inputBufferList->mBuffers[0].mData, m_inputBufferList->mBuffers[0].mDataByteSize);
+        
+        //printf("AudioEngine::recording_callback FINISHED\n");
+        
+        return noErr;
     }
     
     AudioUnit m_audioUnit;
