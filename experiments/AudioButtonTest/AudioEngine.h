@@ -10,23 +10,15 @@
 #ifndef AUDIO_ENGINE_H
 #define AUDIO_ENGINE_H
 
+#include "AudioBasics.h"
+#include "Wavefile.h" // NOTE: could use preprocessor to not link this in at all if desired when not in debug mode
+
 #define kOutputBus 0
 #define kInputBus 1
 
-// audio format constants
-//static const float SAMPLE_RATE = 44100;
-static const int NUM_CHANNELS = 2;
-static const int BIT_DEPTH_IN_BYTES = 2;
-static const int BIT_DEPTH = 8 * BIT_DEPTH_IN_BYTES;
-static const int FORMAT_ID = kAudioFormatLinearPCM;
-static const int FORMAT_FRAMES_PER_PACKET = 1;
-static const int FORMAT_FLAGS = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-
-// debug file constants
 //#define WRITE_DEBUG_FILE
 #ifdef WRITE_DEBUG_FILE
     static const char* DEBUG_FILE_NAME = "debug.wav";
-    static const CFStringEncoding DEFAULT_STRING_ENCODING = kCFStringEncodingMacRoman;
 #endif
 
 class AudioEngine
@@ -36,8 +28,7 @@ public:
         m_inputBufferList(NULL),
         m_recordedData(NULL),
         m_recordedDataSizeInBytes(0),
-        m_debugFileID(0),
-        m_debugFileByteOffset(0)
+        m_debugFile(NULL)
     {
         printf("AudioEngine::AudioEngine\n");
         
@@ -79,8 +70,9 @@ public:
         }    
         
         print_audio_unit_properties(m_audioUnit, "REMOTE IO");
+        
 #ifdef WRITE_DEBUG_FILE
-        init_debug_file();
+        m_debugFile = new Wavefile(DEBUG_FILE_NAME);
 #endif
     }
     
@@ -107,6 +99,12 @@ public:
         {
             free (m_recordedData);
             m_recordedData = NULL;
+        }
+        
+        if (m_debugFile != NULL)
+        {
+            delete m_debugFile;
+            m_debugFile = NULL;
         }
     }
     
@@ -236,7 +234,7 @@ public:
         }
         
 #ifdef WRITE_DEBUG_FILE
-        write_debug_file(ioData);
+        m_debugFile->WriteAudioBuffers(ioData);
 #endif
         //printf("AudioEngine::playbackCallbackHelper FINISHED\n");
         
@@ -254,12 +252,11 @@ private:
         
         // allocate buffer list
         m_inputBufferList = new AudioBufferList; 
-        //m_inputBufferList->mNumberBuffers = m_audioFormat.mChannelsPerFrame;
         m_inputBufferList->mNumberBuffers = 1; // 1 because we're using interleaved data - all channels will go in one buffer
         for (UInt32 i = 0; i < m_inputBufferList->mNumberBuffers; i++)
         {
             printf("AudioEngine::allocate_input_buffers: i = %d, m_inputBufferList->mBuffers[i] = %d\n", i, m_inputBufferList->mBuffers[i]);
-            m_inputBufferList->mBuffers[i].mNumberChannels = NUM_CHANNELS;
+            m_inputBufferList->mBuffers[i].mNumberChannels = AUDIO_NUM_CHANNELS;
             m_inputBufferList->mBuffers[i].mDataByteSize = bufferSizeInBytes;
             m_inputBufferList->mBuffers[i].mData = malloc(bufferSizeInBytes); // could write this with new/delete...
         }
@@ -305,15 +302,8 @@ private:
     
     void init_audio_format()
     {
-        // Describe format
-        m_audioFormat.mSampleRate       = SAMPLE_RATE;
-        m_audioFormat.mFormatID		    = FORMAT_ID;
-        m_audioFormat.mFormatFlags      = FORMAT_FLAGS;
-        m_audioFormat.mFramesPerPacket  = FORMAT_FRAMES_PER_PACKET;
-        m_audioFormat.mChannelsPerFrame = NUM_CHANNELS;
-        m_audioFormat.mBitsPerChannel	= BIT_DEPTH;
-        m_audioFormat.mBytesPerPacket	= BIT_DEPTH_IN_BYTES * NUM_CHANNELS;
-        m_audioFormat.mBytesPerFrame	= BIT_DEPTH_IN_BYTES * NUM_CHANNELS;  
+        // describe format
+        PopulateAudioDescription(m_audioFormat);
               
         // Apply output format
         OSStatus status = AudioUnitSetProperty(m_audioUnit, 
@@ -370,70 +360,7 @@ private:
         {
             printf("AudioEngine::init_callbacks could not set output callback: status = %d\n", status);
         }
-    }
-    
-#ifdef WRITE_DEBUG_FILE
-    void init_debug_file()
-    {
-        if (m_debugFileID == 0) 
-        {
-            // create file URL from file name
-            CFStringRef filename = CFStringCreateWithCString(NULL, DEBUG_FILE_NAME, DEFAULT_STRING_ENCODING);
-            printf("AudioEngine::init_debug_file: filename = %s\n", CFStringGetCStringPtr(filename, DEFAULT_STRING_ENCODING));
-            
-            CFURLRef urlRef = CFURLCreateWithString( NULL, filename, NULL);
-            printf("AudioEngine::init_debug_file: urlRef = %s\n", CFStringGetCStringPtr(CFURLGetString(urlRef), DEFAULT_STRING_ENCODING));
-            
-            // create the audio file (NOTE: this also opens the file)
-            OSStatus result = noErr;
-            result = AudioFileCreateWithURL(urlRef, 
-                                            kAudioFileWAVEType,
-                                            &m_audioFormat,
-                                            kAudioFileFlags_EraseFile,
-                                            &m_debugFileID);	
-            if (result != noErr)
-            {
-                printf("AudioEngine::init_debug_file: error creating debug file: %d\n", result);
-            }
-            
-            // release memory allocated above
-            CFRelease(urlRef);
-            CFRelease(filename);
-        }
-    }
-    
-    void write_debug_file(AudioBufferList* bufferList)
-    {
-        //printf("AudioEngine::write_debug_file m_debugFileID = %d, m_debugFileByteOffset = %d, bufferList = %d\n", m_debugFileID, m_debugFileByteOffset, bufferList);
-        if (m_debugFileID == 0)
-        {
-            // file was never properly initialized so we can't write to it
-            return;
-        }
-        for (int i = 0; i < bufferList->mNumberBuffers; i++)
-        {
-            // write to debug file
-            UInt32 numBytes = bufferList->mBuffers[i].mDataByteSize;
-            //printf("AudioEngine::write_debug_file i = %d, numBytes = %d\n", i, numBytes);
-            OSStatus result = noErr;
-            result = AudioFileWriteBytes(m_debugFileID,
-                                         FALSE,
-                                         m_debugFileByteOffset,
-                                         &numBytes, // this should hold actual num bytes written upon return
-                                         bufferList->mBuffers[i].mData);
-            //printf("AudioEngine::write_debug_file wrote bytes: numBytes = %d\n", numBytes);
-            if (result != noErr)
-            {
-                printf("AudioEngine::write_debug_file: error writing to debug file: %d\n", result);
-            }
-            if (numBytes < bufferList->mBuffers[i].mDataByteSize)
-            {
-                printf("AudioEngine::write_debug_file: warning: some bytes were not written to the debug file\n");
-            }
-            m_debugFileByteOffset += numBytes;
-        }
-    }
-#endif    
+    }    
     
     static void print_audio_unit_properties(AudioUnit unit, const char* name)
     {
@@ -473,8 +400,7 @@ private:
     AudioBufferList* m_inputBufferList;
     void* m_recordedData;
     UInt32 m_recordedDataSizeInBytes;
-    AudioFileID m_debugFileID;
-    SInt64 m_debugFileByteOffset;
+    Wavefile* m_debugFile;
 };
 
 #endif // AUDIO_ENGINE_H

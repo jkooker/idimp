@@ -8,6 +8,7 @@
  */
 
 #import "AudioQueueWrapper.h"
+#import "AudioBasics.h"
 #import <stdio.h>
 #import <stdlib.h>
 #import <unistd.h>
@@ -15,7 +16,6 @@
 
 //#define _DEBUG_
 
-static const int NUM_CHANNELS = 2;
 static const char* DEBUG_FILE_NAME = "debug.wav";
 static const CFStringEncoding DEFAULT_STRING_ENCODING = kCFStringEncodingMacRoman;
 static const int NUM_BUFFER_SAMPLES = 512; // values less than this seem to result in buffer underflows or no audio at all :(
@@ -48,17 +48,10 @@ AudioQueueWrapper::AudioQueueWrapper() :
     m_ringModEffect(NULL)
 {
     printf("AudioQueueWrapper::AudioQueueWrapper\n");
-    m_dataFormat.mSampleRate = SAMPLE_RATE;
-    m_dataFormat.mFormatID = kAudioFormatLinearPCM;
-    m_dataFormat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-    m_dataFormat.mBytesPerPacket = 4;
-    m_dataFormat.mFramesPerPacket = 1;
-    m_dataFormat.mBytesPerFrame = 4; // 2 2-byte samples per channel
-    m_dataFormat.mChannelsPerFrame = NUM_CHANNELS;
-    m_dataFormat.mBitsPerChannel = 16;
+    PopulateAudioDescription(m_dataFormat);
     
     m_ampEffect = new AmplitudeScale();
-    m_ringModEffect = new RingMod(NUM_BUFFER_SAMPLES, NUM_CHANNELS);
+    m_ringModEffect = new RingMod(NUM_BUFFER_SAMPLES, AUDIO_NUM_CHANNELS);
     
 #ifdef _DEBUG_
     InitDebugFile();
@@ -177,9 +170,9 @@ void AudioQueueWrapper::PlaybackCallback(AudioQueueRef inQ, AudioQueueBufferRef 
     if (m_samplesPerFramePerChannel > 0)
     {
         outQB->mAudioDataByteSize = 4 * m_samplesPerFramePerChannel;
-        m_osc.nextSampleBuffer(coreAudioBuffer, m_samplesPerFramePerChannel, NUM_CHANNELS, MAX_AMPLITUDE_16_BITS);
-        m_ringModEffect->Process(coreAudioBuffer, m_samplesPerFramePerChannel, NUM_CHANNELS);
-        m_ampEffect->Process(coreAudioBuffer, m_samplesPerFramePerChannel, NUM_CHANNELS);
+        m_osc.nextSampleBuffer(coreAudioBuffer, m_samplesPerFramePerChannel, AUDIO_NUM_CHANNELS, MAX_AMPLITUDE_16_BITS);
+        m_ringModEffect->Process(coreAudioBuffer, m_samplesPerFramePerChannel, AUDIO_NUM_CHANNELS);
+        m_ampEffect->Process(coreAudioBuffer, m_samplesPerFramePerChannel, AUDIO_NUM_CHANNELS);
     }
     AudioQueueEnqueueBuffer(inQ, outQB, 0, NULL);
     

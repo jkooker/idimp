@@ -15,6 +15,7 @@
 		2899E5220DE3E06400AC0155 /* AudioButtonTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2899E5210DE3E06400AC0155 /* AudioButtonTestViewController.xib */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28D7ACF80DDB3853001CB0EB /* AudioButtonTestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* AudioButtonTestViewController.m */; };
+		326EA8430ED3DF14000002A5 /* AudioBasics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 326EA8420ED3DF14000002A5 /* AudioBasics.cpp */; };
 		327368B50EBED9EF0016810D /* AudioQueueWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 327368B40EBED9EF0016810D /* AudioQueueWrapper.cpp */; };
 		327369010EBEE0B20016810D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 327369000EBEE0B20016810D /* AudioToolbox.framework */; };
 /* End PBXBuildFile section */
@@ -33,6 +34,9 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		322439BB0ECA3A21004C8A6F /* AudioEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioEffect.h; sourceTree = "<group>"; };
 		322C10C90EBEB24C007EAA49 /* AudioQueueWrapper.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = AudioQueueWrapper.h; sourceTree = "<group>"; };
+		326EA7E60ED3D919000002A5 /* Wavefile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Wavefile.h; sourceTree = "<group>"; };
+		326EA7EB0ED3DA79000002A5 /* AudioBasics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioBasics.h; sourceTree = "<group>"; };
+		326EA8420ED3DF14000002A5 /* AudioBasics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioBasics.cpp; sourceTree = "<group>"; };
 		327368B40EBED9EF0016810D /* AudioQueueWrapper.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = AudioQueueWrapper.cpp; sourceTree = "<group>"; };
 		327369000EBEE0B20016810D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		3299EEE90ECF832A00008176 /* AudioEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioEngine.h; path = ../AudioEngine.h; sourceTree = "<group>"; };
@@ -59,6 +63,9 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				326EA8420ED3DF14000002A5 /* AudioBasics.cpp */,
+				326EA7EB0ED3DA79000002A5 /* AudioBasics.h */,
+				326EA7E60ED3D919000002A5 /* Wavefile.h */,
 				3299EEE90ECF832A00008176 /* AudioEngine.h */,
 				32A877EF0EC40C680061E235 /* Oscillator.h */,
 				327368B40EBED9EF0016810D /* AudioQueueWrapper.cpp */,
@@ -180,6 +187,7 @@
 				1D3623260D0F684500981E51 /* AudioButtonTestAppDelegate.m in Sources */,
 				28D7ACF80DDB3853001CB0EB /* AudioButtonTestViewController.m in Sources */,
 				327368B50EBED9EF0016810D /* AudioQueueWrapper.cpp in Sources */,
+				326EA8430ED3DF14000002A5 /* AudioBasics.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

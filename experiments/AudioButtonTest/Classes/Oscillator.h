@@ -10,7 +10,8 @@
 #ifndef OSCILLATOR_H
 #define OSCILLATOR_H
 
-static const double SAMPLE_RATE = 44100.0;
+#import "AudioBasics.h"
+
 static const double PI = 3.14159265359;
 static const double TWO_PI = (2 * PI);
 static const float DEFAULT_FREQUENCY_IN_HZ  = 440.0;
@@ -30,7 +31,7 @@ public:
         m_waveform(Sinusoid),
         m_freq(DEFAULT_FREQUENCY_IN_HZ),
         m_wavetable(NULL),
-        m_hop(m_freq * WAVETABLE_POINTS / SAMPLE_RATE),
+        m_hop(m_freq * WAVETABLE_POINTS / AUDIO_SAMPLE_RATE),
         m_nextSampleIndex(0.0),
         m_amp(DEFAULT_AMPLITUDE)
     {
@@ -69,7 +70,7 @@ public:
         }
         m_freq = freq;
         m_nextSampleIndex -= m_hop;
-        m_hop = freq * WAVETABLE_POINTS / SAMPLE_RATE;
+        m_hop = freq * WAVETABLE_POINTS / AUDIO_SAMPLE_RATE;
         m_nextSampleIndex += m_hop;
         while (m_nextSampleIndex < 0)
         {
