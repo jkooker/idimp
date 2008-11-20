@@ -12,8 +12,6 @@
 
 #import "AudioBasics.h"
 
-static const double PI = 3.14159265359;
-static const double TWO_PI = (2 * PI);
 static const float DEFAULT_FREQUENCY_IN_HZ  = 440.0;
 static const float DEFAULT_AMPLITUDE = 1.0;
 static const int WAVETABLE_POINTS = 2048;
@@ -24,7 +22,10 @@ class Oscillator
 public:
     enum Waveform {
         Sinusoid = 0,
-        SquareWave = 1
+        SquareWave,
+        SawtoothWave,
+        TriangleWave,
+        NumWaveforms
     };
 
     Oscillator() :
@@ -36,7 +37,7 @@ public:
         m_amp(DEFAULT_AMPLITUDE)
     {
         printf("Oscillator::Oscillator\n");
-        m_wavetable = new double[WAVETABLE_POINTS];
+        m_wavetable = new float[WAVETABLE_POINTS];
         setWaveform(m_waveform);
     }
     
@@ -63,7 +64,7 @@ public:
     void setFreq(float freq)
     {
         // check for valid range
-        if (freq < 0 || freq > 20000) // TODO: it would be nice to handle negative frequencies - need to handle table wrap-around
+        if (freq < -20000 || freq > 20000)
         {
             printf("Oscillator::setFreq frequency out of range: %f\n", freq);
             return;
@@ -86,16 +87,39 @@ public:
     {
         switch (wave)
         {
+            case TriangleWave:
+            {
+                int halftable = WAVETABLE_POINTS / 2;
+                // ramp up
+                for (int i = 0; i < halftable; i++)
+                {
+                    m_wavetable[i] = (4.0 * i / (float) WAVETABLE_POINTS) - 1.0;
+                }   
+                // ramp down
+                for (int i = halftable; i < WAVETABLE_POINTS; i++)
+                {
+                    m_wavetable[i] = 1.0 - (4.0 * (i - halftable) / (float) WAVETABLE_POINTS);
+                }            
+                break;
+            }
+            case SawtoothWave:
+            {
+                for (int i = 0; i < WAVETABLE_POINTS; i++)
+                {
+                    m_wavetable[i] = (2.0 * i / (float) WAVETABLE_POINTS) - 1.0;
+                }            
+                break;
+            }
             case SquareWave:
             {
                 int halftable = WAVETABLE_POINTS / 2;
                 for (int i = 0; i < halftable; i++)
                 {
-                    m_wavetable[i] = 0.7;//1.0;
+                    m_wavetable[i] = 1.0;
                 }   
                 for (int i = halftable; i < WAVETABLE_POINTS; i++)
                 {
-                    m_wavetable[i] = -0.7;//-1.0;
+                    m_wavetable[i] = -1.0;
                 }            
                 break;
             }
@@ -120,7 +144,11 @@ public:
             // rounding
             double sample = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
             m_nextSampleIndex += m_hop;
-            if (m_nextSampleIndex >= WAVETABLE_POINTS)
+            while (m_nextSampleIndex < 0)
+            {
+                m_nextSampleIndex += WAVETABLE_POINTS;
+            }
+            while (m_nextSampleIndex >= WAVETABLE_POINTS)
             {
                 m_nextSampleIndex -= WAVETABLE_POINTS;
             }
@@ -133,13 +161,32 @@ public:
         }
     }
     
+    void nextSampleBuffeMono(float* buffer, int numSamples)
+    {
+        float ampScalar = m_amp;
+        //printf("Oscillator::nextSampleBuffer ampScalar = %f\n", ampScalar);
+        for (int n = 0; n < numSamples; n++)
+        {
+            // rounding
+            buffer[n] = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
+            m_nextSampleIndex += m_hop;
+            while (m_nextSampleIndex < 0)
+            {
+                m_nextSampleIndex += WAVETABLE_POINTS;
+            }
+            while (m_nextSampleIndex >= WAVETABLE_POINTS)
+            {
+                m_nextSampleIndex -= WAVETABLE_POINTS;
+            }
+        }
+    }
     
 protected:
     Waveform m_waveform;
     float m_freq;
-    double* m_wavetable;
-    double m_hop;
-    double m_nextSampleIndex;
+    float* m_wavetable;
+    float m_hop;
+    float m_nextSampleIndex;
     float m_amp;
 };
 

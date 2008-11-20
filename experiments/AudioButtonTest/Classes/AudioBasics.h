@@ -22,6 +22,10 @@ static const int   AUDIO_FORMAT_FRAMES_PER_PACKET = 1;
 static const int   AUDIO_FORMAT_ID                = kAudioFormatLinearPCM;
 static const int   AUDIO_FORMAT_FLAGS             = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
 
+// math constants
+static const float PI = 3.14159265359;
+static const float TWO_PI = (2 * PI);
+
 void PopulateAudioDescription(AudioStreamBasicDescription& desc);
 
 #endif // AUDIO_BASICS_H

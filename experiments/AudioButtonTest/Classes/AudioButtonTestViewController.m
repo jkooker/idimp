@@ -98,12 +98,14 @@ static const float kAccelerometerInterval = 0.01;
         [_playButton setTitle: @"Play" forState: UIControlStateNormal ];
         [_playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
         _audioQueue->pause();
+        //_audioEngine->stop();
     }
     else
     {
         [_playButton setTitle: @"Stop" forState: UIControlStateNormal ];
         [_playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
         _audioQueue->play();
+        //_audioEngine->start();
     }
     
     _playIsOn = !_playIsOn;
@@ -117,7 +119,7 @@ static const float kAccelerometerInterval = 0.01;
     if (_recordIsOn) 
     {
         _audioQueue->recordPause();
-
+        
 		// now that recording has stopped, deactivate the audio session
 		//AudioSessionSetActive (false);
         [_recordButton setTitle: @"Record" forState: UIControlStateNormal ];
@@ -196,7 +198,7 @@ static const float kAccelerometerInterval = 0.01;
     [_ampTextField setText:[[NSString alloc] initWithFormat:@"%f", amp]];
     [_ampSlider setValue:amp animated:NO];
     
-    //_audioQueue->m_ringModEffect->setModAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
+    _audioQueue->m_ringModEffect->setModAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
     
     //_audioQueue->m_ringModEffect->setModFreq(1000 * ((angleXZ / PI) >= 0 ? (angleXZ / PI) : -(angleXZ / PI)));
 }
