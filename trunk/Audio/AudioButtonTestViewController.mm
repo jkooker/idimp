@@ -73,15 +73,15 @@ static const float kAccelerometerInterval = 0.01;
     [super viewDidLoad];
 
     float freq = _audioQueue->m_osc.getFreq();
-    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
+    [_frequencyTextField setText:[NSString stringWithFormat:@"%d", (int)freq]];
     [_frequencySlider setValue:freq animated:NO];
     
     float modFreq = _audioQueue->m_ringModEffect->getModFreq();
-    [_ringModFreqTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)modFreq]];
+    [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", (int)modFreq]];
     [_ringModFreqSlider setValue:modFreq animated:NO];
     
     float amp = _audioQueue->m_ampEffect->getAmp();
-    [_ampTextField setText:[[NSString alloc] initWithFormat:@"%f", amp]];
+    [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
     [_ampSlider setValue:amp animated:NO];
     
      // Set up accelerometer
@@ -151,21 +151,21 @@ static const float kAccelerometerInterval = 0.01;
 - (IBAction) frequencySliderChanged: (id) sender
 {
     int freq = (int)[_frequencySlider value]; // for simplicity right now, use only integer values
-    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", freq]];
+    [_frequencyTextField setText:[NSString stringWithFormat:@"%d", freq]];
     _audioQueue->m_osc.setFreq((float)freq);
 }
 
 - (IBAction) ringModFreqSliderChanged: (id) sender
 {
     int freq = (int)[_ringModFreqSlider value]; // for simplicity right now, use only integer values
-    [_ringModFreqTextField setText:[[NSString alloc] initWithFormat:@"%d", freq]];
+    [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", freq]];
     _audioQueue->m_ringModEffect->setModFreq((float)freq);
 }
 
 - (IBAction) ampSliderChanged: (id) sender
 {
     float amp = [_ampSlider value];
-    [_ampTextField setText:[[NSString alloc] initWithFormat:@"%f", amp]];
+    [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
     _audioQueue->m_ampEffect->setAmp(amp);
 }
 
@@ -196,7 +196,7 @@ static const float kAccelerometerInterval = 0.01;
     // change amplitude based on rotation around X axis
     float amp = (angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI);
     _audioQueue->m_ampEffect->setAmp(amp);
-    [_ampTextField setText:[[NSString alloc] initWithFormat:@"%f", amp]];
+    [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
     [_ampSlider setValue:amp animated:NO];
     
     _audioQueue->m_ringModEffect->setModAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
