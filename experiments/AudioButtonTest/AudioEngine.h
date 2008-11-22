@@ -168,15 +168,16 @@ private:
     {
         printf("AudioEngine::allocate_input_buffers: inNumberFrames = %d\n", inNumberFrames);
                
-        UInt32 bufferSizeInBytes = inNumberFrames * m_audioFormat.mBytesPerFrame;
+        //UInt32 bufferSizeInBytes = inNumberFrames * m_audioFormat.mBytesPerFrame;
+        UInt32 bufferSizeInBytes = inNumberFrames * (AUDIO_FORMAT_IS_NONINTERLEAVED ? AUDIO_BIT_DEPTH_IN_BYTES :  (AUDIO_BIT_DEPTH_IN_BYTES * AUDIO_NUM_CHANNELS));
         
         // allocate buffer list
         m_inputBufferList = new AudioBufferList; 
-        m_inputBufferList->mNumberBuffers = 1; // 1 because we're using interleaved data - all channels will go in one buffer
+        m_inputBufferList->mNumberBuffers = AUDIO_FORMAT_IS_NONINTERLEAVED ? AUDIO_NUM_CHANNELS : 1;
         for (UInt32 i = 0; i < m_inputBufferList->mNumberBuffers; i++)
         {
-            printf("AudioEngine::allocate_input_buffers: i = %d, m_inputBufferList->mBuffers[i] = %d\n", i, m_inputBufferList->mBuffers[i]);
-            m_inputBufferList->mBuffers[i].mNumberChannels = AUDIO_NUM_CHANNELS;
+            printf("AudioEngine::allocate_input_buffers: i = %d, bufferSizeInBytes = %d\n", i, bufferSizeInBytes);
+            m_inputBufferList->mBuffers[i].mNumberChannels = AUDIO_FORMAT_IS_NONINTERLEAVED ? 1 : AUDIO_NUM_CHANNELS;
             m_inputBufferList->mBuffers[i].mDataByteSize = bufferSizeInBytes;
             m_inputBufferList->mBuffers[i].mData = malloc(bufferSizeInBytes); // could write this with new/delete...
         }
@@ -186,6 +187,7 @@ private:
             m_recordedData = malloc(bufferSizeInBytes);
             m_recordedDataSizeInBytes = bufferSizeInBytes;
         }
+        //printf("AudioEngine::allocate_input_buffers finished: m_inputBufferList = %d\n", m_inputBufferList);
     }
     
     void enable_playback()
@@ -322,31 +324,38 @@ private:
                                AudioBufferList *ioData) 
     {    
         //printf("AudioEngine::playback_callback: inBusNumber = %d, inNumberFrames = %d, ioData = %d\n", inBusNumber, inNumberFrames, ioData);
-        //printf("ioData->mNumberBuffers = %d\n", ioData->mNumberBuffers);
+        //printf("AudioEngine::playback_callback: ioData->mNumberBuffers = %d\n", ioData->mNumberBuffers);
 
         for (int i = 0; i < ioData->mNumberBuffers; i++)
         {
-            //printf("buffer %d: mNumberChannels = %d, mDataByteSize = %d, mData = %d\n", i, ioData->mBuffers[i].mNumberChannels, ioData->mBuffers[i].mDataByteSize, ioData->mBuffers[i].mData);
-
-            ioData->mBuffers[i].mNumberChannels = m_audioFormat.mChannelsPerFrame;
+            ioData->mBuffers[i].mNumberChannels = AUDIO_FORMAT_IS_NONINTERLEAVED ? 1: AUDIO_NUM_CHANNELS;
+            //printf("AudioEngine::playback_callback: i = %d, mBuffers[i].mNumberChannels = %d, mBuffers[i].mDataByteSize = %d\n", i, ioData->mBuffers[i].mNumberChannels, ioData->mBuffers[i].mDataByteSize);
+            
+            // copy recorded data to playback buffer, if there is any - otherwise insert silence
             if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
             {
-                printf("AudioEngine::playback_callback: nothing to play - inserting silence!\n");
+                printf("AudioEngine::playback_callback: no recorded data to play - substituting silence!\n");
                 
                 // fill the buffer with silence
                 memset(ioData->mBuffers[i].mData, 0, ioData->mBuffers[i].mDataByteSize);
             }
             else if (m_recordedDataSizeInBytes <= ioData->mBuffers[i].mDataByteSize)
             {
+                // copy recorded data into playback buffer
                 memcpy(ioData->mBuffers[i].mData, m_recordedData, m_recordedDataSizeInBytes);
-                // NOTE: should not blindly copy all of recorded data - need to make sure that the size of the buffers provided 
-                // by the callback aren't smaller than the amount of recorded data first
                 ioData->mBuffers[i].mDataByteSize = m_recordedDataSizeInBytes;
             }
             else 
             {
                 printf("AudioEngine::playback_callback playback buffer not large enough: m_recordedDataSizeInBytes = %d, buffer size = %d\n", m_recordedDataSizeInBytes, ioData->mBuffers[i].mDataByteSize);
             }
+            
+            // add synthesized audio
+            /*short* buffer = (short*)ioData->mBuffers[i].mData;
+            for (int n = 0; n < ioData->mBuffers[i].mDataByteSize / 2; n ++)
+            {
+                buffer[n] = (short)(32767 * ((4.0 * n / (float) ioData->mBuffers[i].mDataByteSize) - 1.0));
+            }*/
         }
         
 #ifdef WRITE_DEBUG_FILE
