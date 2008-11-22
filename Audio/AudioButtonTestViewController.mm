@@ -50,15 +50,16 @@ static const float kAccelerometerInterval = 0.01;
     [super dealloc];
 }
 
-/*
+
 // Override initWithNibName:bundle: to load the view using a nib file then perform additional customization that is not appropriate for viewDidLoad.
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         // Custom initialization
+        [self myInit];
     }
     return self;
 }
-*/
+
 
 /*
 // Implement loadView to create a view hierarchy programmatically.
@@ -69,6 +70,8 @@ static const float kAccelerometerInterval = 0.01;
 
 // Implement viewDidLoad to do additional setup after loading the view.
 - (void)viewDidLoad {
+    [super viewDidLoad];
+
     float freq = _audioQueue->m_osc.getFreq();
     [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
     [_frequencySlider setValue:freq animated:NO];
@@ -84,8 +87,6 @@ static const float kAccelerometerInterval = 0.01;
      // Set up accelerometer
     [[UIAccelerometer sharedAccelerometer] setUpdateInterval:kAccelerometerInterval]; // in seconds
     [[UIAccelerometer sharedAccelerometer] setDelegate:self];
-    
-    [super viewDidLoad];
 }
 
 // respond to a tap on the Play button. If stopped, start playing. If playing, stop.
