@@ -14,7 +14,6 @@ static const float kAccelerometerInterval = 0.01;
 @implementation AudioButtonTestViewController
 
 @synthesize _playButton;
-@synthesize _recordButton;
 @synthesize _playIsOn;
 @synthesize _recordIsOn;
 @synthesize _frequencySlider;
@@ -24,6 +23,8 @@ static const float kAccelerometerInterval = 0.01;
 @synthesize _ampSlider;
 @synthesize _ampTextField;
 @synthesize _waveformSelector;
+@synthesize _recordedInputSwitch;
+@synthesize _synthInputSwitch;
 
 - (void) myInit
 {   
@@ -86,6 +87,10 @@ static const float kAccelerometerInterval = 0.01;
     [[UIAccelerometer sharedAccelerometer] setUpdateInterval:kAccelerometerInterval]; // in seconds
     [[UIAccelerometer sharedAccelerometer] setDelegate:self];
     
+    // init switch states
+    [_recordedInputSwitch setOn:!_audioEngine->GetMuteRecording()];
+    [_synthInputSwitch setOn:!_audioEngine->GetMuteSynth()];
+    
     [super viewDidLoad];
 }
 
@@ -110,39 +115,34 @@ static const float kAccelerometerInterval = 0.01;
     _playIsOn = !_playIsOn;
 }
 
-// respond to a tap on the Record button. If stopped, start recording. If recording, stop.
-- (IBAction) recordOrStop: (id) sender {
-
-	NSLog(@"recordOrStop called:");
-    
-    if (_recordIsOn) 
+- (IBAction) recordedInputSwitchChanged: (id) sender 
+{
+	bool recordingIsOn = [_recordedInputSwitch isOn];
+    if (recordingIsOn)
     {
-        _audioEngine->SetMuteRecording(true);
-                
-		// now that recording has stopped, deactivate the audio session
-		//AudioSessionSetActive (false);
-        [_recordButton setTitle: @"Record" forState: UIControlStateNormal ];
-        [_recordButton setTitle: @"Record" forState: UIControlStateHighlighted ];
-        
-	}
+        NSLog(@"recordedInputSwitchChanged unmuting recording");
+        _audioEngine->SetMuteRecording(false);
+    }
     else
     {
-		// before instantiating the recording audio queue object, 
-		//	set the audio session category
-		UInt32 sessionCategory = kAudioSessionCategory_RecordAudio;
-		AudioSessionSetProperty( kAudioSessionProperty_AudioCategory,
-                                 sizeof (sessionCategory),
-                                 &sessionCategory);
-			
-        // activate the audio session immediately before recording starts
-		//AudioSessionSetActive (true);
-		_audioEngine->SetMuteRecording(false);        
-        [_recordButton setTitle: @"Stop" forState: UIControlStateNormal ];
-        [_recordButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
+        NSLog(@"recordedInputSwitchChanged muting recording");
+        _audioEngine->SetMuteRecording(true);
+    }
+}
 
-	}
-    
-    _recordIsOn = !_recordIsOn;
+- (IBAction) synthInputSwitchChanged: (id) sender 
+{
+	bool synthIsOn = [_synthInputSwitch isOn];
+    if (synthIsOn)
+    {
+        NSLog(@"synthInputSwitchChanged unmuting synth");
+        _audioEngine->SetMuteSynth(false);
+    }
+    else
+    {
+        NSLog(@"synthInputSwitchChanged unmuting synth");
+        _audioEngine->SetMuteSynth(true);
+    }
 }
 
 - (IBAction) frequencySliderChanged: (id) sender

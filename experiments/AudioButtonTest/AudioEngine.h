@@ -36,7 +36,8 @@ public:
         m_debugFile(NULL),
         m_effects(NULL),
         m_numEffects(0),
-        m_recordingIsMuted(true),
+        m_recordingIsMuted(false),
+        m_synthIsMuted(false),
         m_silenceBuffer(NULL),
         m_playbackSamplesAllChannels(0)
     {
@@ -146,7 +147,11 @@ public:
         }
     }
     
+    bool GetMuteRecording() { return m_recordingIsMuted; }
     void SetMuteRecording(bool on) { m_recordingIsMuted = on; }
+    
+    bool GetMuteSynth() { return m_synthIsMuted; }
+    void SetMuteSynth(bool on) { m_synthIsMuted = on; }
     
     void start()
     {
@@ -512,6 +517,7 @@ private:
     UInt32 m_recordedDataSizeInBytes;
     Wavefile* m_debugFile;
     bool m_recordingIsMuted;
+    bool m_synthIsMuted;
     float* m_silenceBuffer;
     int m_playbackSamplesAllChannels;
 };
