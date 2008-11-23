@@ -28,8 +28,6 @@ static const float kAccelerometerInterval = 0.01;
 - (void) myInit
 {   
     NSLog(@"AudioButtonTestViewController myInit");
-    //_audioQueue = NULL;
-    //_audioQueue = new AudioQueueWrapper();
     _audioEngine = NULL;
     _audioEngine = new AudioEngine();
 }
@@ -37,11 +35,6 @@ static const float kAccelerometerInterval = 0.01;
 - (void) dealloc
 {   
     NSLog(@"AudioButtonTestViewController dealloc");
-    /*if (_audioQueue != NULL)
-    {
-        delete _audioQueue;
-        _audioQueue = NULL;
-    }*/
     if (_audioEngine != NULL)
     {
         delete _audioEngine;
@@ -73,19 +66,13 @@ static const float kAccelerometerInterval = 0.01;
     [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
     [_frequencySlider setValue:freq animated:NO];
     */
-    if (_audioEngine->m_ringModEffect != NULL)
-    {
-        float modFreq = _audioEngine->m_ringModEffect->getModFreq();
-        [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", (int)modFreq]];
-        [_ringModFreqSlider setValue:modFreq animated:NO];
-    }
+    float modFreq = _audioEngine->m_ringModEffect->getModFreq();
+    [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", (int)modFreq]];
+    [_ringModFreqSlider setValue:modFreq animated:NO];
     
-    if (_audioEngine->m_ampEffect != NULL)
-    {
-        float amp = _audioEngine->m_ampEffect->getAmp();
-        [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
-        [_ampSlider setValue:amp animated:NO];
-    }
+    float amp = _audioEngine->m_ampEffect->getAmp();
+    [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
+    [_ampSlider setValue:amp animated:NO];
     
     // Set up accelerometer
     [[UIAccelerometer sharedAccelerometer] setUpdateInterval:kAccelerometerInterval]; // in seconds
@@ -103,14 +90,12 @@ static const float kAccelerometerInterval = 0.01;
     {
         [_playButton setTitle: @"Play" forState: UIControlStateNormal ];
         [_playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
-        //_audioQueue->pause();
         _audioEngine->stop();
     }
     else
     {
         [_playButton setTitle: @"Stop" forState: UIControlStateNormal ];
         [_playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
-        //_audioQueue->play();
         _audioEngine->start();
     }
     
@@ -164,20 +149,14 @@ static const float kAccelerometerInterval = 0.01;
 {
     int freq = (int)[_ringModFreqSlider value]; // for simplicity right now, use only integer values
     [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", freq]];
-    if (_audioEngine->m_ringModEffect != NULL)
-    {
-        _audioEngine->m_ringModEffect->setModFreq((float)freq);
-    }
+    _audioEngine->m_ringModEffect->setModFreq((float)freq);
 }
 
 - (IBAction) ampSliderChanged: (id) sender
 {
     float amp = [_ampSlider value];
     [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
-    if (_audioEngine->m_ampEffect != NULL)
-    {
-        _audioEngine->m_ampEffect->setAmp(amp);
-    }
+    _audioEngine->m_ampEffect->setAmp(amp);
 }
 
 - (IBAction) waveformSelected: (id) sender
@@ -206,15 +185,9 @@ static const float kAccelerometerInterval = 0.01;
     
     // change amplitude based on rotation around X axis
     float amp = (angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI);
-    if (_audioEngine->m_ampEffect != NULL)
-    {
-        _audioEngine->m_ampEffect->setAmp(amp);
-        [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
-        [_ampSlider setValue:amp animated:NO];
-    }
-    //_audioEngine->m_ringModEffect->setModAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
-    
-    //_audioQueue->m_ringModEffect->setModFreq(1000 * ((angleXZ / PI) >= 0 ? (angleXZ / PI) : -(angleXZ / PI)));
+    _audioEngine->m_ampEffect->setAmp(amp);
+    [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
+    [_ampSlider setValue:amp animated:NO];
 }
 
 @end

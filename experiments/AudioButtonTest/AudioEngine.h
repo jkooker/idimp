@@ -36,8 +36,7 @@ public:
         m_ringModEffect(NULL)
     {
         printf("AudioEngine::AudioEngine\n");
-        printf("AUDIO_MAX_AMPLITUDE = %d\n", AUDIO_MAX_AMPLITUDE);
-        
+       
         // Describe audio component
         AudioComponentDescription desc;
         desc.componentType = kAudioUnitType_Output;
@@ -77,6 +76,10 @@ public:
         
         print_audio_unit_properties(m_audioUnit, "REMOTE IO");
         
+        // init effects
+        m_ampEffect = new AmplitudeScale();
+        m_ringModEffect = new RingMod();
+
 #ifdef WRITE_DEBUG_FILE
         m_debugFile = new Wavefile(DEBUG_FILE_NAME);
 #endif
@@ -391,69 +394,32 @@ private:
             ioData->mBuffers[i].mNumberChannels = AUDIO_FORMAT_IS_NONINTERLEAVED ? 1: AUDIO_NUM_CHANNELS;
             //printf("AudioEngine::playback_callback: i = %d, mBuffers[i].mNumberChannels = %d, mBuffers[i].mDataByteSize = %d\n", i, ioData->mBuffers[i].mNumberChannels, ioData->mBuffers[i].mDataByteSize);
             
-            /*// copy recorded data to playback buffer, if there is any - otherwise insert silence
-            if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
-            {
-                printf("AudioEngine::playback_callback: no recorded data to play - substituting silence!\n");
-                
-                // fill the buffer with silence
-                memset(ioData->mBuffers[i].mData, 0, ioData->mBuffers[i].mDataByteSize);
-            }
-            else if (m_recordedDataSizeInBytes <= ioData->mBuffers[i].mDataByteSize)
-            {
-                // copy recorded data into playback buffer
-                memcpy(ioData->mBuffers[i].mData, m_recordedData, m_recordedDataSizeInBytes);
-                ioData->mBuffers[i].mDataByteSize = m_recordedDataSizeInBytes;
-            }
-            else 
-            {
-                printf("AudioEngine::playback_callback playback buffer not large enough: m_recordedDataSizeInBytes = %d, buffer size = %d\n", m_recordedDataSizeInBytes, ioData->mBuffers[i].mDataByteSize);
-            }
-            
-            // add synthesized audio
-            /*short* buffer = (short*)ioData->mBuffers[i].mData;
-            for (int n = 0; n < ioData->mBuffers[i].mDataByteSize / 2; n ++)
-            {
-                buffer[n] = (short)(32767 * ((4.0 * n / (float) ioData->mBuffers[i].mDataByteSize) - 1.0));
-            }*/
-            
             // copy recorded data to temp buffer in float form if there is any - otherwise insert silence
-            int numSamples = m_recordedDataSizeInBytes / AUDIO_BIT_DEPTH_IN_BYTES;
-            float* tempRecorded = new float[numSamples];
+            int numSamplesAllChannels = m_recordedDataSizeInBytes / AUDIO_BIT_DEPTH_IN_BYTES;
+            float* tempRecorded = new float[numSamplesAllChannels];
             if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
             {
                 printf("AudioEngine::playback_callback: no recorded data to play - substituting silence!\n");
                 // TODO: store a static array of float data that can be copied in here - or can memset be used for a float array?
-                for (int n = 0; n < numSamples; n++)
+                for (int n = 0; n < numSamplesAllChannels; n++)
                 {
                     tempRecorded[n] = 0.0f;
                 }
             }
             else
             {
-                convert_short_to_float((short*)m_recordedData, tempRecorded, numSamples);
+                convert_short_to_float((short*)m_recordedData, tempRecorded, numSamplesAllChannels);
             }
             
             // do processing and add synthesized audio
-            
-            // allocate effects if necessary
-            if (m_ampEffect == NULL)
-            {
-                m_ampEffect = new AmplitudeScale();
-            }
-            if (m_ringModEffect == NULL)
-            {
-                m_ringModEffect = new RingMod(numSamples / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
-            }
-            
-            m_ringModEffect->Process(tempRecorded, numSamples / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
-            m_ampEffect->Process(tempRecorded, numSamples / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            m_ringModEffect->Process(tempRecorded, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            m_ampEffect->Process(tempRecorded, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
             
             if (m_recordedDataSizeInBytes <= ioData->mBuffers[i].mDataByteSize)
             {
                 // copy recorded data into playback buffer
-                convert_float_to_short(tempRecorded, (short*)ioData->mBuffers[i].mData, numSamples);
-                ioData->mBuffers[i].mDataByteSize = numSamples * AUDIO_BIT_DEPTH_IN_BYTES;
+                convert_float_to_short(tempRecorded, (short*)ioData->mBuffers[i].mData, numSamplesAllChannels);
+                ioData->mBuffers[i].mDataByteSize = numSamplesAllChannels * AUDIO_BIT_DEPTH_IN_BYTES;
             }
             else 
             {
