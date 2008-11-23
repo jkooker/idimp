@@ -152,12 +152,12 @@ void AudioQueueWrapper::InitDebugFile()
 void AudioQueueWrapper::PlaybackCallback(AudioQueueRef inQ, AudioQueueBufferRef outQB)
 {
     //printf("AudioQueueWrapper::PlaybackCallback inQ = %d, outQB = %d\n", inQ, outQB);
-    short* coreAudioBuffer = (short*) outQB->mAudioData;
+    //short* coreAudioBuffer = (short*) outQB->mAudioData;
 
     if (m_samplesPerFramePerChannel > 0)
     {
         outQB->mAudioDataByteSize = 4 * m_samplesPerFramePerChannel;
-        m_osc.nextSampleBuffer(coreAudioBuffer, m_samplesPerFramePerChannel, AUDIO_NUM_CHANNELS, MAX_AMPLITUDE_16_BITS);
+        //m_osc.nextSampleBuffer(coreAudioBuffer, m_samplesPerFramePerChannel, AUDIO_NUM_CHANNELS, MAX_AMPLITUDE_16_BITS);
     }
     AudioQueueEnqueueBuffer(inQ, outQB, 0, NULL);
     

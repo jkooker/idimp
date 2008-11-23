@@ -7,7 +7,6 @@
 //
 
 #import "AudioButtonTestViewController.h"
-//#import "AudioQueueWrapper.h"
 
 static const float kAccelerometerInterval = 0.01;
 
@@ -67,10 +66,10 @@ static const float kAccelerometerInterval = 0.01;
 
 // Implement viewDidLoad to do additional setup after loading the view.
 - (void)viewDidLoad {
-    /*float freq = _audioQueue->m_osc.getFreq();
+    float freq = _audioEngine->m_synth->getVoiceFreq(0);
     [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
     [_frequencySlider setValue:freq animated:NO];
-    */
+    
     float modFreq = _ringModFreqParam->getValue();
     [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", (int)modFreq]];
     [_ringModFreqSlider setValue:modFreq animated:NO];
@@ -149,7 +148,7 @@ static const float kAccelerometerInterval = 0.01;
 {
     int freq = (int)[_frequencySlider value]; // for simplicity right now, use only integer values
     [_frequencyTextField setText:[NSString stringWithFormat:@"%d", freq]];
-    //_audioQueue->m_osc.setFreq((float)freq);
+    _audioEngine->m_synth->setVoiceFreq(0, (float)freq);
 }
 
 - (IBAction) ringModFreqSliderChanged: (id) sender
@@ -169,7 +168,7 @@ static const float kAccelerometerInterval = 0.01;
 - (IBAction) waveformSelected: (id) sender
 {
     NSLog(@"waveformSelected called:");
-    //_audioQueue->m_osc.setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
+    _audioEngine->m_synth->setVoiceWaveform(0, (Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 

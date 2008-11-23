@@ -34,6 +34,7 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		322439BB0ECA3A21004C8A6F /* AudioEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioEffect.h; sourceTree = "<group>"; };
 		322C10C90EBEB24C007EAA49 /* AudioQueueWrapper.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = AudioQueueWrapper.h; sourceTree = "<group>"; };
+		323492D00ED93BF500DD06E7 /* Synth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Synth.h; sourceTree = "<group>"; };
 		326EA7E60ED3D919000002A5 /* Wavefile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Wavefile.h; sourceTree = "<group>"; };
 		326EA7EB0ED3DA79000002A5 /* AudioBasics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioBasics.h; sourceTree = "<group>"; };
 		326EA8420ED3DF14000002A5 /* AudioBasics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioBasics.cpp; sourceTree = "<group>"; };
@@ -75,6 +76,7 @@
 				28D7ACF60DDB3853001CB0EB /* AudioButtonTestViewController.h */,
 				28D7ACF70DDB3853001CB0EB /* AudioButtonTestViewController.m */,
 				322439BB0ECA3A21004C8A6F /* AudioEffect.h */,
+				323492D00ED93BF500DD06E7 /* Synth.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";

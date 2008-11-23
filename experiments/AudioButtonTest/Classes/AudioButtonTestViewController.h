@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AudioQueueWrapper.h"
 #import "AudioEngine.h"
 
 @interface AudioButtonTestViewController : UIViewController <UIAccelerometerDelegate> {
