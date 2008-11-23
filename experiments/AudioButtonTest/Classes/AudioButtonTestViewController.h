@@ -23,7 +23,7 @@
     IBOutlet UISegmentedControl* _waveformSelector;
     BOOL _playIsOn;
     BOOL _recordIsOn;
-    AudioQueueWrapper* _audioQueue;
+    //AudioQueueWrapper* _audioQueue;
     AudioEngine* _audioEngine;
 }
 

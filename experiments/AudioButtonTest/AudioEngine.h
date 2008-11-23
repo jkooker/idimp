@@ -24,13 +24,19 @@
 class AudioEngine
 {
 public:
+    AmplitudeScale* m_ampEffect;
+    RingMod* m_ringModEffect;
+
     AudioEngine() :
         m_inputBufferList(NULL),
         m_recordedData(NULL),
         m_recordedDataSizeInBytes(0),
-        m_debugFile(NULL)
+        m_debugFile(NULL),
+        m_ampEffect(NULL),
+        m_ringModEffect(NULL)
     {
         printf("AudioEngine::AudioEngine\n");
+        printf("AUDIO_MAX_AMPLITUDE = %d\n", AUDIO_MAX_AMPLITUDE);
         
         // Describe audio component
         AudioComponentDescription desc;
@@ -105,6 +111,18 @@ public:
         {
             delete m_debugFile;
             m_debugFile = NULL;
+        }
+        
+        // free memory from effect objects
+        if (m_ampEffect != NULL)
+        {
+            delete m_ampEffect;
+            m_ampEffect = NULL;
+        }
+        if (m_ringModEffect != NULL)
+        {
+            delete m_ringModEffect;
+            m_ringModEffect = NULL;
         }
     }
     
@@ -188,6 +206,26 @@ private:
             m_recordedDataSizeInBytes = bufferSizeInBytes;
         }
         //printf("AudioEngine::allocate_input_buffers finished: m_inputBufferList = %d\n", m_inputBufferList);
+    }
+    
+    void convert_float_to_short(float* in, short* out, int numSamples)
+    {
+        float* pIn = in;
+        short* pOut = out;
+        for (int n = 0; n < numSamples; n++)
+        {
+            *(pOut++) = (short)(*(pIn++) * AUDIO_MAX_AMPLITUDE);
+        }
+    }
+    
+    void convert_short_to_float(short* in, float* out, int numSamples)
+    {
+        short* pIn = in;
+        float* pOut = out;
+        for (int n = 0; n < numSamples; n++)
+        {
+            *(pOut++) = *(pIn++) / (float)AUDIO_MAX_AMPLITUDE;
+        }
     }
     
     void enable_playback()
@@ -284,6 +322,28 @@ private:
         }
     }    
     
+    void mix(float* in1, float* in2, float* out1, int numSamples)
+    {
+        float* pIn1 = in1;
+        float* pIn2 = in2;
+        float* pOut1 = out1;
+        for (int n = 0; n < numSamples; n++)
+        {
+            *(pOut1++) = ( *(pIn1++) + *(pIn2++) ) / 2.0;
+        }
+    }
+    
+    void mix_and_convert(float* in1, short* in2, short* out1, int numSamples)
+    {
+        float* pIn1 = in1;
+        short* pIn2 = in2;
+        short* pOut1 = out1;
+        for (int n = 0; n < numSamples; n++)
+        {
+            *(pOut1++) = (short)(( (*(pIn1++) * AUDIO_MAX_AMPLITUDE) + *(pIn2++) ) / 2.0);
+        }
+    }
+    
     static void print_audio_unit_properties(AudioUnit unit, const char* name)
     {
         printf("AudioEngine Audio Unit Properties for %s\n", name);
@@ -331,7 +391,7 @@ private:
             ioData->mBuffers[i].mNumberChannels = AUDIO_FORMAT_IS_NONINTERLEAVED ? 1: AUDIO_NUM_CHANNELS;
             //printf("AudioEngine::playback_callback: i = %d, mBuffers[i].mNumberChannels = %d, mBuffers[i].mDataByteSize = %d\n", i, ioData->mBuffers[i].mNumberChannels, ioData->mBuffers[i].mDataByteSize);
             
-            // copy recorded data to playback buffer, if there is any - otherwise insert silence
+            /*// copy recorded data to playback buffer, if there is any - otherwise insert silence
             if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
             {
                 printf("AudioEngine::playback_callback: no recorded data to play - substituting silence!\n");
@@ -356,6 +416,51 @@ private:
             {
                 buffer[n] = (short)(32767 * ((4.0 * n / (float) ioData->mBuffers[i].mDataByteSize) - 1.0));
             }*/
+            
+            // copy recorded data to temp buffer in float form if there is any - otherwise insert silence
+            int numSamples = m_recordedDataSizeInBytes / AUDIO_BIT_DEPTH_IN_BYTES;
+            float* tempRecorded = new float[numSamples];
+            if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
+            {
+                printf("AudioEngine::playback_callback: no recorded data to play - substituting silence!\n");
+                // TODO: store a static array of float data that can be copied in here - or can memset be used for a float array?
+                for (int n = 0; n < numSamples; n++)
+                {
+                    tempRecorded[n] = 0.0f;
+                }
+            }
+            else
+            {
+                convert_short_to_float((short*)m_recordedData, tempRecorded, numSamples);
+            }
+            
+            // do processing and add synthesized audio
+            
+            // allocate effects if necessary
+            if (m_ampEffect == NULL)
+            {
+                m_ampEffect = new AmplitudeScale();
+            }
+            if (m_ringModEffect == NULL)
+            {
+                m_ringModEffect = new RingMod(numSamples / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            }
+            
+            m_ringModEffect->Process(tempRecorded, numSamples / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            m_ampEffect->Process(tempRecorded, numSamples / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            
+            if (m_recordedDataSizeInBytes <= ioData->mBuffers[i].mDataByteSize)
+            {
+                // copy recorded data into playback buffer
+                convert_float_to_short(tempRecorded, (short*)ioData->mBuffers[i].mData, numSamples);
+                ioData->mBuffers[i].mDataByteSize = numSamples * AUDIO_BIT_DEPTH_IN_BYTES;
+            }
+            else 
+            {
+                printf("AudioEngine::playback_callback playback buffer not large enough: m_recordedDataSizeInBytes = %d, buffer size = %d\n", m_recordedDataSizeInBytes, ioData->mBuffers[i].mDataByteSize);
+            }
+            
+            delete (tempRecorded);
         }
         
 #ifdef WRITE_DEBUG_FILE

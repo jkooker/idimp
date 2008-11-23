@@ -27,6 +27,10 @@ static const int   AUDIO_FORMAT_IS_NONINTERLEAVED = FALSE;
 static const float PI = 3.14159265359;
 static const float TWO_PI = (2 * PI);
 
+// amplitude
+static const short AUDIO_MAX_AMPLITUDE = (1 << (AUDIO_BIT_DEPTH - 1)) - 1;
+
+// helper functions
 void PopulateAudioDescription(AudioStreamBasicDescription& desc);
 
 #endif // AUDIO_BASICS_H

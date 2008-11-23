@@ -161,7 +161,7 @@ public:
         }
     }
     
-    void nextSampleBuffeMono(float* buffer, int numSamples)
+    void nextSampleBufferMono(float* buffer, int numSamples)
     {
         float ampScalar = m_amp;
         //printf("Oscillator::nextSampleBuffer ampScalar = %f\n", ampScalar);
