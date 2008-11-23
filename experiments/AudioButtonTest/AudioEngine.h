@@ -35,7 +35,10 @@ public:
         m_recordedDataSizeInBytes(0),
         m_debugFile(NULL),
         m_effects(NULL),
-        m_numEffects(0)
+        m_numEffects(0),
+        m_recordingIsMuted(true),
+        m_silenceBuffer(NULL),
+        m_playbackSamplesAllChannels(0)
     {
         printf("AudioEngine::AudioEngine\n");
        
@@ -134,7 +137,16 @@ public:
             delete m_effects;
             m_effects = NULL;
         }
+        
+        // free silence buffer
+        if (m_silenceBuffer != NULL)
+        {
+            delete m_silenceBuffer;
+            m_silenceBuffer = NULL;
+        }
     }
+    
+    void SetMuteRecording(bool on) { m_recordingIsMuted = on; }
     
     void start()
     {
@@ -403,15 +415,26 @@ private:
             
             // copy recorded data to temp buffer in float form if there is any - otherwise insert silence
             int numSamplesAllChannels = m_recordedDataSizeInBytes / AUDIO_BIT_DEPTH_IN_BYTES;
+            // TODO: compare numSamplesAllChannels with stored m_playbackSamplesAllChannels to make sure the number hasn't changed (would be an error)
             float* tempRecorded = new float[numSamplesAllChannels];
-            if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
+            if (m_recordingIsMuted || m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
             {
-                printf("AudioEngine::playback_callback: no recorded data to play - substituting silence!\n");
-                // TODO: store a static array of float data that can be copied in here - or can memset be used for a float array?
-                for (int n = 0; n < numSamplesAllChannels; n++)
+                if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
                 {
-                    tempRecorded[n] = 0.0f;
+                    printf("AudioEngine::playback_callback: no recorded data to play - substituting silence!\n");
                 }
+                if (m_silenceBuffer == NULL)
+                {
+                    // allocate silence buffer for future use
+                    m_playbackSamplesAllChannels = numSamplesAllChannels;
+                    m_silenceBuffer = new float[m_playbackSamplesAllChannels];
+                    for (int n = 0; n < numSamplesAllChannels; n++)
+                    {
+                        m_silenceBuffer[n] = 0.0f; // can this be done with memset instead?
+                    }
+                }
+                // insert silence
+                memcpy(tempRecorded, m_silenceBuffer, m_playbackSamplesAllChannels * sizeof(float));    
             }
             else
             {
@@ -488,6 +511,9 @@ private:
     void* m_recordedData;
     UInt32 m_recordedDataSizeInBytes;
     Wavefile* m_debugFile;
+    bool m_recordingIsMuted;
+    float* m_silenceBuffer;
+    int m_playbackSamplesAllChannels;
 };
 
 #endif // AUDIO_ENGINE_H

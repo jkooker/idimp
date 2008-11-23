@@ -117,8 +117,8 @@ static const float kAccelerometerInterval = 0.01;
     
     if (_recordIsOn) 
     {
-        //_audioQueue->recordPause();
-        
+        _audioEngine->SetMuteRecording(true);
+                
 		// now that recording has stopped, deactivate the audio session
 		//AudioSessionSetActive (false);
         [_recordButton setTitle: @"Record" forState: UIControlStateNormal ];
@@ -136,8 +136,7 @@ static const float kAccelerometerInterval = 0.01;
 			
         // activate the audio session immediately before recording starts
 		//AudioSessionSetActive (true);
-		//_audioQueue->recordStart();
-        
+		_audioEngine->SetMuteRecording(false);        
         [_recordButton setTitle: @"Stop" forState: UIControlStateNormal ];
         [_recordButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
 
