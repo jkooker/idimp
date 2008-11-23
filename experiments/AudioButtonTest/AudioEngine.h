@@ -10,8 +10,9 @@
 #ifndef AUDIO_ENGINE_H
 #define AUDIO_ENGINE_H
 
-#include "AudioBasics.h"
-#include "Wavefile.h" // NOTE: could use preprocessor to not link this in at all if desired when not in debug mode
+#import "AudioBasics.h"
+#import "AudioEffect.h"
+#import "Wavefile.h" // NOTE: could use preprocessor to not link this in at all if desired when not in debug mode
 
 #define kOutputBus 0
 #define kInputBus 1
@@ -24,16 +25,17 @@
 class AudioEngine
 {
 public:
-    AmplitudeScale* m_ampEffect;
-    RingMod* m_ringModEffect;
 
+    AudioEffect** m_effects;
+    int m_numEffects;
+    
     AudioEngine() :
         m_inputBufferList(NULL),
         m_recordedData(NULL),
         m_recordedDataSizeInBytes(0),
         m_debugFile(NULL),
-        m_ampEffect(NULL),
-        m_ringModEffect(NULL)
+        m_effects(NULL),
+        m_numEffects(0)
     {
         printf("AudioEngine::AudioEngine\n");
        
@@ -76,10 +78,12 @@ public:
         
         print_audio_unit_properties(m_audioUnit, "REMOTE IO");
         
-        // init effects
-        m_ampEffect = new AmplitudeScale();
-        m_ringModEffect = new RingMod();
-
+        // init effects - they will be called in ascending array order at processing time
+        m_numEffects = 2;
+        m_effects = new AudioEffect*[m_numEffects];
+        m_effects[0] = new RingMod();
+        m_effects[1] = new AmplitudeScale();
+        
 #ifdef WRITE_DEBUG_FILE
         m_debugFile = new Wavefile(DEBUG_FILE_NAME);
 #endif
@@ -117,15 +121,18 @@ public:
         }
         
         // free memory from effect objects
-        if (m_ampEffect != NULL)
+        if (m_effects != NULL)
         {
-            delete m_ampEffect;
-            m_ampEffect = NULL;
-        }
-        if (m_ringModEffect != NULL)
-        {
-            delete m_ringModEffect;
-            m_ringModEffect = NULL;
+            for (int i = 0; i < m_numEffects; i++)
+            {
+                if (m_effects[i] != NULL)
+                {
+                    delete m_effects[i];
+                    m_effects[i] = NULL;
+                }
+            }
+            delete m_effects;
+            m_effects = NULL;
         }
     }
     
@@ -412,8 +419,10 @@ private:
             }
             
             // do processing and add synthesized audio
-            m_ringModEffect->Process(tempRecorded, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
-            m_ampEffect->Process(tempRecorded, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            for (int effect = 0; effect < m_numEffects; effect++)
+            {
+                m_effects[effect]->Process(tempRecorded, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            }
             
             if (m_recordedDataSizeInBytes <= ioData->mBuffers[i].mDataByteSize)
             {

@@ -24,6 +24,8 @@
     BOOL _playIsOn;
     BOOL _recordIsOn;
     AudioEngine* _audioEngine;
+    AudioEffectParameter* _ringModFreqParam;
+    AudioEffectParameter* _ampParam;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton* _playButton;

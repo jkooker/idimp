@@ -49,12 +49,47 @@ private:
 class AudioEffect
 {
 public:
-    AudioEffect() :
-        m_params(NULL),
-        m_numParams(0)
-    {}
+
+    enum
+    {
+        RingModulation = 0,
+        AmplitudeScale,
+        NumEffects
+    };
     
-    virtual ~AudioEffect() {}
+    AudioEffect(int numParams) :
+        m_params(NULL),
+        m_numParams(numParams)
+    {
+        // allocate array of AudioEffectParameter pointers and initialize them all to NULL
+        m_params = new AudioEffectParameter*[m_numParams];
+        for (int i = 0; i < m_numParams; i++)
+        {
+            m_params[i] = NULL;
+        }
+    }
+    
+    virtual ~AudioEffect() 
+    {
+        printf("AudioEffect::~AudioEffect\n");
+        if (m_params != NULL)
+        {
+            // delete all parameters
+            for (int i = 0; i < m_numParams; i++)
+            {
+                if (m_params[i] != NULL)
+                {
+                    delete m_params[i];
+                    m_params[i] = NULL;
+                }
+            }
+            
+            // delete the array
+            delete m_params;
+            m_params = NULL;
+        }
+    }
+    
     virtual void Process(float* buffer, int numSamplesPerChannel, int numChannels) = 0;
     
     AudioEffectParameter* getParameter(int index) const
@@ -64,13 +99,13 @@ public:
             return NULL;
         }
         
-        return &m_params[index];
+        return m_params[index];
     }
     
     int getNumParameters() const { return m_numParams; }
     
 protected:
-    AudioEffectParameter* m_params;
+    AudioEffectParameter** m_params;
     int m_numParams;
 };
 
@@ -78,16 +113,18 @@ class AmplitudeScale : public AudioEffect
 {
 public:
     AmplitudeScale() :
-        AudioEffect(),
-        m_amp(1.0),
+        AudioEffect(1),
         m_oldAmp(1.0)
     {
-    
+        m_params[0] = new AudioEffectParameter("Amplitude", "Amplitude for AmplitudeScale");
+        m_params[0]->setValue(1.0);
+        m_params[0]->setMinValue(0.0);
+        m_params[0]->setMaxValue(1.0);
     }
     
     virtual void Process(float* buffer, int numSamplesPerChannel, int numChannels)
     {
-        float goalAmp = m_amp;
+        float goalAmp = m_params[0]->getValue();
         float amplitudeDelta = goalAmp - m_oldAmp;
         for (int n = 0; n < numSamplesPerChannel; n++)
         {
@@ -102,29 +139,34 @@ public:
         m_oldAmp = goalAmp;
     }
 
-    float getAmp() { return m_amp; }
-    
-    void setAmp(float amp) { m_amp = amp; }
-    
 private:
     float m_oldAmp;
-    float m_amp;
 };
+
+static const float RING_MOD_MAX_FREQ_HZ = 5000.0;
 
 class RingMod : public AudioEffect
 {
 public:
     RingMod() :
-        AudioEffect(),
+        AudioEffect(2),
         m_bufferSamples(0),
         m_bufferFloat(NULL)
-    {   
-        m_osc.setAmp(1.0); // TODO: somewhere we need to make sure we don't clip...
-        m_osc.setFreq(0.0);
+    {           
+        m_params[0] = new AudioEffectParameter("Ring Mod Freq", "Frequency for Ring Mod Modulator");
+        m_params[0]->setValue(0.0);
+        m_params[0]->setMinValue(0.0);
+        m_params[0]->setMaxValue(RING_MOD_MAX_FREQ_HZ);
+        
+        m_params[1] = new AudioEffectParameter("Ring Mod Amp", "Amplitude for Ring Mod Modulator");
+        m_params[1]->setValue(1.0);
+        m_params[1]->setMinValue(0.0);
+        m_params[1]->setMaxValue(1.0);
     }
     
     virtual ~RingMod()
     {
+        printf("RingMod::~RingMod\n");
         if (m_bufferFloat != NULL)
         {
             delete m_bufferFloat;
@@ -146,6 +188,9 @@ public:
             return;
         }
         
+        m_osc.setFreq(m_params[0]->getValue());
+        m_osc.setAmp(m_params[1]->getValue());
+        
         if (m_osc.getFreq() <= 0.0f)
         {
             // don't do anything if the modulator freq is zero
@@ -166,10 +211,6 @@ public:
         }
     }
     
-    void setModAmp(float amp) { m_osc.setAmp(amp); }
-    float getModFreq() { return m_osc.getFreq(); }
-    void setModFreq(float freq) { m_osc.setFreq(freq); }
-
 private:
     Oscillator m_osc;
     int m_bufferSamples;
