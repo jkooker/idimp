@@ -12,12 +12,13 @@
 void PopulateAudioDescription(AudioStreamBasicDescription& desc)
 {
     // describe format
-    desc.mSampleRate       = AUDIO_SAMPLE_RATE;
+    /*desc.mSampleRate       = AUDIO_SAMPLE_RATE;
     desc.mFormatID		    = AUDIO_FORMAT_ID;
     desc.mFormatFlags      = AUDIO_FORMAT_FLAGS;
     desc.mFramesPerPacket  = AUDIO_FORMAT_FRAMES_PER_PACKET;
     desc.mChannelsPerFrame = AUDIO_NUM_CHANNELS;
     desc.mBitsPerChannel	= AUDIO_BIT_DEPTH;
     desc.mBytesPerPacket	= AUDIO_BIT_DEPTH_IN_BYTES * AUDIO_NUM_CHANNELS;
-    desc.mBytesPerFrame	= AUDIO_BIT_DEPTH_IN_BYTES * AUDIO_NUM_CHANNELS;  
+    desc.mBytesPerFrame	= AUDIO_BIT_DEPTH_IN_BYTES * AUDIO_NUM_CHANNELS;  */
+    FillOutASBDForLPCM(desc, AUDIO_SAMPLE_RATE, AUDIO_NUM_CHANNELS, AUDIO_BIT_DEPTH, AUDIO_BIT_DEPTH, false, false, AUDIO_FORMAT_IS_NONINTERLEAVED);
 }

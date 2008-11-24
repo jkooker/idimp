@@ -1,5 +1,5 @@
 //
-//  AudioButtonTestViewController.m
+//  AudioButtonTestViewController.mm
 //  AudioButtonTest
 //
 //  Created by Michelle Daniels on 11/2/08.
@@ -7,14 +7,12 @@
 //
 
 #import "AudioButtonTestViewController.h"
-//#import "AudioQueueWrapper.h"
 
 static const float kAccelerometerInterval = 0.01;
 
 @implementation AudioButtonTestViewController
 
 @synthesize _playButton;
-@synthesize _recordButton;
 @synthesize _playIsOn;
 @synthesize _recordIsOn;
 @synthesize _frequencySlider;
@@ -24,24 +22,23 @@ static const float kAccelerometerInterval = 0.01;
 @synthesize _ampSlider;
 @synthesize _ampTextField;
 @synthesize _waveformSelector;
+@synthesize _recordedInputSwitch;
+@synthesize _synthInputSwitch;
 
 - (void) myInit
 {   
     NSLog(@"AudioButtonTestViewController myInit");
-    _audioQueue = NULL;
-    _audioQueue = new AudioQueueWrapper();
     _audioEngine = NULL;
-    //_audioEngine = new AudioEngine();
+    _audioEngine = new AudioEngine();
+    
+    // map parameters to sliders
+    _ringModFreqParam = _audioEngine->m_effects[AudioEffect::RingModulation]->getParameter(0);
+    _ampParam = _audioEngine->m_effects[AudioEffect::AmplitudeScale]->getParameter(0);
 }
 
 - (void) dealloc
 {   
     NSLog(@"AudioButtonTestViewController dealloc");
-    if (_audioQueue != NULL)
-    {
-        delete _audioQueue;
-        _audioQueue = NULL;
-    }
     if (_audioEngine != NULL)
     {
         delete _audioEngine;
@@ -50,16 +47,15 @@ static const float kAccelerometerInterval = 0.01;
     [super dealloc];
 }
 
-
+/*
 // Override initWithNibName:bundle: to load the view using a nib file then perform additional customization that is not appropriate for viewDidLoad.
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         // Custom initialization
-        [self myInit];
     }
     return self;
 }
-
+*/
 
 /*
 // Implement loadView to create a view hierarchy programmatically.
@@ -70,23 +66,31 @@ static const float kAccelerometerInterval = 0.01;
 
 // Implement viewDidLoad to do additional setup after loading the view.
 - (void)viewDidLoad {
-    [super viewDidLoad];
-
-    float freq = _audioQueue->m_osc.getFreq();
-    [_frequencyTextField setText:[NSString stringWithFormat:@"%d", (int)freq]];
+    float freq = _audioEngine->m_synth->getVoiceFreq(0);
+    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
     [_frequencySlider setValue:freq animated:NO];
     
-    float modFreq = _audioQueue->m_ringModEffect->getModFreq();
+    float modFreq = _ringModFreqParam->getValue();
     [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", (int)modFreq]];
     [_ringModFreqSlider setValue:modFreq animated:NO];
+    [_ringModFreqSlider setMinimumValue:_ringModFreqParam->getMinValue()];
+    [_ringModFreqSlider setMaximumValue:_ringModFreqParam->getMaxValue()];
     
-    float amp = _audioQueue->m_ampEffect->getAmp();
+    float amp = _ampParam->getValue();
     [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
     [_ampSlider setValue:amp animated:NO];
-    
-     // Set up accelerometer
+    [_ampSlider setMinimumValue:_ampParam->getMinValue()];
+    [_ampSlider setMaximumValue:_ampParam->getMaxValue()];
+
+    // Set up accelerometer
     [[UIAccelerometer sharedAccelerometer] setUpdateInterval:kAccelerometerInterval]; // in seconds
     [[UIAccelerometer sharedAccelerometer] setDelegate:self];
+    
+    // init switch states
+    [_recordedInputSwitch setOn:!_audioEngine->GetMuteRecording()];
+    [_synthInputSwitch setOn:!_audioEngine->GetMuteSynth()];
+    
+    [super viewDidLoad];
 }
 
 // respond to a tap on the Play button. If stopped, start playing. If playing, stop.
@@ -98,81 +102,73 @@ static const float kAccelerometerInterval = 0.01;
     {
         [_playButton setTitle: @"Play" forState: UIControlStateNormal ];
         [_playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
-        _audioQueue->pause();
-        //_audioEngine->stop();
+        _audioEngine->stop();
     }
     else
     {
         [_playButton setTitle: @"Stop" forState: UIControlStateNormal ];
         [_playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
-        _audioQueue->play();
-        //_audioEngine->start();
+        _audioEngine->start();
     }
     
     _playIsOn = !_playIsOn;
 }
 
-// respond to a tap on the Record button. If stopped, start recording. If recording, stop.
-- (IBAction) recordOrStop: (id) sender {
-
-	NSLog(@"recordOrStop called:");
-    
-    if (_recordIsOn) 
+- (IBAction) recordedInputSwitchChanged: (id) sender 
+{
+	bool recordingIsOn = [_recordedInputSwitch isOn];
+    if (recordingIsOn)
     {
-        _audioQueue->recordPause();
-        
-		// now that recording has stopped, deactivate the audio session
-		//AudioSessionSetActive (false);
-        [_recordButton setTitle: @"Record" forState: UIControlStateNormal ];
-        [_recordButton setTitle: @"Record" forState: UIControlStateHighlighted ];
-        
-	}
+        NSLog(@"recordedInputSwitchChanged unmuting recording");
+        _audioEngine->SetMuteRecording(false);
+    }
     else
     {
-		// before instantiating the recording audio queue object, 
-		//	set the audio session category
-		UInt32 sessionCategory = kAudioSessionCategory_RecordAudio;
-		AudioSessionSetProperty( kAudioSessionProperty_AudioCategory,
-                                 sizeof (sessionCategory),
-                                 &sessionCategory);
-			
-        // activate the audio session immediately before recording starts
-		//AudioSessionSetActive (true);
-		_audioQueue->recordStart();
-        
-        [_recordButton setTitle: @"Stop" forState: UIControlStateNormal ];
-        [_recordButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
+        NSLog(@"recordedInputSwitchChanged muting recording");
+        _audioEngine->SetMuteRecording(true);
+    }
+}
 
-	}
-    
-    _recordIsOn = !_recordIsOn;
+- (IBAction) synthInputSwitchChanged: (id) sender 
+{
+	bool synthIsOn = [_synthInputSwitch isOn];
+    if (synthIsOn)
+    {
+        NSLog(@"synthInputSwitchChanged unmuting synth");
+        _audioEngine->SetMuteSynth(false);
+    }
+    else
+    {
+        NSLog(@"synthInputSwitchChanged unmuting synth");
+        _audioEngine->SetMuteSynth(true);
+    }
 }
 
 - (IBAction) frequencySliderChanged: (id) sender
 {
     int freq = (int)[_frequencySlider value]; // for simplicity right now, use only integer values
     [_frequencyTextField setText:[NSString stringWithFormat:@"%d", freq]];
-    _audioQueue->m_osc.setFreq((float)freq);
+    _audioEngine->m_synth->setVoiceFreq(0, (float)freq);
 }
 
 - (IBAction) ringModFreqSliderChanged: (id) sender
 {
     int freq = (int)[_ringModFreqSlider value]; // for simplicity right now, use only integer values
     [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", freq]];
-    _audioQueue->m_ringModEffect->setModFreq((float)freq);
+    _ringModFreqParam->setValue((float)freq);
 }
 
 - (IBAction) ampSliderChanged: (id) sender
 {
     float amp = [_ampSlider value];
     [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
-    _audioQueue->m_ampEffect->setAmp(amp);
+    _ampParam->setValue(amp);
 }
 
 - (IBAction) waveformSelected: (id) sender
 {
     NSLog(@"waveformSelected called:");
-    _audioQueue->m_osc.setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
+    _audioEngine->m_synth->setVoiceWaveform(0, (Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
@@ -195,13 +191,9 @@ static const float kAccelerometerInterval = 0.01;
     
     // change amplitude based on rotation around X axis
     float amp = (angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI);
-    _audioQueue->m_ampEffect->setAmp(amp);
+    _ampParam->setValue(amp);
     [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
     [_ampSlider setValue:amp animated:NO];
-    
-    _audioQueue->m_ringModEffect->setModAmp((angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI));
-    
-    //_audioQueue->m_ringModEffect->setModFreq(1000 * ((angleXZ / PI) >= 0 ? (angleXZ / PI) : -(angleXZ / PI)));
 }
 
 @end
