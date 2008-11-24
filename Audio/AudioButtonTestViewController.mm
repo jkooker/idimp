@@ -31,9 +31,16 @@ static const float kAccelerometerInterval = 0.01;
     _audioEngine = NULL;
     _audioEngine = new AudioEngine();
     
-    // map parameters to sliders
-    _ringModFreqParam = _audioEngine->m_effects[AudioEffect::RingModulation]->getParameter(0);
-    _ampParam = _audioEngine->m_effects[AudioEffect::AmplitudeScale]->getParameter(0);
+    // init effects and map their parameters to sliders
+    // at processing time, they will be called in the order they are added to the engine
+    _ringModEffect = NULL;
+    _ringModEffect = new RingMod();
+    _ampEffect = NULL;
+    _ampEffect = new AmplitudeScale();
+    _audioEngine->addRecordingEffect(_ringModEffect);
+    _audioEngine->addRecordingEffect(_ampEffect);
+    _ringModFreqParam = _ringModEffect->getParameter(0);
+    _ampParam = _ampEffect->getParameter(0);
 }
 
 - (void) dealloc
@@ -43,6 +50,19 @@ static const float kAccelerometerInterval = 0.01;
     {
         delete _audioEngine;
         _audioEngine = NULL;
+    }
+    
+    if (_ringModEffect != NULL)
+    {
+        // TODO: remove effect from engine??
+        delete _ringModEffect;
+        _ringModEffect = NULL;
+    }
+    if (_ampEffect != NULL)
+    {
+        // TODO: remove effect from engine?
+        delete _ampEffect;
+        _ampEffect = NULL;
     }
     [super dealloc];
 }
