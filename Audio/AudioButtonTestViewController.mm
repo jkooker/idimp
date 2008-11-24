@@ -66,6 +66,8 @@ static const float kAccelerometerInterval = 0.01;
 
 // Implement viewDidLoad to do additional setup after loading the view.
 - (void)viewDidLoad {
+    NSLog(@"AudioButtonTestViewController viewDidLoad");
+    [self myInit];
     float freq = _audioEngine->m_synth->getVoiceFreq(0);
     [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
     [_frequencySlider setValue:freq animated:NO];
