@@ -15,9 +15,6 @@
 #import "Wavefile.h"
 #import "Synth.h"
 
-#define kOutputBus 0
-#define kInputBus 1
-
 static const int NUM_SYNTH_VOICES = 1;
 
 //#define WRITE_DEBUG_FILE
@@ -320,7 +317,7 @@ private:
         OSStatus status = AudioUnitSetProperty(m_audioUnit, 
                                                kAudioOutputUnitProperty_EnableIO, 
                                                kAudioUnitScope_Output, 
-                                               kOutputBus,
+                                               AUDIO_OUTPUT_BUS,
                                                &flag, 
                                                sizeof(flag));
         if (status != noErr)
@@ -336,7 +333,7 @@ private:
         OSStatus status = AudioUnitSetProperty(m_audioUnit, 
                                                kAudioOutputUnitProperty_EnableIO, 
                                                kAudioUnitScope_Input, 
-                                               kInputBus,
+                                               AUDIO_INPUT_BUS,
                                                &flag, 
                                                sizeof(flag));
         if (status != noErr)
@@ -402,7 +399,7 @@ private:
         OSStatus status = AudioUnitSetProperty(m_audioUnit, 
                                                kAudioUnitProperty_StreamFormat, 
                                                kAudioUnitScope_Output, 
-                                               kInputBus, 
+                                               AUDIO_INPUT_BUS, 
                                                &m_audioFormat, 
                                                sizeof(m_audioFormat));
         if (status != noErr)
@@ -414,7 +411,7 @@ private:
         status = AudioUnitSetProperty(m_audioUnit, 
                                       kAudioUnitProperty_StreamFormat, 
                                       kAudioUnitScope_Input, 
-                                      kOutputBus, 
+                                      AUDIO_OUTPUT_BUS, 
                                       &m_audioFormat, 
                                       sizeof(m_audioFormat));
         if (status != noErr)
@@ -432,7 +429,7 @@ private:
         OSStatus status = AudioUnitSetProperty(m_audioUnit, 
                                                kAudioOutputUnitProperty_SetInputCallback, 
                                                kAudioUnitScope_Global, 
-                                               kInputBus, 
+                                               AUDIO_INPUT_BUS, 
                                                &callbackStruct, 
                                                sizeof(callbackStruct));
         if (status != noErr)
@@ -446,7 +443,7 @@ private:
         status = AudioUnitSetProperty(m_audioUnit, 
                                       kAudioUnitProperty_SetRenderCallback, 
                                       kAudioUnitScope_Global, 
-                                      kOutputBus,
+                                      AUDIO_OUTPUT_BUS,
                                       &callbackStruct, 
                                       sizeof(callbackStruct));
         if (status != noErr)
