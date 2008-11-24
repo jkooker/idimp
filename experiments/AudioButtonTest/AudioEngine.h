@@ -293,9 +293,9 @@ private:
         }
     }
     
-    void convert_float_to_short(float* in, short* out, int numSamples)
+    static void convert_float_to_short(const float* in, short* out, int numSamples)
     {
-        float* pIn = in;
+        const float* pIn = in;
         short* pOut = out;
         for (int n = 0; n < numSamples; n++)
         {
@@ -303,9 +303,9 @@ private:
         }
     }
     
-    void convert_short_to_float(short* in, float* out, int numSamples)
+    static void convert_short_to_float(const short* in, float* out, int numSamples)
     {
-        short* pIn = in;
+        const short* pIn = in;
         float* pOut = out;
         for (int n = 0; n < numSamples; n++)
         {
@@ -353,6 +353,44 @@ private:
         // insert silence
         memcpy(buffer, m_silenceBuffer, n * sizeof(float));    
 
+    }
+    
+    void get_recorded_data_for_playback(float* buffer, int numSamplesAllChannels)
+    {
+        // copy recorded data to temp buffer in float form if there is any - otherwise insert silence
+        if (m_recordingIsMuted || m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
+        {
+            if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
+            {
+                printf("AudioEngine::get_recorded_data_for_playback: no recorded data to play - substituting silence!\n");
+            }
+            fill_buffer_with_silence(buffer, numSamplesAllChannels);
+        }
+        else
+        {
+            convert_short_to_float((short*)m_recordedData, buffer, numSamplesAllChannels);
+        }
+        
+        // do processing on recorded data
+        for (int effect = 0; effect < m_numEffects; effect++)
+        {
+            m_effects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+        }
+    }
+    
+    void get_synthesized_data_for_playback(float* buffer, int numSamplesAllChannels)
+    {
+        // get synthesized audio
+        if (m_synthIsMuted)
+        {
+            fill_buffer_with_silence(m_tempSynthesizedBuffer, numSamplesAllChannels);
+        }
+        else
+        {
+            m_synth->RenderAudioBuffer(m_tempSynthesizedBuffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+        }
+           
+        // TODO: do processing on synthesized data
     }
     
     void init_audio_format()
@@ -417,10 +455,10 @@ private:
         }
     }    
     
-    void mix(float* in1, float* in2, float* out1, int numSamples)
+    static void mix(const float* in1, const float* in2, float* out1, int numSamples)
     {
-        float* pIn1 = in1;
-        float* pIn2 = in2;
+        const float* pIn1 = in1;
+        const float* pIn2 = in2;
         float* pOut1 = out1;
         for (int n = 0; n < numSamples; n++)
         {
@@ -428,21 +466,10 @@ private:
         }
     }
     
-    void mix_and_convert(float* in1, short* in2, short* out1, int numSamples)
+    static void mix_and_convert(const float* in1, const float* in2, short* out1, int numSamples)
     {
-        float* pIn1 = in1;
-        short* pIn2 = in2;
-        short* pOut1 = out1;
-        for (int n = 0; n < numSamples; n++)
-        {
-            *(pOut1++) = (short)(( (*(pIn1++) * AUDIO_MAX_AMPLITUDE) + *(pIn2++) ) / 2.0);
-        }
-    }
-    
-    void mix_and_convert(float* in1, float* in2, short* out1, int numSamples)
-    {
-        float* pIn1 = in1;
-        float* pIn2 = in2;
+        const float* pIn1 = in1;
+        const float* pIn2 = in2;
         short* pOut1 = out1;
         for (int n = 0; n < numSamples; n++)
         {
@@ -450,7 +477,7 @@ private:
         }
     }
     
-    static void print_audio_unit_properties(AudioUnit unit, const char* name)
+    static void print_audio_unit_properties(const AudioUnit unit, const char* name)
     {
         printf("AudioEngine Audio Unit Properties for %s\n", name);
         print_audio_unit_uint32_property(unit, kAudioUnitProperty_SampleRate, kAudioUnitScope_Global, "kAudioUnitProperty_SampleRate");
@@ -460,7 +487,7 @@ private:
         print_audio_unit_uint32_property(unit, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitScope_Global, "kAudioUnitProperty_MaximumFramesPerSlice");
     }
     
-    static void print_audio_unit_uint32_property(AudioUnit unit, AudioUnitPropertyID inID, AudioUnitScope inScope, const char* propertyDisplayName)
+    static void print_audio_unit_uint32_property(const AudioUnit unit, AudioUnitPropertyID inID, AudioUnitScope inScope, const char* propertyDisplayName)
     {
         UInt32 propValue = 0;
         UInt32 propValueSize = sizeof(propValue);
@@ -490,8 +517,7 @@ private:
                                AudioBufferList *ioData) 
     {    
         //printf("AudioEngine::playback_callback: inBusNumber = %d, inNumberFrames = %d, ioData = %d\n", inBusNumber, inNumberFrames, ioData);
-        //printf("AudioEngine::playback_callback: ioData->mNumberBuffers = %d\n", ioData->mNumberBuffers);
-
+        
         for (int i = 0; i < ioData->mNumberBuffers; i++)
         {
             ioData->mBuffers[i].mNumberChannels = AUDIO_FORMAT_IS_NONINTERLEAVED ? 1: AUDIO_NUM_CHANNELS;
@@ -502,37 +528,9 @@ private:
             // if needed, allocate buffers for temporary storage of recorded and synthesized data
             allocate_temp_buffers(numSamplesAllChannels);
             
-            // copy recorded data to temp buffer in float form if there is any - otherwise insert silence
-            if (m_recordingIsMuted || m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
-            {
-                if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
-                {
-                    printf("AudioEngine::playback_callback: no recorded data to play - substituting silence!\n");
-                }
-                fill_buffer_with_silence(m_tempRecordedBuffer, numSamplesAllChannels);
-            }
-            else
-            {
-                convert_short_to_float((short*)m_recordedData, m_tempRecordedBuffer, numSamplesAllChannels);
-            }
+            get_recorded_data_for_playback(m_tempRecordedBuffer, numSamplesAllChannels);
             
-            // do processing on recorded data
-            for (int effect = 0; effect < m_numEffects; effect++)
-            {
-                m_effects[effect]->Process(m_tempRecordedBuffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
-            }
-            
-            // get synthesized audio
-            if (m_synthIsMuted)
-            {
-                fill_buffer_with_silence(m_tempSynthesizedBuffer, numSamplesAllChannels);
-            }
-            else
-            {
-                m_synth->RenderAudioBuffer(m_tempSynthesizedBuffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
-            }
-            
-            // TODO: do processing on synthesized data
+            get_synthesized_data_for_playback(m_tempSynthesizedBuffer, numSamplesAllChannels);
             
             // TODO: make sure that the playback buffer is large enough for the recorded data ??
             
@@ -557,8 +555,7 @@ private:
                                 AudioBufferList *ioData) 
     {
         //printf("AudioEngine::recording_callback: inBusNumber = %d, inNumberFrames = %d, ioData = %d\n", inBusNumber, inNumberFrames, ioData);
-        //printf("inTimeStamp->mSampleTime = %d, mHostTime = %d, mRateScalar = %d, mFlags = %d\n", inTimeStamp->mSampleTime, inTimeStamp->mHostTime, inTimeStamp->mRateScalar, inTimeStamp->mFlags);
-
+        
         if (m_inputBufferList == NULL)
         {
             allocate_input_buffers(inNumberFrames);
