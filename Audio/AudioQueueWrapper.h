@@ -21,8 +21,6 @@ class AudioQueueWrapper
 {
 public:
     Oscillator m_osc;
-    AmplitudeScale* m_ampEffect;
-    RingMod* m_ringModEffect;
     
     AudioQueueWrapper();
     virtual ~AudioQueueWrapper();

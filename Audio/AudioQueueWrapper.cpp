@@ -43,15 +43,10 @@ AudioQueueWrapper::AudioQueueWrapper() :
     m_samplesPerFramePerChannel(NUM_BUFFER_SAMPLES),
     m_audioPlayerShouldStopImmediately(true),
     m_debugFileID(0),
-    m_debugFileByteOffset(0),
-    m_ampEffect(NULL),
-    m_ringModEffect(NULL)
+    m_debugFileByteOffset(0)
 {
     printf("AudioQueueWrapper::AudioQueueWrapper\n");
     PopulateAudioDescription(m_dataFormat);
-    
-    m_ampEffect = new AmplitudeScale();
-    m_ringModEffect = new RingMod(NUM_BUFFER_SAMPLES, AUDIO_NUM_CHANNELS);
     
 #ifdef _DEBUG_
     InitDebugFile();
@@ -74,14 +69,6 @@ AudioQueueWrapper::~AudioQueueWrapper()
     if (m_debugFileID > 0)
     {
         AudioFileClose(m_debugFileID);
-    }
-    if (m_ampEffect != NULL)
-    {
-        delete m_ampEffect;
-    }
-    if (m_ringModEffect != NULL)
-    {
-        delete m_ringModEffect;
     }
 }
 
@@ -165,14 +152,12 @@ void AudioQueueWrapper::InitDebugFile()
 void AudioQueueWrapper::PlaybackCallback(AudioQueueRef inQ, AudioQueueBufferRef outQB)
 {
     //printf("AudioQueueWrapper::PlaybackCallback inQ = %d, outQB = %d\n", inQ, outQB);
-    short* coreAudioBuffer = (short*) outQB->mAudioData;
+    //short* coreAudioBuffer = (short*) outQB->mAudioData;
 
     if (m_samplesPerFramePerChannel > 0)
     {
         outQB->mAudioDataByteSize = 4 * m_samplesPerFramePerChannel;
-        m_osc.nextSampleBuffer(coreAudioBuffer, m_samplesPerFramePerChannel, AUDIO_NUM_CHANNELS, MAX_AMPLITUDE_16_BITS);
-        m_ringModEffect->Process(coreAudioBuffer, m_samplesPerFramePerChannel, AUDIO_NUM_CHANNELS);
-        m_ampEffect->Process(coreAudioBuffer, m_samplesPerFramePerChannel, AUDIO_NUM_CHANNELS);
+        //m_osc.nextSampleBuffer(coreAudioBuffer, m_samplesPerFramePerChannel, AUDIO_NUM_CHANNELS, MAX_AMPLITUDE_16_BITS);
     }
     AudioQueueEnqueueBuffer(inQ, outQB, 0, NULL);
     

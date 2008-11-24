@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AudioQueueWrapper.h"
 #import "AudioEngine.h"
 
 @interface AudioButtonTestViewController : UIViewController <UIAccelerometerDelegate> {
 
     IBOutlet UIButton* _playButton;
-    IBOutlet UIButton* _recordButton;
     IBOutlet UISlider* _frequencySlider;
     IBOutlet UITextField* _frequencyTextField;
     IBOutlet UISlider* _ringModFreqSlider;
@@ -21,14 +19,16 @@
     IBOutlet UISlider* _ampSlider;
     IBOutlet UITextField* _ampTextField;
     IBOutlet UISegmentedControl* _waveformSelector;
+    IBOutlet UISwitch* _recordedInputSwitch;
+    IBOutlet UISwitch* _synthInputSwitch;
     BOOL _playIsOn;
     BOOL _recordIsOn;
-    AudioQueueWrapper* _audioQueue;
     AudioEngine* _audioEngine;
+    AudioEffectParameter* _ringModFreqParam;
+    AudioEffectParameter* _ampParam;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton* _playButton;
-@property (nonatomic, retain) IBOutlet UIButton* _recordButton;
 @property (nonatomic, retain) IBOutlet UISlider* _frequencySlider;
 @property (nonatomic, retain) IBOutlet UITextField* _frequencyTextField;
 @property (nonatomic, retain) IBOutlet UISlider* _ringModFreqSlider;
@@ -36,13 +36,16 @@
 @property (nonatomic, retain) IBOutlet UISlider* _ampSlider;
 @property (nonatomic, retain) IBOutlet UITextField* _ampTextField;
 @property (nonatomic, retain) IBOutlet UISegmentedControl* _waveformSelector;
+@property (nonatomic, retain) IBOutlet UISwitch* _recordedInputSwitch;
+@property (nonatomic, retain) IBOutlet UISwitch* _synthInputSwitch;
 @property (readwrite) BOOL _playIsOn;
 @property (readwrite) BOOL _recordIsOn;
 
 - (void) myInit;
 - (void) dealloc;
 - (IBAction) playOrStop: (id) sender;
-- (IBAction) recordOrStop: (id) sender;
+- (IBAction) recordedInputSwitchChanged: (id) sender;
+- (IBAction) synthInputSwitchChanged: (id) sender;
 - (IBAction) frequencySliderChanged: (id) sender;
 - (IBAction) ringModFreqSliderChanged: (id) sender;
 - (IBAction) ampSliderChanged: (id) sender;

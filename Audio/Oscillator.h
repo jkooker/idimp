@@ -82,7 +82,7 @@ public:
             m_nextSampleIndex -= WAVETABLE_POINTS;
         }
     }
-
+    
     void setWaveform(Waveform wave)
     {
         switch (wave)
@@ -135,14 +135,23 @@ public:
         }
     }
     
-    void nextSampleBuffer(short* buffer, int numSamples, int numChannels, int scale) // buffer size should be numSamples * numChannels
+    void nextSampleBufferMono(float* buffer, int numSamples)
     {
-        float ampScalar = scale * m_amp;
-        //printf("Oscillator::nextSampleBuffer ampScalar = %f\n", ampScalar);
-        for (int n = 0; n < numSamples; n++)
+        nextSampleBuffer(buffer, numSamples, 1);
+    }
+    
+    void nextSampleBuffer(float* buffer, int numSamplesPerChannel, int numChannels)
+    {
+        float ampScalar = m_amp;
+        for (int n = 0; n < numSamplesPerChannel; n++)
         {
-            // rounding
-            double sample = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
+            // same thing in all channels
+            float nextSample = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
+            for (int ch = 0; ch < numChannels; ch++)
+            {
+                // overwrite existing data
+                buffer[(numChannels * n) + ch] = nextSample;
+            }
             m_nextSampleIndex += m_hop;
             while (m_nextSampleIndex < 0)
             {
@@ -152,23 +161,21 @@ public:
             {
                 m_nextSampleIndex -= WAVETABLE_POINTS;
             }
-            
-            // same content in both channels
-            for (int ch = 0; ch < numChannels; ch++)
-            {
-                buffer[(2 * n) + ch] = (short)sample;
-            }
         }
     }
     
-    void nextSampleBuffeMono(float* buffer, int numSamples)
+    void addNextSamplesToBuffer(float* buffer, int numSamplesPerChannel, int numChannels)
     {
         float ampScalar = m_amp;
-        //printf("Oscillator::nextSampleBuffer ampScalar = %f\n", ampScalar);
-        for (int n = 0; n < numSamples; n++)
+        for (int n = 0; n < numSamplesPerChannel; n++)
         {
-            // rounding
-            buffer[n] = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
+            // same thing in all channels
+            float nextSample = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
+            for (int ch = 0; ch < numChannels; ch++)
+            {
+                // add to existing data - don't overwrite
+                buffer[(numChannels * n) + ch] += nextSample;
+            }
             m_nextSampleIndex += m_hop;
             while (m_nextSampleIndex < 0)
             {

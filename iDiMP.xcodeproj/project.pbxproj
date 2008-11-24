@@ -23,7 +23,6 @@
 		9B6C40A20ED78A1D007E73EC /* AudioButtonTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */; };
 		9B6C40C90ED78B7A007E73EC /* AudioBasics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */; };
 		9B6C40CB0ED78B7A007E73EC /* AudioButtonTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */; };
-		9B6C40CC0ED78B7A007E73EC /* AudioQueueWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B6C40C50ED78B7A007E73EC /* AudioQueueWrapper.cpp */; };
 		9B6C40D70ED78CBE007E73EC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6C40D60ED78CBE007E73EC /* AudioToolbox.framework */; };
 		9B873FA30ED67F360041A31B /* at_symbol.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B873FA20ED67F360041A31B /* at_symbol.png */; };
 /* End PBXBuildFile section */
@@ -50,6 +49,7 @@
 		289233AD0DB2D0DB0083E9F9 /* FlipsideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FlipsideViewController.m; path = Classes/FlipsideViewController.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* iDiMP_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iDiMP_Prefix.pch; sourceTree = "<group>"; };
+		32DCC9DE0EDA737E00D7F0ED /* Synth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Synth.h; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioButtonTestViewController.xib; sourceTree = "<group>"; };
 		9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioBasics.cpp; sourceTree = "<group>"; };
@@ -57,8 +57,6 @@
 		9B6C40C20ED78B7A007E73EC /* AudioButtonTestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioButtonTestViewController.h; sourceTree = "<group>"; };
 		9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioButtonTestViewController.mm; sourceTree = "<group>"; };
 		9B6C40C40ED78B7A007E73EC /* AudioEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioEffect.h; sourceTree = "<group>"; };
-		9B6C40C50ED78B7A007E73EC /* AudioQueueWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioQueueWrapper.cpp; sourceTree = "<group>"; };
-		9B6C40C60ED78B7A007E73EC /* AudioQueueWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioQueueWrapper.h; sourceTree = "<group>"; };
 		9B6C40C70ED78B7A007E73EC /* Oscillator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Oscillator.h; sourceTree = "<group>"; };
 		9B6C40C80ED78B7A007E73EC /* Wavefile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Wavefile.h; sourceTree = "<group>"; };
 		9B6C40CE0ED78BD8007E73EC /* AudioEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioEngine.h; sourceTree = "<group>"; };
@@ -174,14 +172,13 @@
 		9B6C40BD0ED78B7A007E73EC /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				32DCC9DE0EDA737E00D7F0ED /* Synth.h */,
 				9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */,
 				9B6C40BF0ED78B7A007E73EC /* AudioBasics.h */,
 				9B6C40C20ED78B7A007E73EC /* AudioButtonTestViewController.h */,
 				9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */,
 				9B6C40C40ED78B7A007E73EC /* AudioEffect.h */,
 				9B6C40CE0ED78BD8007E73EC /* AudioEngine.h */,
-				9B6C40C50ED78B7A007E73EC /* AudioQueueWrapper.cpp */,
-				9B6C40C60ED78B7A007E73EC /* AudioQueueWrapper.h */,
 				9B6C40C70ED78B7A007E73EC /* Oscillator.h */,
 				9B6C40C80ED78B7A007E73EC /* Wavefile.h */,
 			);
@@ -261,7 +258,6 @@
 				289233B00DB2D0DB0083E9F9 /* FlipsideViewController.m in Sources */,
 				9B6C40C90ED78B7A007E73EC /* AudioBasics.cpp in Sources */,
 				9B6C40CB0ED78B7A007E73EC /* AudioButtonTestViewController.mm in Sources */,
-				9B6C40CC0ED78B7A007E73EC /* AudioQueueWrapper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
