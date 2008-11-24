@@ -23,6 +23,10 @@ static const int   AUDIO_FORMAT_ID                = kAudioFormatLinearPCM;
 static const int   AUDIO_FORMAT_FLAGS             = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
 static const int   AUDIO_FORMAT_IS_NONINTERLEAVED = FALSE;
 
+// for audio units
+static const int AUDIO_OUTPUT_BUS = 0;
+static const int AUDIO_INPUT_BUS = 1;
+
 // math constants
 static const float PI = 3.14159265359;
 static const float TWO_PI = (2 * PI);
