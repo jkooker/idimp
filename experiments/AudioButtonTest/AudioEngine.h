@@ -44,7 +44,9 @@ public:
         m_synthIsMuted(false),
         m_silenceBuffer(NULL),
         m_playbackSamplesAllChannels(0),
-        m_synth(NULL)
+        m_synth(NULL),
+        m_tempRecordedBuffer(NULL),
+        m_tempSynthesizedBuffer(NULL)
     {
         printf("AudioEngine::AudioEngine\n");
        
@@ -160,6 +162,18 @@ public:
             delete m_synth;
             m_synth = NULL;
         }
+        
+        // free temp buffers
+        if (m_tempRecordedBuffer != NULL)
+        {
+            delete m_tempRecordedBuffer;
+            m_tempRecordedBuffer = NULL;
+        }
+        if (m_tempSynthesizedBuffer != NULL)
+        {
+            delete m_tempSynthesizedBuffer;
+            m_tempSynthesizedBuffer = NULL;
+        }
     }
     
     bool GetMuteRecording() { return m_recordingIsMuted; }
@@ -250,17 +264,32 @@ private:
         //printf("AudioEngine::allocate_input_buffers finished: m_inputBufferList = %d\n", m_inputBufferList);
     }
     
-    void allocate_silence_buffer(int numSamplesAllChannels)
+    void allocate_silence_buffer(int n)
     {
+        // NOTE: we don't need to check to make sure that n hasn't changed from previous
+        // calls since allocate_temp_buffers already does this check first
         if (m_silenceBuffer == NULL)
         {
             // allocate silence buffer for future use
-            m_playbackSamplesAllChannels = numSamplesAllChannels;
-            m_silenceBuffer = new float[m_playbackSamplesAllChannels];
-            for (int n = 0; n < m_playbackSamplesAllChannels; n++)
+            m_silenceBuffer = new float[n];
+            for (int i = 0; i < n; i++)
             {
-                m_silenceBuffer[n] = 0.0f; // can this be done with memset instead?
+                m_silenceBuffer[i] = 0.0f; // can this be done with memset instead?
             }
+        }
+    }
+    
+    void allocate_temp_buffers(int numSamplesAllChannels)
+    {
+        // TODO: check to make sure m_playbackSamplesAllChannels hasn't changed once buffers have been allocated
+        m_playbackSamplesAllChannels = numSamplesAllChannels;
+        if (m_tempRecordedBuffer == NULL)
+        {
+            m_tempRecordedBuffer = new float[numSamplesAllChannels];
+        }
+        if (m_tempSynthesizedBuffer == NULL)
+        {
+            m_tempSynthesizedBuffer = new float[numSamplesAllChannels];
         }
     }
     
@@ -314,6 +343,16 @@ private:
         {
             printf("AudioEngine::enable_recording failed: status = %d\n", status);
         }
+    }
+    
+    void fill_buffer_with_silence(float* buffer, int n)
+    {
+        // make sure slience buffer has been initialized
+        allocate_silence_buffer(n);
+                
+        // insert silence
+        memcpy(buffer, m_silenceBuffer, n * sizeof(float));    
+
     }
     
     void init_audio_format()
@@ -458,54 +497,48 @@ private:
             ioData->mBuffers[i].mNumberChannels = AUDIO_FORMAT_IS_NONINTERLEAVED ? 1: AUDIO_NUM_CHANNELS;
             //printf("AudioEngine::playback_callback: i = %d, mBuffers[i].mNumberChannels = %d, mBuffers[i].mDataByteSize = %d\n", i, ioData->mBuffers[i].mNumberChannels, ioData->mBuffers[i].mDataByteSize);
             
-            // copy recorded data to temp buffer in float form if there is any - otherwise insert silence
             int numSamplesAllChannels = m_recordedDataSizeInBytes / AUDIO_BIT_DEPTH_IN_BYTES;
-            // TODO: compare numSamplesAllChannels with stored m_playbackSamplesAllChannels to make sure the number hasn't changed (would be an error)
-            float* tempRecorded = new float[numSamplesAllChannels];
+            
+            // if needed, allocate buffers for temporary storage of recorded and synthesized data
+            allocate_temp_buffers(numSamplesAllChannels);
+            
+            // copy recorded data to temp buffer in float form if there is any - otherwise insert silence
             if (m_recordingIsMuted || m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
             {
                 if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
                 {
                     printf("AudioEngine::playback_callback: no recorded data to play - substituting silence!\n");
                 }
-                allocate_silence_buffer(numSamplesAllChannels);
-                // insert silence
-                memcpy(tempRecorded, m_silenceBuffer, m_playbackSamplesAllChannels * sizeof(float));    
+                fill_buffer_with_silence(m_tempRecordedBuffer, numSamplesAllChannels);
             }
             else
             {
-                convert_short_to_float((short*)m_recordedData, tempRecorded, numSamplesAllChannels);
+                convert_short_to_float((short*)m_recordedData, m_tempRecordedBuffer, numSamplesAllChannels);
             }
             
             // do processing on recorded data
             for (int effect = 0; effect < m_numEffects; effect++)
             {
-                m_effects[effect]->Process(tempRecorded, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+                m_effects[effect]->Process(m_tempRecordedBuffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
             }
             
             // get synthesized audio
-            float* tempSynthesized = new float[numSamplesAllChannels];
             if (m_synthIsMuted)
             {
-                // insert silence
-                allocate_silence_buffer(numSamplesAllChannels);
-                memcpy(tempSynthesized, m_silenceBuffer, m_playbackSamplesAllChannels * sizeof(float));    
+                fill_buffer_with_silence(m_tempSynthesizedBuffer, numSamplesAllChannels);
             }
             else
             {
-                m_synth->RenderAudioBuffer(tempSynthesized, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+                m_synth->RenderAudioBuffer(m_tempSynthesizedBuffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
             }
             
             // TODO: do processing on synthesized data
             
-            // TODO: make sure that the playback buffer is large enough for the recorded data
-            // copy recorded and synthesized data into playback buffer
-            mix_and_convert(tempRecorded, tempSynthesized, (short*)ioData->mBuffers[i].mData, numSamplesAllChannels);
-            ioData->mBuffers[i].mDataByteSize = numSamplesAllChannels * AUDIO_BIT_DEPTH_IN_BYTES;
+            // TODO: make sure that the playback buffer is large enough for the recorded data ??
             
-            // TODO: make tempRecorded and tempSynthesized member variables that are only allocated the first time around and then reused
-            delete tempRecorded;
-            delete tempSynthesized;
+            // copy recorded and synthesized data into playback buffer
+            mix_and_convert(m_tempRecordedBuffer, m_tempSynthesizedBuffer, (short*)ioData->mBuffers[i].mData, numSamplesAllChannels);
+            ioData->mBuffers[i].mDataByteSize = numSamplesAllChannels * AUDIO_BIT_DEPTH_IN_BYTES;
         }
         
 #ifdef WRITE_DEBUG_FILE
@@ -562,6 +595,8 @@ private:
     bool m_synthIsMuted;
     float* m_silenceBuffer;
     int m_playbackSamplesAllChannels;
+    float* m_tempRecordedBuffer;
+    float* m_tempSynthesizedBuffer;
 };
 
 #endif // AUDIO_ENGINE_H
