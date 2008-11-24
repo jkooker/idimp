@@ -155,6 +155,43 @@ public:
         m_recordingEffects.push_back(e);
     }
     
+    bool removeRecordingEffect(AudioEffect* e)
+    {
+        for (std::vector<AudioEffect*>::iterator it = m_recordingEffects.begin(); it != m_recordingEffects.end(); it++) 
+        {
+            if ((*it) == e)
+            {
+                // effect found
+                m_recordingEffects.erase(it);
+                printf("AudioEngine::removeRecordingEffect effect found!\n");
+                return true;
+            }
+        }
+        // effect not found
+        printf("AudioEngine::removeRecordingEffect effect NOT found!\n");
+        return false;
+    }
+    
+    void addSynthesisEffect(AudioEffect* e)
+    {
+        m_synthEffects.push_back(e);
+    }
+    
+    bool removeSynthesisEffect(AudioEffect* e)
+    {
+        for (std::vector<AudioEffect*>::iterator it = m_synthEffects.begin(); it != m_synthEffects.end(); it++) 
+        {
+            if ((*it) == e)
+            {
+                // effect found
+                m_synthEffects.erase(it);
+                return true;
+            }
+        }
+        // effect not found
+        return false;
+    }
+    
     bool GetMuteRecording() { return m_recordingIsMuted; }
     void SetMuteRecording(bool on) { m_recordingIsMuted = on; }
     

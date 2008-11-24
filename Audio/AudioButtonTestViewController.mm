@@ -54,13 +54,13 @@ static const float kAccelerometerInterval = 0.01;
     
     if (_ringModEffect != NULL)
     {
-        // TODO: remove effect from engine??
+        _audioEngine->removeRecordingEffect(_ringModEffect);
         delete _ringModEffect;
         _ringModEffect = NULL;
     }
     if (_ampEffect != NULL)
     {
-        // TODO: remove effect from engine?
+        _audioEngine->removeRecordingEffect(_ampEffect);
         delete _ampEffect;
         _ampEffect = NULL;
     }
