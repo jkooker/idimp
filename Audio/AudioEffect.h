@@ -50,13 +50,6 @@ class AudioEffect
 {
 public:
 
-    enum
-    {
-        RingModulation = 0,
-        AmplitudeScale,
-        NumEffects
-    };
-    
     AudioEffect(int numParams) :
         m_params(NULL),
         m_numParams(numParams)
