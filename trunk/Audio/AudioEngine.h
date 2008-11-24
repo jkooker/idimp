@@ -10,6 +10,8 @@
 #ifndef AUDIO_ENGINE_H
 #define AUDIO_ENGINE_H
 
+#import <vector>
+
 #import "AudioBasics.h"
 #import "AudioEffect.h"
 #import "Wavefile.h"
@@ -26,8 +28,6 @@ class AudioEngine
 {
 public:
 
-    AudioEffect** m_effects;
-    int m_numEffects;
     Synth* m_synth;
     
     AudioEngine() :
@@ -35,8 +35,6 @@ public:
         m_recordedData(NULL),
         m_recordedDataSizeInBytes(0),
         m_debugFile(NULL),
-        m_effects(NULL),
-        m_numEffects(0),
         m_recordingIsMuted(false),
         m_synthIsMuted(false),
         m_silenceBuffer(NULL),
@@ -86,12 +84,6 @@ public:
         
         print_audio_unit_properties(m_audioUnit, "REMOTE IO");
         
-        // init effects - they will be called in ascending array order at processing time
-        m_numEffects = 2;
-        m_effects = new AudioEffect*[m_numEffects];
-        m_effects[0] = new RingMod();
-        m_effects[1] = new AmplitudeScale();
-        
         // init synth
         m_synth = new Synth(NUM_SYNTH_VOICES);
         
@@ -131,21 +123,6 @@ public:
             m_debugFile = NULL;
         }
         
-        // free memory from effect objects
-        if (m_effects != NULL)
-        {
-            for (int i = 0; i < m_numEffects; i++)
-            {
-                if (m_effects[i] != NULL)
-                {
-                    delete m_effects[i];
-                    m_effects[i] = NULL;
-                }
-            }
-            delete m_effects;
-            m_effects = NULL;
-        }
-        
         // free silence buffer
         if (m_silenceBuffer != NULL)
         {
@@ -171,6 +148,11 @@ public:
             delete m_tempSynthesizedBuffer;
             m_tempSynthesizedBuffer = NULL;
         }
+    }
+    
+    void addRecordingEffect(AudioEffect* e)
+    {
+        m_recordingEffects.push_back(e);
     }
     
     bool GetMuteRecording() { return m_recordingIsMuted; }
@@ -369,9 +351,9 @@ private:
         }
         
         // do processing on recorded data
-        for (int effect = 0; effect < m_numEffects; effect++)
+        for (int effect = 0; effect < m_recordingEffects.size(); effect++)
         {
-            m_effects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            m_recordingEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
         }
     }
     
@@ -380,14 +362,18 @@ private:
         // get synthesized audio
         if (m_synthIsMuted)
         {
-            fill_buffer_with_silence(m_tempSynthesizedBuffer, numSamplesAllChannels);
+            fill_buffer_with_silence(buffer, numSamplesAllChannels);
         }
         else
         {
-            m_synth->RenderAudioBuffer(m_tempSynthesizedBuffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            m_synth->RenderAudioBuffer(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
         }
            
-        // TODO: do processing on synthesized data
+        // do processing on synthesized data
+        for (int effect = 0; effect < m_synthEffects.size(); effect++)
+        {
+            m_synthEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+        }
     }
     
     void init_audio_format()
@@ -591,6 +577,8 @@ private:
     int m_playbackSamplesAllChannels;
     float* m_tempRecordedBuffer;
     float* m_tempSynthesizedBuffer;
+    std::vector<AudioEffect*> m_recordingEffects;
+    std::vector<AudioEffect*> m_synthEffects;
 };
 
 #endif // AUDIO_ENGINE_H

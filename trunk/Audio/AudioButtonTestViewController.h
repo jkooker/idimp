@@ -26,6 +26,8 @@
     AudioEngine* _audioEngine;
     AudioEffectParameter* _ringModFreqParam;
     AudioEffectParameter* _ampParam;
+    AudioEffect* _ringModEffect;
+    AudioEffect* _ampEffect;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton* _playButton;
