@@ -1,4 +1,5 @@
 #summary iPhone App Gotchas
+#labels Featured
 
 = Introduction =
 
