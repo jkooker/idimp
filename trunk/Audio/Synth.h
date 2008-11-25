@@ -12,6 +12,55 @@
 
 #import "Oscillator.h"
 
+static const float DEFAULT_MIN_FREQUENCY_HZ = 20.0;
+static const float DEFAULT_MAX_FREQUENCY_HZ = 10000.0;
+static const float DEFAULT_MIN_AMPLITUDE = 0.0;
+static const float DEFAULT_MAX_AMPLITUDE = 1.0;
+
+class Voice
+{
+public:
+    float m_x;
+    float m_y;
+    
+    Voice(float x, float xMax, float y, float yMax) :
+        m_xMax(xMax),
+        m_yMax(yMax),
+        m_minFreq(DEFAULT_MIN_FREQUENCY_HZ),
+        m_freqRange(DEFAULT_MAX_FREQUENCY_HZ - DEFAULT_MIN_FREQUENCY_HZ),
+        m_minAmp(DEFAULT_MIN_AMPLITUDE),
+        m_ampRange(DEFAULT_MAX_AMPLITUDE - DEFAULT_MIN_AMPLITUDE)
+    {
+        setPosition(x, y);
+    }
+    
+    void setPosition(float x, float y)
+    {
+        // store new coordinates
+        m_x = x;
+        m_y = y;
+        
+        // update oscillator parameters based on new position
+        // map y to frequency and x to amplitude
+        m_osc.setFreq(m_minFreq + m_freqRange * (m_y / m_yMax));
+        m_osc.setAmp(m_minAmp + m_ampRange * (m_x / m_xMax));
+    }
+    
+    void setWaveform(Oscillator::Waveform wave)
+    {
+        m_osc.setWaveform(wave);
+    }
+    
+protected:
+    Oscillator m_osc;
+    float m_xMax;
+    float m_yMax;
+    float m_minFreq;
+    float m_freqRange;
+    float m_minAmp;
+    float m_ampRange;
+};
+
 class Synth
 {
 public:
