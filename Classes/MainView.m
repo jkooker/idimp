@@ -59,7 +59,6 @@ static const float circleRadius = 80;
         // Draw a circle (border only)
         CGContextStrokeEllipseInRect(contextRef, CGRectMake(p.x - circleRadius, p.y - circleRadius, 2*circleRadius, 2*circleRadius));
     }
-    NSLog(@"MainView::drawRect finished");
 }
 
 - (void)dealloc {
