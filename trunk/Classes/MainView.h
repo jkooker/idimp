@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface MainView : UIView {
-
+    NSMutableArray* _touchPoints;
 }
+
+@property (readwrite, retain) NSMutableArray* _touchPoints;
 
 @end
