@@ -26,9 +26,28 @@ static const float circleRadius = 80;
 {
     NSLog(@"MainView::awakeFromNib");
     
-    _touchPoints = [NSMutableArray arrayWithCapacity:5]; // the 6th touch point causes a touchCancelled event
-    [_touchPoints retain];
-    NSLog(@"_touchPoints = %02X, count = %d", _touchPoints, [_touchPoints count]);
+    //_touchPoints = [NSMutableArray arrayWithCapacity:MAX_TOUCHES]; // the 6th touch point causes a touchCancelled event
+    //[_touchPoints retain];
+    // NOTE: if I don't use this _touchPoints array, will I still get touchCancelled events?  What will trigger them?
+    
+    // TODO: these voices need to come from the synth so we can actually get audio
+    
+    //_audioEngine = NULL;
+    //_audioEngine = new AudioEngine();
+    //_voices = _audioEngine->m_synth->getVoices();
+    //_numVoices = _audioEngine->m_synth->getNumVoices();
+    
+    _numVoices = NUM_VOICES;
+    
+    CGRect bounds = [self bounds];
+    NSLog(@"bounds: w %f h %f", bounds.size.width, bounds.size.height);
+    for (int i = 0; i < _numVoices; i++)
+    {
+        _voices[i].setMaxX(bounds.size.width);
+        _voices[i].setMaxY(bounds.size.height);
+    }
+    
+    //_audioEngine->start();
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -40,29 +59,35 @@ static const float circleRadius = 80;
     // Drawing code
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
     
-    for (NSValue *v in _touchPoints)
+    for (int i = 0; i < _numVoices; i++)
     {
-        CGPoint p = [v CGPointValue];
-        //NSLog(@"point: %f, %f", p.x, p.y);
+        // only draw voices that are turned on
+        if (!_voices[i].isOn()) continue;
         
-        float xratio = (p.x/bounds.size.width);
-        float yratio = 1 - (p.y/bounds.size.height);
-        //NSLog(@"x ratio: %f, y ratio: %f", xratio, yratio);
+        float x = _voices[i].m_x;
+        float y = _voices[i].m_y;
+            
+        float xratio = (x / bounds.size.width);
+        float yratio = 1 - (y / bounds.size.height);
         
-        CGContextSetRGBFillColor(contextRef, 0, xratio, 1-xratio, 0.8*yratio);
-        CGContextSetRGBStrokeColor(contextRef, 0, xratio, 1-xratio, 0.2+0.8*yratio);
+        CGContextSetRGBFillColor(contextRef, 0, xratio, 1 - xratio, 0.8 * yratio);
+        CGContextSetRGBStrokeColor(contextRef, 0, xratio, 1 - xratio, 0.2 + 0.8 * yratio);
         CGContextSetLineWidth(contextRef, 3);
         
         // Draw a circle (filled)
-        CGContextFillEllipseInRect(contextRef, CGRectMake(p.x - circleRadius, p.y - circleRadius, 2*circleRadius, 2*circleRadius));
+        CGContextFillEllipseInRect(contextRef, CGRectMake(x - circleRadius, y - circleRadius, 2 * circleRadius, 2 * circleRadius));
 
         // Draw a circle (border only)
-        CGContextStrokeEllipseInRect(contextRef, CGRectMake(p.x - circleRadius, p.y - circleRadius, 2*circleRadius, 2*circleRadius));
+        CGContextStrokeEllipseInRect(contextRef, CGRectMake(x - circleRadius, y - circleRadius, 2 * circleRadius, 2 * circleRadius));
     }
 }
 
 - (void)dealloc {
     [_touchPoints release];
+    /*if (_audioEngine != NULL)
+    {
+        delete _audioEngine;
+    }*/
     [super dealloc];
 }
 
@@ -72,9 +97,24 @@ static const float circleRadius = 80;
     //NSLog(@"touchesBegan. %@", touches);
     
     // add points to the touchpoints array
+    int nextIndex = 0;
+    CGRect bounds = [self bounds];
     for (UITouch *touch in touches)
     {
-        [_touchPoints addObject:[NSValue valueWithCGPoint:[touch locationInView:self]]];
+        CGPoint p = [touch locationInView:self];
+        // find unused voice
+        for (int i = nextIndex; i < _numVoices; i++)
+        {
+            if (!_voices[i].isOn())
+            {
+                // found an unused voice
+                _voices[i].setPosition(p.x, p.y);
+                _voices[i].turnOn();
+                nextIndex = i + 1;
+                break;
+            }
+        }
+        // if we got here, there were no unused voices - now what??
     }
     
     [self setNeedsDisplay];
@@ -87,18 +127,22 @@ static const float circleRadius = 80;
     // find the matching point (by looking at previous locations) and modify it
     for (UITouch *touch in touches)
     {
-        for (NSUInteger i = 0; i < [_touchPoints count]; i++)
+        for (int i = 0; i < _numVoices; i++)
         {
-            NSValue *v = [_touchPoints objectAtIndex:i];
+            if (!_voices[i].isOn()) continue;
             
-            if ([v CGPointValue].x == [touch previousLocationInView:self].x &&
-                [v CGPointValue].y == [touch previousLocationInView:self].y)
+            if (_voices[i].m_x == [touch previousLocationInView:self].x &&
+                _voices[i].m_y == [touch previousLocationInView:self].y)
             {
-                [_touchPoints replaceObjectAtIndex:i withObject:[NSValue valueWithCGPoint:[touch locationInView:self]]];
+                // found a match - update its position
+                CGPoint pMoved = [touch locationInView:self];
+                _voices[i].setPosition(pMoved.x, pMoved.y);
                 break;
             }
         }
     }
+    
+    // So we can assume that we will never get a new touch with "touchedMoved"?
 
     [self setNeedsDisplay];
 }
@@ -109,15 +153,17 @@ static const float circleRadius = 80;
     
     for (UITouch *touch in touches)
     {
-        for (NSUInteger i = 0; i < [_touchPoints count]; i++)
+        for (int i = 0; i < _numVoices; i++)
         {
-            NSValue *v = [_touchPoints objectAtIndex:i];
+            if (!_voices[i].isOn()) continue;
             
-            if ([v CGPointValue].x == [touch locationInView:self].x &&
-                [v CGPointValue].y == [touch locationInView:self].y)
+            // so we always get a touchesMoved event before a touchesEnded event if the touch has moved
+            // from its original location?
+            if (_voices[i].m_x == [touch locationInView:self].x &&
+                _voices[i].m_y == [touch locationInView:self].y)
             {
-                //NSLog(@"found it!");
-                [_touchPoints removeObjectAtIndex:i];
+                // found a match - turn it off
+                _voices[i].turnOff();
                 break;
             }
         }
@@ -129,8 +175,11 @@ static const float circleRadius = 80;
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
 {
     //NSLog(@"touchesCancelled");
-    
-    [_touchPoints removeAllObjects];
+
+    for (int i = 0; i < _numVoices; i++)
+    {
+        _voices[i].turnOff();
+    }
     
     [self setNeedsDisplay];
 }

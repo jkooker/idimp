@@ -17,8 +17,6 @@
 #import "Wavefile.h"
 #import "Synth.h"
 
-static const int NUM_SYNTH_VOICES = 1;
-
 //#define WRITE_DEBUG_FILE
 #ifdef WRITE_DEBUG_FILE
     static const char* DEBUG_FILE_NAME = "debug.wav";
@@ -85,7 +83,7 @@ public:
         print_audio_unit_properties(m_audioUnit, "REMOTE IO");
         
         // init synth
-        m_synth = new Synth(NUM_SYNTH_VOICES);
+        m_synth = new Synth();
         
 #ifdef WRITE_DEBUG_FILE
         m_debugFile = new Wavefile(DEBUG_FILE_NAME);
