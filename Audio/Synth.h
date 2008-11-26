@@ -19,6 +19,9 @@ static const float DEFAULT_MAX_AMPLITUDE = 1.0;
 
 static const int NUM_VOICES = 5;
 
+// for drawing voices
+static const float CIRCLE_RADIUS = 80;
+
 class Voice
 {
 public:
@@ -48,6 +51,24 @@ public:
         m_isOn(false)
     {
         setPosition(x, y);
+    }
+    
+    void draw(CGContextRef contextRef, CGRect& bounds)
+    {
+        if (!isOn()) return;
+        
+        float xratio = (m_x / bounds.size.width);
+        float yratio = 1 - (m_y / bounds.size.height);
+        
+        CGContextSetRGBFillColor(contextRef, 0, xratio, 1 - xratio, 0.8 * yratio);
+        CGContextSetRGBStrokeColor(contextRef, 0, xratio, 1 - xratio, 0.2 + 0.8 * yratio);
+        CGContextSetLineWidth(contextRef, 3);
+        
+        // Draw a circle (filled)
+        CGContextFillEllipseInRect(contextRef, CGRectMake(m_x - CIRCLE_RADIUS, m_y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS));
+
+        // Draw a circle (border only)
+        CGContextStrokeEllipseInRect(contextRef, CGRectMake(m_x - CIRCLE_RADIUS, m_y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS));
     }
     
     bool isOn() { return m_isOn; }
