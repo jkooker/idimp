@@ -161,50 +161,6 @@ public:
     
     int getNumVoices() const { return NUM_VOICES; }
     
-    float getVoiceAmp(int voice)
-    {
-        if (voice < 0 || voice >= NUM_VOICES)
-        {
-            printf("Synth::getVoiceAmp voice index out of range: %d\n", voice);
-            return 0.0;
-        }
-        
-        return m_voices[voice].m_osc.getAmp();
-    }
-
-    void setVoiceAmp(int voice, float amp)
-    {
-        if (voice < 0 || voice >= NUM_VOICES)
-        {
-            printf("Synth::setVoiceAmp voice index out of range: %d\n", voice);
-            return;
-        }
-        
-        m_voices[voice].m_osc.setAmp(amp);
-    }
-    
-    float getVoiceFreq(int voice)
-    {
-        if (voice < 0 || voice >= NUM_VOICES)
-        {
-            printf("Synth::getVoiceFreq voice index out of range: %d\n", voice);
-            return 0.0;
-        }
-        
-        return m_voices[voice].m_osc.getFreq();
-    }
-
-    void setVoiceFreq(int voice, float freq)
-    {
-        if (voice < 0 || voice >= NUM_VOICES)
-        {
-            printf("Synth::setVoiceFreq voice index out of range: %d\n", voice);
-            return;
-        }
-        
-        m_voices[voice].m_osc.setFreq(freq);
-    }
-    
     void setWaveform(Oscillator::Waveform wave)
     {
         // set the desired waveform for all voices
@@ -214,36 +170,6 @@ public:
         }
     }
     
-    void voiceOff(int voice) 
-    { 
-        if (voice < 0 || voice >= NUM_VOICES)
-        {
-            printf("Synth::voiceOff voice index out of range: %d\n", voice);
-            return;
-        }
-        m_voices[voice].turnOff(); 
-    }
-
-    void voiceOn(int voice) 
-    { 
-        if (voice < 0 || voice >= NUM_VOICES)
-        {
-            printf("Synth::voiceOn voice index out of range: %d\n", voice);
-            return;
-        }
-        m_voices[voice].turnOn(); 
-    }
-    
-    bool voiceIsOn(int voice) 
-    { 
-        if (voice < 0 || voice >= NUM_VOICES)
-        {
-            printf("Synth::voiceIsOn voice index out of range: %d\n", voice);
-            return false;
-        }
-        return m_voices[voice].isOn(); 
-    }
-
 private:
 
     void allocate_silence_buffer(int n)
