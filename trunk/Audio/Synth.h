@@ -25,10 +25,6 @@ static const float CIRCLE_RADIUS = 80;
 class Voice
 {
 public:
-    float m_x;
-    float m_y;
-    Oscillator m_osc; // TODO: make this protected/private
-    
     Voice() :
         m_xMax(1.0),
         m_yMax(1.0),
@@ -55,7 +51,7 @@ public:
     
     void draw(CGContextRef contextRef, CGRect& bounds)
     {
-        if (!isOn()) return;
+        if (!m_isOn) return;
         
         float xratio = (m_x / bounds.size.width);
         float yratio = 1 - (m_y / bounds.size.height);
@@ -85,6 +81,14 @@ public:
         m_isOn = false; 
     }
     
+    void renderAddToBuffer(float* output, int numSamplesPerChannel, int numChannels)
+    {
+        if (m_isOn)
+        {
+            m_osc.addNextSamplesToBuffer(output, numSamplesPerChannel, numChannels);
+        }
+    }
+    
     void setMaxX(float x) { m_xMax = x; }
     void setMaxY(float y) { m_yMax = y; }
     
@@ -106,6 +110,9 @@ public:
     }
     
 protected:
+    float m_x;
+    float m_y;
+    Oscillator m_osc;
     float m_xMax;
     float m_yMax;
     float m_minFreq;
@@ -141,10 +148,7 @@ public:
         
         for (int v = 0; v < NUM_VOICES; v++)
         {
-            if (m_voices[v].isOn())
-            {
-                m_voices[v].m_osc.addNextSamplesToBuffer(output, numSamplesPerChannel, numChannels);
-            }
+            m_voices[v].renderAddToBuffer(output, numSamplesPerChannel, numChannels);
         }
         
         // scale output by number of voices to avoid clipping
