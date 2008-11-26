@@ -17,11 +17,26 @@ static const float DEFAULT_MAX_FREQUENCY_HZ = 10000.0;
 static const float DEFAULT_MIN_AMPLITUDE = 0.0;
 static const float DEFAULT_MAX_AMPLITUDE = 1.0;
 
+static const int NUM_VOICES = 5;
+
 class Voice
 {
 public:
     float m_x;
     float m_y;
+    Oscillator m_osc; // TODO: make this protected/private
+    
+    Voice() :
+        m_xMax(1.0),
+        m_yMax(1.0),
+        m_minFreq(DEFAULT_MIN_FREQUENCY_HZ),
+        m_freqRange(DEFAULT_MAX_FREQUENCY_HZ - DEFAULT_MIN_FREQUENCY_HZ),
+        m_minAmp(DEFAULT_MIN_AMPLITUDE),
+        m_ampRange(DEFAULT_MAX_AMPLITUDE - DEFAULT_MIN_AMPLITUDE),
+        m_isOn(false)
+    {
+        setPosition(0.0, 0.0);
+    }
     
     Voice(float x, float xMax, float y, float yMax) :
         m_xMax(xMax),
@@ -29,10 +44,18 @@ public:
         m_minFreq(DEFAULT_MIN_FREQUENCY_HZ),
         m_freqRange(DEFAULT_MAX_FREQUENCY_HZ - DEFAULT_MIN_FREQUENCY_HZ),
         m_minAmp(DEFAULT_MIN_AMPLITUDE),
-        m_ampRange(DEFAULT_MAX_AMPLITUDE - DEFAULT_MIN_AMPLITUDE)
+        m_ampRange(DEFAULT_MAX_AMPLITUDE - DEFAULT_MIN_AMPLITUDE),
+        m_isOn(false)
     {
         setPosition(x, y);
     }
+    
+    bool isOn() { return m_isOn; }
+    void turnOn() { m_isOn = true; }
+    void turnOff() { m_isOn = false; }
+    
+    void setMaxX(float x) { m_xMax = x; }
+    void setMaxY(float y) { m_yMax = y; }
     
     void setPosition(float x, float y)
     {
@@ -52,48 +75,25 @@ public:
     }
     
 protected:
-    Oscillator m_osc;
     float m_xMax;
     float m_yMax;
     float m_minFreq;
     float m_freqRange;
     float m_minAmp;
     float m_ampRange;
+    bool m_isOn;
 };
 
 class Synth
 {
 public:
-    Synth(int numVoices) :
-        m_voices(NULL),
-        m_numVoices(numVoices),
-        m_voiceIsOn(NULL),
+    Synth() :
         m_silenceBuffer(NULL),
         m_silenceBufferSize(0)
-    {
-        m_voices = new Oscillator[m_numVoices];
-        m_voiceIsOn = new bool[m_numVoices];
-        // init all voices to "on"
-        for (int v = 0; v < m_numVoices; v++)
-        {
-            m_voiceIsOn[v] = true;
-        }
-    }
+    { }
     
     ~Synth()
     {
-        if (m_voices != NULL)
-        {
-            delete m_voices;
-            m_voices = NULL;
-        }
-        
-        if (m_voiceIsOn != NULL)
-        {
-            delete m_voiceIsOn;
-            m_voiceIsOn = NULL;
-        }
-        
         if (m_silenceBuffer != NULL)
         {
             delete m_silenceBuffer;
@@ -108,71 +108,75 @@ public:
         allocate_silence_buffer(nTotalSamples);
         fill_buffer_with_silence(output, nTotalSamples);
         
-        for (int v = 0; v < m_numVoices; v++)
+        for (int v = 0; v < NUM_VOICES; v++)
         {
-            if (m_voiceIsOn[v])
+            if (m_voices[v].isOn())
             {
-                m_voices[v].addNextSamplesToBuffer(output, numSamplesPerChannel, numChannels);
+                m_voices[v].m_osc.addNextSamplesToBuffer(output, numSamplesPerChannel, numChannels);
             }
         }
         
         // scale output by number of voices to avoid clipping
-        if (m_numVoices > 1)
+        if (NUM_VOICES > 1)
         {
             for (int n = 0; n < nTotalSamples; n++)
             {
-                output[n] /= m_numVoices;
+                output[n] /= NUM_VOICES;
             }
         }
     }
     
+    Voice* getVoices() { return m_voices; }
+    
+    int getNumVoices() const { return NUM_VOICES; }
+    
     float getVoiceAmp(int voice)
     {
-        if (voice < 0 || voice >= m_numVoices)
+        if (voice < 0 || voice >= NUM_VOICES)
         {
             printf("Synth::getVoiceAmp voice index out of range: %d\n", voice);
             return 0.0;
         }
         
-        return m_voices[voice].getAmp();
+        return m_voices[voice].m_osc.getAmp();
     }
 
     void setVoiceAmp(int voice, float amp)
     {
-        if (voice < 0 || voice >= m_numVoices)
+        if (voice < 0 || voice >= NUM_VOICES)
         {
             printf("Synth::setVoiceAmp voice index out of range: %d\n", voice);
             return;
         }
         
-        m_voices[voice].setAmp(amp);
+        m_voices[voice].m_osc.setAmp(amp);
     }
     
     float getVoiceFreq(int voice)
     {
-        if (voice < 0 || voice >= m_numVoices)
+        if (voice < 0 || voice >= NUM_VOICES)
         {
             printf("Synth::getVoiceFreq voice index out of range: %d\n", voice);
             return 0.0;
         }
         
-        return m_voices[voice].getFreq();
+        return m_voices[voice].m_osc.getFreq();
     }
 
     void setVoiceFreq(int voice, float freq)
     {
-        if (voice < 0 || voice >= m_numVoices)
+        if (voice < 0 || voice >= NUM_VOICES)
         {
             printf("Synth::setVoiceFreq voice index out of range: %d\n", voice);
             return;
         }
         
-        m_voices[voice].setFreq(freq);
+        m_voices[voice].m_osc.setFreq(freq);
     }
     
     void setVoiceWaveform(int voice, Oscillator::Waveform wave)
     {
-        if (voice < 0 || voice >= m_numVoices)
+        if (voice < 0 || voice >= NUM_VOICES)
         {
             printf("Synth::setVoiceWaveform voice index out of range: %d\n", voice);
             return;
@@ -183,32 +187,32 @@ public:
     
     void voiceOff(int voice) 
     { 
-        if (voice < 0 || voice >= m_numVoices)
+        if (voice < 0 || voice >= NUM_VOICES)
         {
             printf("Synth::voiceOff voice index out of range: %d\n", voice);
             return;
         }
-        m_voiceIsOn[voice] = false; 
+        m_voices[voice].turnOff(); 
     }
 
     void voiceOn(int voice) 
     { 
-        if (voice < 0 || voice >= m_numVoices)
+        if (voice < 0 || voice >= NUM_VOICES)
         {
             printf("Synth::voiceOn voice index out of range: %d\n", voice);
             return;
         }
-        m_voiceIsOn[voice] = true; 
+        m_voices[voice].turnOn(); 
     }
     
     bool voiceIsOn(int voice) 
     { 
-        if (voice < 0 || voice >= m_numVoices)
+        if (voice < 0 || voice >= NUM_VOICES)
         {
             printf("Synth::voiceIsOn voice index out of range: %d\n", voice);
             return false;
         }
-        return m_voiceIsOn[voice]; 
+        return m_voices[voice].isOn(); 
     }
 
 private:
@@ -238,9 +242,7 @@ private:
 
     }
 
-    Oscillator* m_voices;
-    bool* m_voiceIsOn;
-    int m_numVoices;
+    Voice m_voices[NUM_VOICES];
     float* m_silenceBuffer;
     int m_silenceBufferSize;
 };

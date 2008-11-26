@@ -56,6 +56,8 @@ public:
     void setAmp(float amp) 
     { 
         //printf("Oscillator::setAmp amp = %f\n", amp);
+        // TODO: modify Oscillator so that amplitude changes don't cause
+        // sudden discontinuities in the waveform (smooth changes over some number of samples)
         m_amp = amp; 
     }
     
