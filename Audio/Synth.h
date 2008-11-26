@@ -122,15 +122,15 @@ protected:
     bool m_isOn;
 };
 
-class Synth
+class TouchSynth
 {
 public:
-    Synth() :
+    TouchSynth() :
         m_silenceBuffer(NULL),
         m_silenceBufferSize(0)
     { }
     
-    ~Synth()
+    ~TouchSynth()
     {
         if (m_silenceBuffer != NULL)
         {
@@ -139,7 +139,7 @@ public:
         }
     }
     
-    void RenderAudioBuffer(float* output, int numSamplesPerChannel, int numChannels)
+    void renderAudioBuffer(float* output, int numSamplesPerChannel, int numChannels)
     {
         // first zero out output buffer (can I use memset to do this??)
         int nTotalSamples = numSamplesPerChannel * numChannels; 

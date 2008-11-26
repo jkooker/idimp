@@ -101,8 +101,8 @@ static const float kAccelerometerInterval = 0.01;
     [[UIAccelerometer sharedAccelerometer] setDelegate:self];
     
     // init switch states
-    [_recordedInputSwitch setOn:!_audioEngine->GetMuteRecording()];
-    [_synthInputSwitch setOn:!_audioEngine->GetMuteSynth()];
+    [_recordedInputSwitch setOn:!_audioEngine->getMuteRecording()];
+    [_synthInputSwitch setOn:!_audioEngine->getMuteSynth()];
     
     [super viewDidLoad];
 }
@@ -134,12 +134,12 @@ static const float kAccelerometerInterval = 0.01;
     if (recordingIsOn)
     {
         NSLog(@"recordedInputSwitchChanged unmuting recording");
-        _audioEngine->SetMuteRecording(false);
+        _audioEngine->setMuteRecording(false);
     }
     else
     {
         NSLog(@"recordedInputSwitchChanged muting recording");
-        _audioEngine->SetMuteRecording(true);
+        _audioEngine->setMuteRecording(true);
     }
 }
 
@@ -149,12 +149,12 @@ static const float kAccelerometerInterval = 0.01;
     if (synthIsOn)
     {
         NSLog(@"synthInputSwitchChanged unmuting synth");
-        _audioEngine->SetMuteSynth(false);
+        _audioEngine->setMuteSynth(false);
     }
     else
     {
         NSLog(@"synthInputSwitchChanged unmuting synth");
-        _audioEngine->SetMuteSynth(true);
+        _audioEngine->setMuteSynth(true);
     }
 }
 
@@ -175,7 +175,7 @@ static const float kAccelerometerInterval = 0.01;
 - (IBAction) waveformSelected: (id) sender
 {
     NSLog(@"waveformSelected called:");
-    _audioEngine->m_synth->setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
+    _audioEngine->m_synth.setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
