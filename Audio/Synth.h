@@ -67,6 +67,9 @@ public:
         CGContextStrokeEllipseInRect(contextRef, CGRectMake(m_x - CIRCLE_RADIUS, m_y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS));
     }
     
+    float getX() { return m_x; }
+    float getY() { return m_y; }
+    
     bool isOn() { return m_isOn; }
     
     void turnOn() 
@@ -139,6 +142,76 @@ public:
         }
     }
     
+    bool addTouchVoice(float xPos, float yPos)
+    {
+        // find unused voice
+        for (int i = 0; i < NUM_VOICES; i++)
+        {
+            if (!m_voices[i].isOn())
+            {
+                // found an unused voice
+                m_voices[i].setPosition(xPos, yPos);
+                m_voices[i].turnOn();
+                return (true);
+            }
+        }
+        
+        // no unused voice found
+        return false;
+    }
+    
+    bool updateTouchVoice(float xCurrent, float yCurrent, float xPrev, float yPrev)
+    {
+        for (int i = 0; i < NUM_VOICES; i++)
+        {
+            if (!m_voices[i].isOn()) continue;
+            
+            if (m_voices[i].getX() == xPrev && m_voices[i].getY() == yPrev)
+            {
+                // found a match - update its position
+                m_voices[i].setPosition(xCurrent, yCurrent);
+                return true;
+            }
+        }
+        
+        // no match found
+        return false;
+    }
+    
+    bool removeTouchVoice(float xPos, float yPos)
+    {
+        for (int i = 0; i < NUM_VOICES; i++)
+        {
+            if (!m_voices[i].isOn()) continue;
+            
+            if (m_voices[i].getX() == xPos && m_voices[i].getY() == yPos)
+            {
+                // found a match - turn it off
+                m_voices[i].turnOff();
+                return true;
+            }
+        }
+        
+        // no match found
+        return false;
+    }
+    
+    void removeAllVoices()
+    {
+        for (int i = 0; i < NUM_VOICES; i++)
+        {
+            m_voices[i].turnOff();
+        }
+    }
+    
+    void drawVoices(CGContextRef contextRef, CGRect& bounds)
+    {
+        for (int i = 0; i < NUM_VOICES; i++)
+        {
+            m_voices[i].draw(contextRef, bounds);
+        }
+    }
+    
     void renderAudioBuffer(float* output, int numSamplesPerChannel, int numChannels)
     {
         // first zero out output buffer (can I use memset to do this??)
@@ -164,6 +237,15 @@ public:
     Voice* getVoices() { return m_voices; }
     
     int getNumVoices() const { return NUM_VOICES; }
+    
+    void setDisplayBounds(CGRect bounds)
+    {
+        for (int i = 0; i < NUM_VOICES; i++)
+        {
+            m_voices[i].setMaxX(bounds.size.width);
+            m_voices[i].setMaxY(bounds.size.height);
+        }
+    }
     
     void setWaveform(Oscillator::Waveform wave)
     {

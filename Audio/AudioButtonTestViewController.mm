@@ -175,7 +175,7 @@ static const float kAccelerometerInterval = 0.01;
 - (IBAction) waveformSelected: (id) sender
 {
     NSLog(@"waveformSelected called:");
-    _audioEngine->m_synth.setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
+    _audioEngine->getSynth()->setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 

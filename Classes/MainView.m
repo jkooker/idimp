@@ -23,17 +23,11 @@
     NSLog(@"MainView::awakeFromNib");
     
     _audioEngine = AudioEngine::getInstance();
-    _voices = _audioEngine->m_synth.getVoices();
-    _numVoices = _audioEngine->m_synth.getNumVoices();
+    _synth = _audioEngine->getSynth();
     
     CGRect bounds = [self bounds];
     NSLog(@"bounds: w %f h %f", bounds.size.width, bounds.size.height);
-    for (int i = 0; i < _numVoices; i++)
-    {
-        _voices[i].setMaxX(bounds.size.width);
-        _voices[i].setMaxY(bounds.size.height);
-    }
-    
+    _synth->setDisplayBounds(bounds); // needed to map position to parameter ranges    
     _audioEngine->start();
 }
 
@@ -41,15 +35,8 @@
     //NSLog(@"MainView::drawRect");
     
     CGRect bounds = [self bounds];
-    //NSLog(@"bounds: w %f h %f", bounds.size.width, bounds.size.height);
-
-    // Drawing code
     CGContextRef contextRef = UIGraphicsGetCurrentContext();
-    
-    for (int i = 0; i < _numVoices; i++)
-    {
-        _voices[i].draw(contextRef, bounds);
-    }
+    _synth->drawVoices(contextRef, bounds);
 }
 
 - (void)dealloc {
@@ -61,25 +48,17 @@
 - (void)touchesBegan: (NSSet *)touches withEvent:(UIEvent *)event {
     //NSLog(@"touchesBegan. %@", touches);
     
-    // add points to the touchpoints array
-    int nextIndex = 0;
+    // add touch voices to the synth
     CGRect bounds = [self bounds];
     for (UITouch *touch in touches)
     {
         CGPoint p = [touch locationInView:self];
-        // find unused voice
-        for (int i = nextIndex; i < _numVoices; i++)
+        bool success = _synth->addTouchVoice(p.x, p.y);
+        if (!success)
         {
-            if (!_voices[i].isOn())
-            {
-                // found an unused voice
-                _voices[i].setPosition(p.x, p.y);
-                _voices[i].turnOn();
-                nextIndex = i + 1;
-                break;
-            }
+            NSLog(@"MainView::touchesBegan no free voices!");
+            // should we do anything here?        
         }
-        // if we got here, there were no unused voices - now what??
     }
     
     [self setNeedsDisplay];
@@ -92,19 +71,16 @@
     // find the matching point (by looking at previous locations) and modify it
     for (UITouch *touch in touches)
     {
-        for (int i = 0; i < _numVoices; i++)
+        bool success = _synth->updateTouchVoice([touch locationInView:self].x,
+                                                [touch locationInView:self].y,
+                                                [touch previousLocationInView:self].x,
+                                                [touch previousLocationInView:self].y);
+        if (!success)
         {
-            if (!_voices[i].isOn()) continue;
-            
-            if (_voices[i].m_x == [touch previousLocationInView:self].x &&
-                _voices[i].m_y == [touch previousLocationInView:self].y)
-            {
-                // found a match - update its position
-                CGPoint pMoved = [touch locationInView:self];
-                _voices[i].setPosition(pMoved.x, pMoved.y);
-                break;
-            }
+            NSLog(@"MainView::touchesMoved could not match a voice!");
+            // should we do anything here?        
         }
+
     }
     
     // So we can assume that we will never get a new touch with "touchedMoved"?
@@ -116,22 +92,17 @@
 {
     //NSLog(@"touchesEnded. %@", touches);
     
+    // so we always get a touchesMoved event before a touchesEnded event if the touch has moved
+    // from its original location?
+            
     for (UITouch *touch in touches)
     {
-        for (int i = 0; i < _numVoices; i++)
+        bool success = _synth->removeTouchVoice([touch locationInView:self].x, [touch locationInView:self].y);
+        if (!success)
         {
-            if (!_voices[i].isOn()) continue;
-            
-            // so we always get a touchesMoved event before a touchesEnded event if the touch has moved
-            // from its original location?
-            if (_voices[i].m_x == [touch locationInView:self].x &&
-                _voices[i].m_y == [touch locationInView:self].y)
-            {
-                // found a match - turn it off
-                _voices[i].turnOff();
-                break;
-            }
-        }
+            NSLog(@"MainView::touchesEnded could not match a voice!");
+            // should we do anything here?        
+        }   
     }
 
     [self setNeedsDisplay];
@@ -141,10 +112,7 @@
 {
     //NSLog(@"touchesCancelled");
 
-    for (int i = 0; i < _numVoices; i++)
-    {
-        _voices[i].turnOff();
-    }
+    _synth->removeAllVoices();
     
     [self setNeedsDisplay];
 }
