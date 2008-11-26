@@ -19,8 +19,6 @@
     IBOutlet UISegmentedControl* _waveformSelector;
     IBOutlet UISwitch* _recordedInputSwitch;
     IBOutlet UISwitch* _synthInputSwitch;
-    BOOL _playIsOn;
-    BOOL _recordIsOn;
     AudioEngine* _audioEngine;
     AudioEffectParameter* _ringModFreqParam;
     AudioEffectParameter* _ampParam;
