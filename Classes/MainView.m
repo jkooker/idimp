@@ -10,8 +10,6 @@
 
 @implementation MainView
 
-@synthesize _touchPoints;
-
 - (id)initWithFrame:(CGRect)frame {
     NSLog(@"MainView::initWithFrame");
     if (self = [super initWithFrame:frame]) {
@@ -24,18 +22,13 @@
 {
     NSLog(@"MainView::awakeFromNib");
     
-    //_touchPoints = [NSMutableArray arrayWithCapacity:MAX_TOUCHES]; // the 6th touch point causes a touchCancelled event
-    //[_touchPoints retain];
-    // NOTE: if I don't use this _touchPoints array, will I still get touchCancelled events?  What will trigger them?
+    // NOTE: if I don't use the _touchPoints array, will I still get touchCancelled events?  What will trigger them?
     
     // TODO: these voices need to come from the synth so we can actually get audio
     
-    //_audioEngine = NULL;
-    //_audioEngine = new AudioEngine();
-    //_voices = _audioEngine->m_synth->getVoices();
-    //_numVoices = _audioEngine->m_synth->getNumVoices();
-    
-    _numVoices = NUM_VOICES;
+    _audioEngine = AudioEngine::getInstance();
+    _voices = _audioEngine->m_synth->getVoices();
+    _numVoices = _audioEngine->m_synth->getNumVoices();
     
     CGRect bounds = [self bounds];
     NSLog(@"bounds: w %f h %f", bounds.size.width, bounds.size.height);
@@ -45,7 +38,7 @@
         _voices[i].setMaxY(bounds.size.height);
     }
     
-    //_audioEngine->start();
+    _audioEngine->start();
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -64,11 +57,6 @@
 }
 
 - (void)dealloc {
-    [_touchPoints release];
-    /*if (_audioEngine != NULL)
-    {
-        delete _audioEngine;
-    }*/
     [super dealloc];
 }
 

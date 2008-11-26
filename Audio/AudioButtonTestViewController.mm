@@ -29,7 +29,7 @@ static const float kAccelerometerInterval = 0.01;
 {   
     NSLog(@"AudioButtonTestViewController myInit");
     _audioEngine = NULL;
-    _audioEngine = new AudioEngine();
+    _audioEngine = AudioEngine::getInstance();
     
     // init effects and map their parameters to sliders
     // at processing time, they will be called in the order they are added to the engine
@@ -46,12 +46,9 @@ static const float kAccelerometerInterval = 0.01;
 - (void) dealloc
 {   
     NSLog(@"AudioButtonTestViewController dealloc");
-    if (_audioEngine != NULL)
-    {
-        delete _audioEngine;
-        _audioEngine = NULL;
-    }
     
+    // dont need to delete the AudioEngine - we don't own it
+
     if (_ringModEffect != NULL)
     {
         _audioEngine->removeRecordingEffect(_ringModEffect);
