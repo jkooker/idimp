@@ -15,8 +15,6 @@ static const float kAccelerometerInterval = 0.01;
 @synthesize _playButton;
 @synthesize _playIsOn;
 @synthesize _recordIsOn;
-@synthesize _frequencySlider;
-@synthesize _frequencyTextField;
 @synthesize _ringModFreqSlider;
 @synthesize _ringModFreqTextField;
 @synthesize _ampSlider;
@@ -85,10 +83,7 @@ static const float kAccelerometerInterval = 0.01;
 - (void)viewDidLoad {
     NSLog(@"AudioButtonTestViewController viewDidLoad");
     [self myInit];
-    float freq = _audioEngine->m_synth->getVoiceFreq(0);
-    [_frequencyTextField setText:[[NSString alloc] initWithFormat:@"%d", (int)freq]];
-    [_frequencySlider setValue:freq animated:NO];
-    
+        
     float modFreq = _ringModFreqParam->getValue();
     [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", (int)modFreq]];
     [_ringModFreqSlider setValue:modFreq animated:NO];
@@ -163,13 +158,6 @@ static const float kAccelerometerInterval = 0.01;
     }
 }
 
-- (IBAction) frequencySliderChanged: (id) sender
-{
-    int freq = (int)[_frequencySlider value]; // for simplicity right now, use only integer values
-    [_frequencyTextField setText:[NSString stringWithFormat:@"%d", freq]];
-    _audioEngine->m_synth->setVoiceFreq(0, (float)freq);
-}
-
 - (IBAction) ringModFreqSliderChanged: (id) sender
 {
     int freq = (int)[_ringModFreqSlider value]; // for simplicity right now, use only integer values
@@ -187,7 +175,7 @@ static const float kAccelerometerInterval = 0.01;
 - (IBAction) waveformSelected: (id) sender
 {
     NSLog(@"waveformSelected called:");
-    _audioEngine->m_synth->setVoiceWaveform(0, (Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
+    _audioEngine->m_synth->setWaveform((Oscillator:: Waveform)[_waveformSelector selectedSegmentIndex]);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
