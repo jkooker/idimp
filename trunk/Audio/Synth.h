@@ -205,15 +205,13 @@ public:
         m_voices[voice].m_osc.setFreq(freq);
     }
     
-    void setVoiceWaveform(int voice, Oscillator::Waveform wave)
+    void setWaveform(Oscillator::Waveform wave)
     {
-        if (voice < 0 || voice >= NUM_VOICES)
+        // set the desired waveform for all voices
+        for (int i = 0; i < NUM_VOICES; i++)
         {
-            printf("Synth::setVoiceWaveform voice index out of range: %d\n", voice);
-            return;
+            m_voices[i].setWaveform(wave);
         }
-        
-        m_voices[voice].setWaveform(wave);
     }
     
     void voiceOff(int voice) 

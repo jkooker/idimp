@@ -12,8 +12,6 @@
 @interface AudioButtonTestViewController : UIViewController <UIAccelerometerDelegate> {
 
     IBOutlet UIButton* _playButton;
-    IBOutlet UISlider* _frequencySlider;
-    IBOutlet UITextField* _frequencyTextField;
     IBOutlet UISlider* _ringModFreqSlider;
     IBOutlet UITextField* _ringModFreqTextField;
     IBOutlet UISlider* _ampSlider;
@@ -31,8 +29,6 @@
 }
 
 @property (nonatomic, retain) IBOutlet UIButton* _playButton;
-@property (nonatomic, retain) IBOutlet UISlider* _frequencySlider;
-@property (nonatomic, retain) IBOutlet UITextField* _frequencyTextField;
 @property (nonatomic, retain) IBOutlet UISlider* _ringModFreqSlider;
 @property (nonatomic, retain) IBOutlet UITextField* _ringModFreqTextField;
 @property (nonatomic, retain) IBOutlet UISlider* _ampSlider;
@@ -48,7 +44,6 @@
 - (IBAction) playOrStop: (id) sender;
 - (IBAction) recordedInputSwitchChanged: (id) sender;
 - (IBAction) synthInputSwitchChanged: (id) sender;
-- (IBAction) frequencySliderChanged: (id) sender;
 - (IBAction) ringModFreqSliderChanged: (id) sender;
 - (IBAction) ampSliderChanged: (id) sender;
 - (IBAction) waveformSelected: (id) sender;

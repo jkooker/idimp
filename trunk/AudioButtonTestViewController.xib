@@ -30,7 +30,7 @@
 					<object class="IBUIButton" id="36406075">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{105, 6}, {109, 37}}</string>
+						<string key="NSFrame">{{105, 37}, {109, 37}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -55,60 +55,6 @@
 							<bytes key="NSRGB">MC4xOTYwNzg0MyAwLjMwOTgwMzkzIDAuNTIxNTY4NjYAA</bytes>
 						</object>
 					</object>
-					<object class="IBUISlider" id="581224998">
-						<reference key="NSNextResponder" ref="774585933"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{18, 157}, {171, 23}}</string>
-						<reference key="NSSuperview" ref="774585933"/>
-						<bool key="IBUIOpaque">NO</bool>
-						<bool key="IBUIClipsSubviews">YES</bool>
-						<bool key="IBUIMultipleTouchEnabled">YES</bool>
-						<int key="IBUIContentHorizontalAlignment">0</int>
-						<int key="IBUIContentVerticalAlignment">0</int>
-						<float key="IBUIValue">4.400000e+02</float>
-						<float key="IBUIMinValue">2.000000e+01</float>
-						<float key="IBUIMaxValue">5.000000e+03</float>
-					</object>
-					<object class="IBUILabel" id="487272783">
-						<reference key="NSNextResponder" ref="774585933"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{99, 124}, {122, 21}}</string>
-						<reference key="NSSuperview" ref="774585933"/>
-						<bool key="IBUIOpaque">NO</bool>
-						<bool key="IBUIClipsSubviews">YES</bool>
-						<bool key="IBUIUserInteractionEnabled">NO</bool>
-						<string key="IBUIText">Frequency (Hz):</string>
-						<object class="NSColor" key="IBUITextColor" id="451787957">
-							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MCAwIDAAA</bytes>
-						</object>
-						<nil key="IBUIHighlightedColor"/>
-						<int key="IBUIBaselineAdjustment">1</int>
-						<float key="IBUIMinimumFontSize">1.000000e+01</float>
-					</object>
-					<object class="IBUITextField" id="260087182">
-						<reference key="NSNextResponder" ref="774585933"/>
-						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{195, 153}, {97, 31}}</string>
-						<reference key="NSSuperview" ref="774585933"/>
-						<bool key="IBUIOpaque">NO</bool>
-						<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-						<bool key="IBUIEnabled">NO</bool>
-						<int key="IBUIContentVerticalAlignment">0</int>
-						<string key="IBUIText"/>
-						<int key="IBUIBorderStyle">3</int>
-						<object class="NSColor" key="IBUITextColor">
-							<int key="NSColorSpace">3</int>
-							<bytes key="NSWhite">MAA</bytes>
-							<object class="NSColorSpace" key="NSCustomColorSpace" id="619685855">
-								<int key="NSID">2</int>
-							</object>
-						</object>
-						<bool key="IBUIClearsOnBeginEditing">YES</bool>
-						<bool key="IBUIAdjustsFontSizeToFit">YES</bool>
-						<float key="IBUIMinimumFontSize">1.700000e+01</float>
-						<object class="IBUITextInputTraits" key="IBUITextInputTraits"/>
-					</object>
 					<object class="IBUILabel" id="1009208170">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
@@ -118,7 +64,10 @@
 						<bool key="IBUIClipsSubviews">YES</bool>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="IBUIText">Waveform:</string>
-						<reference key="IBUITextColor" ref="451787957"/>
+						<object class="NSColor" key="IBUITextColor" id="451787957">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MCAwIDAAA</bytes>
+						</object>
 						<nil key="IBUIHighlightedColor"/>
 						<int key="IBUIBaselineAdjustment">1</int>
 						<float key="IBUIMinimumFontSize">1.000000e+01</float>
@@ -209,7 +158,9 @@
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MAA</bytes>
-							<reference key="NSCustomColorSpace" ref="619685855"/>
+							<object class="NSColorSpace" key="NSCustomColorSpace" id="619685855">
+								<int key="NSID">2</int>
+							</object>
 						</object>
 						<bool key="IBUIClearsOnBeginEditing">YES</bool>
 						<bool key="IBUIAdjustsFontSizeToFit">YES</bool>
@@ -266,7 +217,7 @@
 					<object class="IBUISwitch" id="989405500">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{187, 51}, {94, 27}}</string>
+						<string key="NSFrame">{{187, 82}, {94, 27}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -278,7 +229,7 @@
 					<object class="IBUILabel" id="340189113">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{39, 54}, {121, 21}}</string>
+						<string key="NSFrame">{{39, 85}, {121, 21}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -292,7 +243,7 @@
 					<object class="IBUISwitch" id="520922252">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{186, 83}, {94, 27}}</string>
+						<string key="NSFrame">{{186, 114}, {94, 27}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -304,7 +255,7 @@
 					<object class="IBUILabel" id="322799532">
 						<reference key="NSNextResponder" ref="774585933"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{38, 86}, {121, 21}}</string>
+						<string key="NSFrame">{{38, 117}, {121, 21}}</string>
 						<reference key="NSSuperview" ref="774585933"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -388,31 +339,6 @@
 						<reference key="destination" ref="520922252"/>
 					</object>
 					<int key="connectionID">66</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">_frequencySlider</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="581224998"/>
-					</object>
-					<int key="connectionID">67</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">_frequencyTextField</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="260087182"/>
-					</object>
-					<int key="connectionID">68</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">frequencySliderChanged:</string>
-						<reference key="source" ref="581224998"/>
-						<reference key="destination" ref="372490531"/>
-						<int key="IBEventType">13</int>
-					</object>
-					<int key="connectionID">69</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -517,9 +443,6 @@
 							<reference ref="661026616"/>
 							<reference ref="978396783"/>
 							<reference ref="1009208170"/>
-							<reference ref="581224998"/>
-							<reference ref="487272783"/>
-							<reference ref="260087182"/>
 							<reference ref="36406075"/>
 							<reference ref="989405500"/>
 							<reference ref="340189113"/>
@@ -532,23 +455,6 @@
 						<int key="objectID">13</int>
 						<reference key="object" ref="36406075"/>
 						<reference key="parent" ref="774585933"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">18</int>
-						<reference key="object" ref="581224998"/>
-						<reference key="parent" ref="774585933"/>
-						<string key="objectName">FrequencySlider</string>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">19</int>
-						<reference key="object" ref="487272783"/>
-						<reference key="parent" ref="774585933"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">20</int>
-						<reference key="object" ref="260087182"/>
-						<reference key="parent" ref="774585933"/>
-						<string key="objectName">FrequencyTextField</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">24</int>
@@ -626,9 +532,6 @@
 					<string>-1.CustomClassName</string>
 					<string>-2.CustomClassName</string>
 					<string>13.IBPluginDependency</string>
-					<string>18.IBPluginDependency</string>
-					<string>19.IBPluginDependency</string>
-					<string>20.IBPluginDependency</string>
 					<string>24.IBPluginDependency</string>
 					<string>26.IBPluginDependency</string>
 					<string>31.IBPluginDependency</string>
@@ -661,10 +564,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-					<string>{{582, 464}, {320, 480}}</string>
+					<string>{{503, 368}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				</object>
 			</object>
@@ -701,7 +601,6 @@
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>ampSliderChanged:</string>
-							<string>frequencySliderChanged:</string>
 							<string>playOrStop:</string>
 							<string>recordedInputSwitchChanged:</string>
 							<string>ringModFreqSliderChanged:</string>
@@ -716,7 +615,6 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
-							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -725,8 +623,6 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_ampSlider</string>
 							<string>_ampTextField</string>
-							<string>_frequencySlider</string>
-							<string>_frequencyTextField</string>
 							<string>_playButton</string>
 							<string>_recordedInputSwitch</string>
 							<string>_ringModFreqSlider</string>
@@ -736,8 +632,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>UISlider</string>
-							<string>UITextField</string>
 							<string>UISlider</string>
 							<string>UITextField</string>
 							<string>UIButton</string>
