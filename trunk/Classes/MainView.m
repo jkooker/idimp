@@ -22,13 +22,9 @@
 {
     NSLog(@"MainView::awakeFromNib");
     
-    // NOTE: if I don't use the _touchPoints array, will I still get touchCancelled events?  What will trigger them?
-    
-    // TODO: these voices need to come from the synth so we can actually get audio
-    
     _audioEngine = AudioEngine::getInstance();
-    _voices = _audioEngine->m_synth->getVoices();
-    _numVoices = _audioEngine->m_synth->getNumVoices();
+    _voices = _audioEngine->m_synth.getVoices();
+    _numVoices = _audioEngine->m_synth.getNumVoices();
     
     CGRect bounds = [self bounds];
     NSLog(@"bounds: w %f h %f", bounds.size.width, bounds.size.height);

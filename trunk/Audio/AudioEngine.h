@@ -26,7 +26,7 @@ class AudioEngine
 {
 public:
 
-    Synth* m_synth;
+    TouchSynth m_synth;
     
     ~AudioEngine()
     {
@@ -65,14 +65,7 @@ public:
             delete m_silenceBuffer;
             m_silenceBuffer = NULL;
         }
-        
-        // free synth
-        if (m_synth != NULL)
-        {
-            delete m_synth;
-            m_synth = NULL;
-        }
-        
+    
         // free temp buffers
         if (m_tempRecordedBuffer != NULL)
         {
@@ -135,11 +128,11 @@ public:
         return false;
     }
     
-    bool GetMuteRecording() { return m_recordingIsMuted; }
-    void SetMuteRecording(bool on) { m_recordingIsMuted = on; }
+    bool getMuteRecording() { return m_recordingIsMuted; }
+    void setMuteRecording(bool on) { m_recordingIsMuted = on; }
     
-    bool GetMuteSynth() { return m_synthIsMuted; }
-    void SetMuteSynth(bool on) { m_synthIsMuted = on; }
+    bool getMuteSynth() { return m_synthIsMuted; }
+    void setMuteSynth(bool on) { m_synthIsMuted = on; }
     
     void start()
     {
@@ -205,7 +198,6 @@ protected:
         m_synthIsMuted(false),
         m_silenceBuffer(NULL),
         m_playbackSamplesAllChannels(0),
-        m_synth(NULL),
         m_tempRecordedBuffer(NULL),
         m_tempSynthesizedBuffer(NULL)
     {
@@ -249,9 +241,6 @@ protected:
         }    
         
         print_audio_unit_properties(m_audioUnit, "REMOTE IO");
-        
-        // init synth
-        m_synth = new Synth();
         
 #ifdef WRITE_DEBUG_FILE
         m_debugFile = new Wavefile(DEBUG_FILE_NAME);
@@ -414,7 +403,7 @@ private:
         }
         else
         {
-            m_synth->RenderAudioBuffer(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            m_synth.renderAudioBuffer(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
         }
            
         // do processing on synthesized data
