@@ -28,68 +28,6 @@ public:
 
     Synth* m_synth;
     
-    AudioEngine() :
-        m_inputBufferList(NULL),
-        m_recordedData(NULL),
-        m_recordedDataSizeInBytes(0),
-        m_debugFile(NULL),
-        m_recordingIsMuted(false),
-        m_synthIsMuted(false),
-        m_silenceBuffer(NULL),
-        m_playbackSamplesAllChannels(0),
-        m_synth(NULL),
-        m_tempRecordedBuffer(NULL),
-        m_tempSynthesizedBuffer(NULL)
-    {
-        printf("AudioEngine::AudioEngine\n");
-       
-        // Describe audio component
-        AudioComponentDescription desc;
-        desc.componentType = kAudioUnitType_Output;
-        desc.componentSubType = kAudioUnitSubType_RemoteIO;
-        desc.componentFlags = 0;
-        desc.componentFlagsMask = 0;
-        desc.componentManufacturer = kAudioUnitManufacturer_Apple;
-        
-        // Get component
-        AudioComponent inputComponent = AudioComponentFindNext(NULL, &desc);
-        
-        // Get audio unit
-        OSStatus status = AudioComponentInstanceNew(inputComponent, &m_audioUnit);
-        if (status != noErr)
-        {
-            printf("AudioEngine::AudioEngine could not create new audio component: status = %d\n", status);
-        }
-        
-        // enable IO for recording
-        enable_recording();
-                
-        // enable IO for playback
-        enable_playback();
-        
-        // init audio format for input and output
-        init_audio_format();
-                        
-        // set input and output callbacks
-        init_callbacks();
-                
-        // initialize
-        status = AudioUnitInitialize(m_audioUnit);
-        if (status != noErr)
-        {
-            printf("AudioEngine::AudioEngine could not initialize audio unit: status = %d\n", status);
-        }    
-        
-        print_audio_unit_properties(m_audioUnit, "REMOTE IO");
-        
-        // init synth
-        m_synth = new Synth();
-        
-#ifdef WRITE_DEBUG_FILE
-        m_debugFile = new Wavefile(DEBUG_FILE_NAME);
-#endif
-    }
-    
     ~AudioEngine()
     {
         printf("AudioEngine::~AudioEngine\n");
@@ -146,6 +84,13 @@ public:
             delete m_tempSynthesizedBuffer;
             m_tempSynthesizedBuffer = NULL;
         }
+    }
+    
+    static AudioEngine* getInstance()
+    {
+        // this way, the static instance gets properly destructed when the app ends?
+        static AudioEngine instance;
+        return &instance;
     }
     
     void addRecordingEffect(AudioEffect* e)
@@ -250,6 +195,74 @@ public:
                                          ioData);
     }
     
+protected:
+     AudioEngine() :
+        m_inputBufferList(NULL),
+        m_recordedData(NULL),
+        m_recordedDataSizeInBytes(0),
+        m_debugFile(NULL),
+        m_recordingIsMuted(false),
+        m_synthIsMuted(false),
+        m_silenceBuffer(NULL),
+        m_playbackSamplesAllChannels(0),
+        m_synth(NULL),
+        m_tempRecordedBuffer(NULL),
+        m_tempSynthesizedBuffer(NULL)
+    {
+        printf("AudioEngine::AudioEngine\n");
+       
+        // Describe audio component
+        AudioComponentDescription desc;
+        desc.componentType = kAudioUnitType_Output;
+        desc.componentSubType = kAudioUnitSubType_RemoteIO;
+        desc.componentFlags = 0;
+        desc.componentFlagsMask = 0;
+        desc.componentManufacturer = kAudioUnitManufacturer_Apple;
+        
+        // Get component
+        AudioComponent inputComponent = AudioComponentFindNext(NULL, &desc);
+        
+        // Get audio unit
+        OSStatus status = AudioComponentInstanceNew(inputComponent, &m_audioUnit);
+        if (status != noErr)
+        {
+            printf("AudioEngine::AudioEngine could not create new audio component: status = %d\n", status);
+        }
+        
+        // enable IO for recording
+        enable_recording();
+                
+        // enable IO for playback
+        enable_playback();
+        
+        // init audio format for input and output
+        init_audio_format();
+                        
+        // set input and output callbacks
+        init_callbacks();
+                
+        // initialize
+        status = AudioUnitInitialize(m_audioUnit);
+        if (status != noErr)
+        {
+            printf("AudioEngine::AudioEngine could not initialize audio unit: status = %d\n", status);
+        }    
+        
+        print_audio_unit_properties(m_audioUnit, "REMOTE IO");
+        
+        // init synth
+        m_synth = new Synth();
+        
+#ifdef WRITE_DEBUG_FILE
+        m_debugFile = new Wavefile(DEBUG_FILE_NAME);
+#endif
+    }
+    
+    // TODO: implement these if desired.  For now, the compiler will complain if someone tries to use them
+    AudioEngine(const AudioEngine&);
+    
+    AudioEngine& operator= (const AudioEngine&);
+
 private:
 
     void allocate_input_buffers(UInt32 inNumberFrames)

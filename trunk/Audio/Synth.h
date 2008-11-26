@@ -72,8 +72,18 @@ public:
     }
     
     bool isOn() { return m_isOn; }
-    void turnOn() { m_isOn = true; }
-    void turnOff() { m_isOn = false; }
+    
+    void turnOn() 
+    { 
+        printf("Voice::turnOn %02X\n", this);
+        m_isOn = true; 
+    }
+    
+    void turnOff() 
+    { 
+        printf("Voice::turnOff %02X\n", this);
+        m_isOn = false; 
+    }
     
     void setMaxX(float x) { m_xMax = x; }
     void setMaxY(float y) { m_yMax = y; }
@@ -86,7 +96,7 @@ public:
         
         // update oscillator parameters based on new position
         // map y to frequency and x to amplitude
-        m_osc.setFreq(m_minFreq + m_freqRange * (m_y / m_yMax));
+        m_osc.setFreq(m_minFreq + m_freqRange * (1.0 - m_y / m_yMax));
         m_osc.setAmp(m_minAmp + m_ampRange * (m_x / m_xMax));
     }
     
