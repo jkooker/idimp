@@ -26,8 +26,6 @@ class AudioEngine
 {
 public:
 
-    TouchSynth m_synth;
-    
     ~AudioEngine()
     {
         printf("AudioEngine::~AudioEngine\n");
@@ -127,6 +125,8 @@ public:
         // effect not found
         return false;
     }
+    
+    TouchSynth* getSynth() { return &m_synth; }
     
     bool getMuteRecording() { return m_recordingIsMuted; }
     void setMuteRecording(bool on) { m_recordingIsMuted = on; }
@@ -616,6 +616,7 @@ private:
     float* m_tempSynthesizedBuffer;
     std::vector<AudioEffect*> m_recordingEffects;
     std::vector<AudioEffect*> m_synthEffects;
+    TouchSynth m_synth;
 };
 
 #endif // AUDIO_ENGINE_H

@@ -12,8 +12,7 @@
 #import "Synth.h"
 
 @interface MainView : UIView {
-    Voice* _voices;
-    int _numVoices;
+    TouchSynth* _synth; // TODO: maybe the synth should be owned by this class and added to the audio engine explicitly?
     AudioEngine* _audioEngine;
 }
 
