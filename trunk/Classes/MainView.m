@@ -8,8 +8,6 @@
 
 #import "MainView.h"
 
-static const float circleRadius = 80;
-
 @implementation MainView
 
 @synthesize _touchPoints;
@@ -61,24 +59,7 @@ static const float circleRadius = 80;
     
     for (int i = 0; i < _numVoices; i++)
     {
-        // only draw voices that are turned on
-        if (!_voices[i].isOn()) continue;
-        
-        float x = _voices[i].m_x;
-        float y = _voices[i].m_y;
-            
-        float xratio = (x / bounds.size.width);
-        float yratio = 1 - (y / bounds.size.height);
-        
-        CGContextSetRGBFillColor(contextRef, 0, xratio, 1 - xratio, 0.8 * yratio);
-        CGContextSetRGBStrokeColor(contextRef, 0, xratio, 1 - xratio, 0.2 + 0.8 * yratio);
-        CGContextSetLineWidth(contextRef, 3);
-        
-        // Draw a circle (filled)
-        CGContextFillEllipseInRect(contextRef, CGRectMake(x - circleRadius, y - circleRadius, 2 * circleRadius, 2 * circleRadius));
-
-        // Draw a circle (border only)
-        CGContextStrokeEllipseInRect(contextRef, CGRectMake(x - circleRadius, y - circleRadius, 2 * circleRadius, 2 * circleRadius));
+        _voices[i].draw(contextRef, bounds);
     }
 }
 
