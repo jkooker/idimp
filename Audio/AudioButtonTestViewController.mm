@@ -104,6 +104,18 @@ static const float kAccelerometerInterval = 0.01;
     [_recordedInputSwitch setOn:!_audioEngine->getMuteRecording()];
     [_synthInputSwitch setOn:!_audioEngine->getMuteSynth()];
     
+    // init play/stop button
+    if (_audioEngine->isStarted())
+    {
+        [_playButton setTitle: @"Stop" forState: UIControlStateNormal ];
+        [_playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
+    }
+    else
+    {
+        [_playButton setTitle: @"Play" forState: UIControlStateNormal ];
+        [_playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
+    }
+    
     [super viewDidLoad];
 }
 
@@ -112,7 +124,7 @@ static const float kAccelerometerInterval = 0.01;
 
 	NSLog(@"playOrStop called:");
     
-    if (_playIsOn)
+    if (_audioEngine->isStarted())
     {
         [_playButton setTitle: @"Play" forState: UIControlStateNormal ];
         [_playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
@@ -124,8 +136,6 @@ static const float kAccelerometerInterval = 0.01;
         [_playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
         _audioEngine->start();
     }
-    
-    _playIsOn = !_playIsOn;
 }
 
 - (IBAction) recordedInputSwitchChanged: (id) sender 

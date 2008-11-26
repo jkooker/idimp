@@ -134,6 +134,8 @@ public:
     bool getMuteSynth() { return m_synthIsMuted; }
     void setMuteSynth(bool on) { m_synthIsMuted = on; }
     
+    bool isStarted() { return m_isStarted; }
+    
     void start()
     {
         printf("AudioEngine::start\n");
@@ -141,6 +143,10 @@ public:
         if (status != noErr)
         {
             printf("AudioEngine::AudioEngine could not start audio unit: status = %d\n", status);
+        }
+        else
+        {
+            m_isStarted = true;
         }
     }
     
@@ -151,6 +157,10 @@ public:
         if (status != noErr)
         {
             printf("AudioEngine::AudioEngine could not stop audio unit: status = %d\n", status);
+        }
+        else
+        {
+            m_isStarted = false;
         }
     }
     
@@ -199,7 +209,8 @@ protected:
         m_silenceBuffer(NULL),
         m_playbackSamplesAllChannels(0),
         m_tempRecordedBuffer(NULL),
-        m_tempSynthesizedBuffer(NULL)
+        m_tempSynthesizedBuffer(NULL),
+        m_isStarted(false)
     {
         printf("AudioEngine::AudioEngine\n");
        
@@ -617,6 +628,7 @@ private:
     std::vector<AudioEffect*> m_recordingEffects;
     std::vector<AudioEffect*> m_synthEffects;
     TouchSynth m_synth;
+    bool m_isStarted;
 };
 
 #endif // AUDIO_ENGINE_H
