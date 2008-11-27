@@ -35,6 +35,14 @@ static const float TWO_PI = (2 * PI);
 static const short AUDIO_MAX_AMPLITUDE = (1 << (AUDIO_BIT_DEPTH - 1)) - 1;
 
 // helper functions
+void AudioSamplesFloatToShort(const float* in, 
+                              short* out, 
+                              int numSamples);
+                              
+void AudioSamplesShortToFloat(const short* in, 
+                              float* out, 
+                              int numSamples);
+                              
 void PopulateAudioDescription(AudioStreamBasicDescription& desc);
 
 #endif // AUDIO_BASICS_H
