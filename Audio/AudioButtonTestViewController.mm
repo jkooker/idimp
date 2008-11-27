@@ -163,7 +163,7 @@ static const float kAccelerometerInterval = 0.01;
     }
     else
     {
-        NSLog(@"synthInputSwitchChanged unmuting synth");
+        NSLog(@"synthInputSwitchChanged muting synth");
         _audioEngine->setMuteSynth(true);
     }
 }
