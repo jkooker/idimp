@@ -10,6 +10,7 @@
 #ifndef SYNTH_H
 #define SYNTH_H
 
+#import <UIKit/UIKit.h>
 #import "Oscillator.h"
 
 static const float DEFAULT_MIN_FREQUENCY_HZ = 20.0;

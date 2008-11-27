@@ -9,6 +9,26 @@
 
 #include "AudioBasics.h"
 
+void AudioSamplesFloatToShort(const float* in, short* out, int numSamples)
+{
+    const float* pIn = in;
+    short* pOut = out;
+    for (int n = 0; n < numSamples; n++)
+    {
+        *(pOut++) = (short)(*(pIn++) * AUDIO_MAX_AMPLITUDE);
+    }
+}
+
+void AudioSamplesShortToFloat(const short* in, float* out, int numSamples)
+{
+    const short* pIn = in;
+    float* pOut = out;
+    for (int n = 0; n < numSamples; n++)
+    {
+        *(pOut++) = *(pIn++) / (float)AUDIO_MAX_AMPLITUDE;
+    }
+}
+
 void PopulateAudioDescription(AudioStreamBasicDescription& desc)
 {
     // describe format
