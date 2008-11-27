@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MainViewController : UIViewController {
-    
+@interface MainViewController : UIViewController <UIAccelerometerDelegate> {
+    UIAccelerationValue	_savedAcceleration[3]; // in three dimensions
+    CFTimeInterval		_lastShakeTime;
 }
+
+- (BOOL) didShake:(UIAcceleration*)acceleration;
 
 @end
