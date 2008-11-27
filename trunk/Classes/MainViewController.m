@@ -9,12 +9,19 @@
 #import "MainViewController.h"
 #import "MainView.h"
 
+static const int kAccelerometerFrequency        = 25; //Hz
+static const int kFilteringFactor               = 0.1;
+static const int kMinEraseInterval              = 0.5;
+static const int kEraseAccelerationThreshold    = 2.0;
+
 @implementation MainViewController
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         // Custom initialization
+        [[UIAccelerometer sharedAccelerometer] setUpdateInterval:(1.0 / kAccelerometerFrequency)];
+        [[UIAccelerometer sharedAccelerometer] setDelegate:self];
     }
     return self;
 }
@@ -44,5 +51,41 @@
     [super dealloc];
 }
 
+#pragma mark Acceleration
+// This can be moved if we decide that more than just the main view needs to detect shaking
+- (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
+{
+    if ([self didShake:acceleration])
+    {
+        NSLog(@"Detected shake gesture.");
+    }
+}
+
+- (BOOL)didShake:(UIAcceleration*)acceleration
+{
+    UIAccelerationValue length, x, y, z;
+    BOOL detectedShakeGesture = NO;
+	
+	// Use a basic high-pass filter to remove the influence of gravity
+	_savedAcceleration[0] = acceleration.x * kFilteringFactor + _savedAcceleration[0] * (1.0 - kFilteringFactor);
+	_savedAcceleration[1] = acceleration.y * kFilteringFactor + _savedAcceleration[1] * (1.0 - kFilteringFactor);
+	_savedAcceleration[2] = acceleration.z * kFilteringFactor + _savedAcceleration[2] * (1.0 - kFilteringFactor);
+
+	// Compute values for the three axes of the acceleromater
+	x = acceleration.x - _savedAcceleration[0];
+	y = acceleration.y - _savedAcceleration[0];
+	z = acceleration.z - _savedAcceleration[0];
+	
+	// Compute the intensity of the current acceleration 
+	length = sqrt(x * x + y * y + z * z);
+    
+	// If above a given threshold, return true
+	if((length >= kEraseAccelerationThreshold) && (CFAbsoluteTimeGetCurrent() > _lastShakeTime + kMinEraseInterval)) {
+        detectedShakeGesture = YES;
+		_lastShakeTime = CFAbsoluteTimeGetCurrent();
+	}
+    
+    return detectedShakeGesture;
+}
 
 @end
