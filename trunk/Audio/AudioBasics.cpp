@@ -29,6 +29,28 @@ void AudioSamplesShortToFloat(const short* in, float* out, int numSamples)
     }
 }
 
+void AudioSamplesMixFloatToFloat(const float* in1, const float* in2, float* out1, int numSamples)
+{
+    const float* pIn1 = in1;
+    const float* pIn2 = in2;
+    float* pOut1 = out1;
+    for (int n = 0; n < numSamples; n++)
+    {
+        *(pOut1++) = ( *(pIn1++) + *(pIn2++) ) / 2.0;
+    }
+}
+
+void AudioSamplesMixFloatToShort(const float* in1, const float* in2, short* out1, int numSamples)
+{
+    const float* pIn1 = in1;
+    const float* pIn2 = in2;
+    short* pOut1 = out1;
+    for (int n = 0; n < numSamples; n++)
+    {
+        *(pOut1++) = (short)(AUDIO_MAX_AMPLITUDE *  ((*(pIn1++) + *(pIn2++)) / 2.0));
+    }
+}
+
 void PopulateAudioDescription(AudioStreamBasicDescription& desc)
 {
     // describe format
