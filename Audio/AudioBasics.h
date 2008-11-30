@@ -43,6 +43,16 @@ void AudioSamplesShortToFloat(const short* in,
                               float* out, 
                               int numSamples);
                               
+void AudioSamplesMixFloatToFloat(const float* in1, 
+                                 const float* in2, 
+                                 float* out1, 
+                                 int numSamples);
+                                 
+void AudioSamplesMixFloatToShort(const float* in1, 
+                                 const float* in2, 
+                                 short* out1, 
+                                 int numSamples);
+                              
 void PopulateAudioDescription(AudioStreamBasicDescription& desc);
 
 #endif // AUDIO_BASICS_H
