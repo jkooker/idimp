@@ -34,8 +34,6 @@
 @property (nonatomic, retain) IBOutlet UISegmentedControl* _waveformSelector;
 @property (nonatomic, retain) IBOutlet UISwitch* _recordedInputSwitch;
 @property (nonatomic, retain) IBOutlet UISwitch* _synthInputSwitch;
-@property (readwrite) BOOL _playIsOn;
-@property (readwrite) BOOL _recordIsOn;
 
 - (void) myInit;
 - (void) dealloc;

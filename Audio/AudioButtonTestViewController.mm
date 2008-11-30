@@ -13,8 +13,6 @@ static const float kAccelerometerInterval = 0.01;
 @implementation AudioButtonTestViewController
 
 @synthesize _playButton;
-@synthesize _playIsOn;
-@synthesize _recordIsOn;
 @synthesize _ringModFreqSlider;
 @synthesize _ringModFreqTextField;
 @synthesize _ampSlider;
