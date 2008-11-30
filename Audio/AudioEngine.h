@@ -271,152 +271,23 @@ private:
         
     void allocate_temp_buffers(int numSamplesAllChannels);
         
-    void enable_playback()
-    {
-        // enable IO for playback
-        UInt32 flag = 1;
-        OSStatus status = AudioUnitSetProperty(m_audioUnit, 
-                                               kAudioOutputUnitProperty_EnableIO, 
-                                               kAudioUnitScope_Output, 
-                                               AUDIO_OUTPUT_BUS,
-                                               &flag, 
-                                               sizeof(flag));
-        if (status != noErr)
-        {
-            printf("AudioEngine::enable_playback failed: status = %d\n", status);
-        }
-    }
-    
-    void enable_recording()
-    {
-        // Enable IO for recording
-        UInt32 flag = 1;
-        OSStatus status = AudioUnitSetProperty(m_audioUnit, 
-                                               kAudioOutputUnitProperty_EnableIO, 
-                                               kAudioUnitScope_Input, 
-                                               AUDIO_INPUT_BUS,
-                                               &flag, 
-                                               sizeof(flag));
-        if (status != noErr)
-        {
-            printf("AudioEngine::enable_recording failed: status = %d\n", status);
-        }
-    }
-    
-    void fill_buffer_with_silence(float* buffer, int n)
-    {
-        // make sure slience buffer has been initialized
-        allocate_silence_buffer(n);
-                
-        // insert silence
-        memcpy(buffer, m_silenceBuffer, n * sizeof(float));    
-
-    }
-    
-    void get_recorded_data_for_playback(float* buffer, int numSamplesAllChannels)
-    {
-        // copy recorded data to temp buffer in float form if there is any - otherwise insert silence
-        if (m_recordingIsMuted || m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
-        {
-            if (m_recordedData == NULL || m_recordedDataSizeInBytes <= 0)
-            {
-                printf("AudioEngine::get_recorded_data_for_playback: no recorded data to play - substituting silence!\n");
-            }
-            fill_buffer_with_silence(buffer, numSamplesAllChannels);
-        }
-        else
-        {
-            AudioSamplesShortToFloat((short*)m_recordedData, buffer, numSamplesAllChannels);
-        }
+    void enable_playback();
         
-        // do processing on recorded data
-        for (int effect = 0; effect < m_recordingEffects.size(); effect++)
-        {
-            m_recordingEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
-        }
-    }
-    
-    void get_synthesized_data_for_playback(float* buffer, int numSamplesAllChannels)
-    {
-        // get synthesized audio
-        if (m_synthIsMuted)
-        {
-            fill_buffer_with_silence(buffer, numSamplesAllChannels);
-        }
-        else
-        {
-            m_synth.renderAudioBuffer(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
-        }
-           
-        // do processing on synthesized data
-        for (int effect = 0; effect < m_synthEffects.size(); effect++)
-        {
-            m_synthEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
-        }
-    }
-    
-    void init_audio_format()
-    {
-        // describe format
-        PopulateAudioDescription(m_audioFormat);
-              
-        // Apply output format
-        OSStatus status = AudioUnitSetProperty(m_audioUnit, 
-                                               kAudioUnitProperty_StreamFormat, 
-                                               kAudioUnitScope_Output, 
-                                               AUDIO_INPUT_BUS, 
-                                               &m_audioFormat, 
-                                               sizeof(m_audioFormat));
-        if (status != noErr)
-        {
-            printf("AudioEngine::init_audio_format could not set output format: status = %d\n", status);
-        }
+    void enable_recording();
         
-        // Apply input format
-        status = AudioUnitSetProperty(m_audioUnit, 
-                                      kAudioUnitProperty_StreamFormat, 
-                                      kAudioUnitScope_Input, 
-                                      AUDIO_OUTPUT_BUS, 
-                                      &m_audioFormat, 
-                                      sizeof(m_audioFormat));
-        if (status != noErr)
-        {
-            printf("AudioEngine::init_audio_format could not set input format: status = %d\n", status);
-        }
-    }
-    
-    void init_callbacks()
-    {
-        // Set input callback
-        AURenderCallbackStruct callbackStruct;
-        callbackStruct.inputProc = recordingCallback;
-        callbackStruct.inputProcRefCon = this;
-        OSStatus status = AudioUnitSetProperty(m_audioUnit, 
-                                               kAudioOutputUnitProperty_SetInputCallback, 
-                                               kAudioUnitScope_Global, 
-                                               AUDIO_INPUT_BUS, 
-                                               &callbackStruct, 
-                                               sizeof(callbackStruct));
-        if (status != noErr)
-        {
-            printf("AudioEngine::init_callbacks could not set input callback: status = %d\n", status);
-        }
+    void fill_buffer_with_silence(float* buffer, 
+                                  int n);
         
-        // Set output callback
-        callbackStruct.inputProc = playbackCallback;
-        callbackStruct.inputProcRefCon = this;
-        status = AudioUnitSetProperty(m_audioUnit, 
-                                      kAudioUnitProperty_SetRenderCallback, 
-                                      kAudioUnitScope_Global, 
-                                      AUDIO_OUTPUT_BUS,
-                                      &callbackStruct, 
-                                      sizeof(callbackStruct));
-        if (status != noErr)
-        {
-            printf("AudioEngine::init_callbacks could not set output callback: status = %d\n", status);
-        }
-    }    
+    void get_recorded_data_for_playback(float* buffer, 
+                                        int numSamplesAllChannels);
+        
+    void get_synthesized_data_for_playback(float* buffer, 
+                                           int numSamplesAllChannels);
+                                               
+    void init_audio_format();
     
+    void init_callbacks();
+        
     static void mix(const float* in1, const float* in2, float* out1, int numSamples)
     {
         const float* pIn1 = in1;
