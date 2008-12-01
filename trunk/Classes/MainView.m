@@ -48,6 +48,9 @@
 - (void)touchesBegan: (NSSet *)touches withEvent:(UIEvent *)event {
     //NSLog(@"touchesBegan. %@", touches);
     
+    // TODO: it might be cool if double-taps create a persistent voice which stays alive even 
+    // after the user removes their finger.  a later tap on that voice would remove it?
+    
     // add touch voices to the synth
     CGRect bounds = [self bounds];
     for (UITouch *touch in touches)
@@ -59,6 +62,7 @@
             NSLog(@"MainView::touchesBegan no free voices!");
             // should we do anything here?        
         }
+        //NSLog(@"MainView::touchesBegan added x = %f, y = %f\n", p.x, p.y);
     }
     
     [self setNeedsDisplay];
@@ -66,7 +70,7 @@
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    //NSLog(@"touchesMoved. %@\n%@", touches, _touchPoints);
+    //NSLog(@"touchesMoved. %@\n", touches);
     
     // find the matching point (by looking at previous locations) and modify it
     for (UITouch *touch in touches)
@@ -77,13 +81,11 @@
                                                 [touch previousLocationInView:self].y);
         if (!success)
         {
-            NSLog(@"MainView::touchesMoved could not match a voice!");
+            NSLog(@"MainView::touchesMoved could not match voice: x = %f, y = %f", [touch locationInView:self].x, [touch locationInView:self].y);
             // should we do anything here?        
         }
 
     }
-    
-    // So we can assume that we will never get a new touch with "touchedMoved"?
 
     [self setNeedsDisplay];
 }
@@ -100,10 +102,12 @@
         bool success = _synth->removeTouchVoice([touch locationInView:self].x, [touch locationInView:self].y);
         if (!success)
         {
-            NSLog(@"MainView::touchesEnded could not match a voice!");
+            NSLog(@"MainView::touchesEnded could not match voice: x = %f, y = %f", [touch locationInView:self].x, [touch locationInView:self].y);
+            //_synth->printVoices();
             // should we do anything here?        
         }   
     }
+    //_synth->printVoices();
 
     [self setNeedsDisplay];
 }
