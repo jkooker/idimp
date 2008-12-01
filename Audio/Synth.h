@@ -113,6 +113,11 @@ public:
         m_osc.setWaveform(wave);
     }
     
+    void print()
+    {
+        printf("Voice %02X pos x = %f, y = %f, on = %d\n", this, m_x, m_y, m_isOn);
+    }
+    
 protected:
     float m_x;
     float m_y;
@@ -152,6 +157,7 @@ public:
             {
                 // found an unused voice
                 m_voices[i].setPosition(xPos, yPos);
+                //printf("TouchSynth::addTouchVoice added x = %f, y = %f\n", xPos, yPos);
                 m_voices[i].turnOn();
                 return (true);
             }
@@ -210,6 +216,15 @@ public:
         for (int i = 0; i < NUM_VOICES; i++)
         {
             m_voices[i].draw(contextRef, bounds);
+        }
+    }
+    
+    void printVoices()
+    {
+        printf("PRINTING VOICES\n");
+        for (int i = 0; i < NUM_VOICES; i++)
+        {
+            m_voices[i].print();
         }
     }
     
