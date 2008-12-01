@@ -346,31 +346,31 @@ void AudioEngine::get_recorded_data_for_playback(float* buffer, int numSamplesAl
     else
     {
         AudioSamplesShortToFloat((short*)m_recordedData, buffer, numSamplesAllChannels);
-    }
-    
-    // do processing on recorded data
-    for (int effect = 0; effect < m_recordingEffects.size(); effect++)
-    {
-        m_recordingEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+        
+        // do processing on recorded data
+        for (int effect = 0; effect < m_recordingEffects.size(); effect++)
+        {
+            m_recordingEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+        }
     }
 }
 
 void AudioEngine::get_synthesized_data_for_playback(float* buffer, int numSamplesAllChannels)
 {
     // get synthesized audio
-    if (m_synthIsMuted)
+    if (m_synthIsMuted || m_synth.allVoicesAreOff())
     {
         fill_buffer_with_silence(buffer, numSamplesAllChannels);
     }
     else
     {
         m_synth.renderAudioBuffer(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
-    }
-    
-    // do processing on synthesized data
-    for (int effect = 0; effect < m_synthEffects.size(); effect++)
-    {
-        m_synthEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+        
+        // do processing on synthesized data
+        for (int effect = 0; effect < m_synthEffects.size(); effect++)
+        {
+            m_synthEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+        }
     }
 }
 

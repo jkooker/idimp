@@ -50,7 +50,7 @@ public:
         setPosition(x, y);
     }
     
-    void draw(CGContextRef contextRef, CGRect& bounds)
+    void draw(CGContextRef contextRef, CGRect& bounds) const
     {
         if (!m_isOn) return;
         
@@ -68,10 +68,10 @@ public:
         CGContextStrokeEllipseInRect(contextRef, CGRectMake(m_x - CIRCLE_RADIUS, m_y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS));
     }
     
-    float getX() { return m_x; }
-    float getY() { return m_y; }
+    float getX() const { return m_x; }
+    float getY() const { return m_y; }
     
-    bool isOn() { return m_isOn; }
+    bool isOn() const { return m_isOn; }
     
     void turnOn() 
     { 
@@ -113,7 +113,7 @@ public:
         m_osc.setWaveform(wave);
     }
     
-    void print()
+    void print() const
     {
         printf("Voice %02X pos x = %f, y = %f, on = %d\n", this, m_x, m_y, m_isOn);
     }
@@ -211,7 +211,7 @@ public:
         }
     }
     
-    void drawVoices(CGContextRef contextRef, CGRect& bounds)
+    void drawVoices(CGContextRef contextRef, CGRect& bounds) const
     {
         for (int i = 0; i < NUM_VOICES; i++)
         {
@@ -219,7 +219,7 @@ public:
         }
     }
     
-    void printVoices()
+    void printVoices() const
     {
         printf("PRINTING VOICES\n");
         for (int i = 0; i < NUM_VOICES; i++)
@@ -250,9 +250,16 @@ public:
         }
     }
     
-    Voice* getVoices() { return m_voices; }
-    
     int getNumVoices() const { return NUM_VOICES; }
+    
+    bool allVoicesAreOff() const
+    {
+        for (int i = 0; i < NUM_VOICES; i++)
+        {
+            if (m_voices[i].isOn()) return false;
+        }
+        return true;
+    }
     
     void setDisplayBounds(CGRect bounds)
     {
