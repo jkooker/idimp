@@ -1,0 +1,8 @@
+Info about the Doxygen tool
+
+= Introduction =
+Doxygen is a nifty tool for generating documentation automatically from javadoc-style comments.
+
+
+= Details =
+You can download doxygen from [http://www.stack.nl/~dimitri/doxygen/ here]
