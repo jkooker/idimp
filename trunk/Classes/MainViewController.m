@@ -14,6 +14,18 @@ static const int kFilteringFactor               = 0.1;
 static const int kMinEraseInterval              = 0.5;
 static const int kEraseAccelerationThreshold    = 2.0;
 
+Oscillator::Waveform NextWaveform(Oscillator::Waveform waveform)
+{
+    if (waveform < Oscillator::NumWaveforms - 1)
+    {
+        return (Oscillator::Waveform) (waveform + 1);
+    }
+    else
+    {
+        return (Oscillator::Waveform) 0;
+    }
+}
+
 @implementation MainViewController
 
 
@@ -58,6 +70,9 @@ static const int kEraseAccelerationThreshold    = 2.0;
     if ([self didShake:acceleration])
     {
         NSLog(@"Detected shake gesture.");
+        // Cycle through waveforms
+        TouchSynth *mainSynth = AudioEngine::getInstance()->getSynth();
+        mainSynth->setWaveform(NextWaveform(mainSynth->getWaveform()));
     }
 }
 

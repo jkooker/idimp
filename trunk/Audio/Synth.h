@@ -50,7 +50,7 @@ public:
         setPosition(x, y);
     }
     
-    void draw(CGContextRef contextRef, CGRect& bounds) const
+    void draw(CGContextRef contextRef, CGRect& bounds)
     {
         if (!m_isOn) return;
         
@@ -61,11 +61,23 @@ public:
         CGContextSetRGBStrokeColor(contextRef, 0, xratio, 1 - xratio, 0.2 + 0.8 * yratio);
         CGContextSetLineWidth(contextRef, 3);
         
-        // Draw a circle (filled)
-        CGContextFillEllipseInRect(contextRef, CGRectMake(m_x - CIRCLE_RADIUS, m_y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS));
-
-        // Draw a circle (border only)
-        CGContextStrokeEllipseInRect(contextRef, CGRectMake(m_x - CIRCLE_RADIUS, m_y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS));
+        CGRect rect = CGRectMake(m_x - CIRCLE_RADIUS, m_y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS);
+                
+        switch (m_osc.getWaveform()) {
+            case Oscillator::SquareWave:
+                // Draw a square (filled)
+                CGContextFillRect(contextRef, rect);
+                // Draw a square (border only)
+                CGContextStrokeRect(contextRef, rect);
+                break;
+            default:
+            case Oscillator::Sinusoid:
+                // Draw a circle (filled)
+                CGContextFillEllipseInRect(contextRef, rect);
+                // Draw a circle (border only)
+                CGContextStrokeEllipseInRect(contextRef, rect);
+                break;
+        }
     }
     
     float getX() const { return m_x; }
@@ -107,6 +119,8 @@ public:
         m_osc.setFreq(m_minFreq + m_freqRange * (1.0 - m_y / m_yMax));
         m_osc.setAmp(m_minAmp + m_ampRange * (m_x / m_xMax));
     }
+    
+    Oscillator::Waveform getWaveform() { return m_osc.getWaveform(); }
     
     void setWaveform(Oscillator::Waveform wave)
     {
@@ -211,7 +225,7 @@ public:
         }
     }
     
-    void drawVoices(CGContextRef contextRef, CGRect& bounds) const
+    void drawVoices(CGContextRef contextRef, CGRect& bounds)
     {
         for (int i = 0; i < NUM_VOICES; i++)
         {
@@ -268,6 +282,12 @@ public:
             m_voices[i].setMaxX(bounds.size.width);
             m_voices[i].setMaxY(bounds.size.height);
         }
+    }
+    
+    Oscillator::Waveform getWaveform()
+    {
+        // just return the waveform of the first voice
+        return m_voices[0].getWaveform();
     }
     
     void setWaveform(Oscillator::Waveform wave)

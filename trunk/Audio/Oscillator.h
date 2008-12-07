@@ -85,8 +85,11 @@ public:
         }
     }
     
+    Waveform getWaveform() { return m_waveform; }
+    
     void setWaveform(Waveform wave)
     {
+        m_waveform = wave;
         switch (wave)
         {
             case TriangleWave:
