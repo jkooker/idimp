@@ -12,7 +12,7 @@
 static const int kAccelerometerFrequency        = 25; //Hz
 static const int kFilteringFactor               = 0.1;
 static const int kMinShakeInterval              = 1;
-static const int kEraseAccelerationThreshold    = 2.0;
+static const int kShakeAccelerationThreshold    = 2.0;
 
 Oscillator::Waveform NextWaveform(Oscillator::Waveform waveform)
 {
@@ -95,7 +95,7 @@ Oscillator::Waveform NextWaveform(Oscillator::Waveform waveform)
 	length = sqrt(x * x + y * y + z * z);
     
 	// If above a given threshold, return true
-	if((length >= kEraseAccelerationThreshold) && (CFAbsoluteTimeGetCurrent() > _lastShakeTime + kMinShakeInterval)) {
+	if((length >= kShakeAccelerationThreshold) && (CFAbsoluteTimeGetCurrent() > _lastShakeTime + kMinShakeInterval)) {
         detectedShakeGesture = YES;
 		_lastShakeTime = CFAbsoluteTimeGetCurrent();
 	}
