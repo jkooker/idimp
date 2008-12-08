@@ -112,7 +112,7 @@ static void UDPServerAcceptCallBack(CFSocketRef socket, CFSocketCallBackType typ
 
 - (BOOL)start:(NSError **)error {
     CFSocketContext socketCtxt = {0, self, NULL, NULL, NULL};
-    _ipv4socket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_STREAM, IPPROTO_TCP, kCFSocketAcceptCallBack, (CFSocketCallBack)&UDPServerAcceptCallBack, &socketCtxt);
+    _ipv4socket = CFSocketCreate(kCFAllocatorDefault, PF_INET, SOCK_DGRAM, IPPROTO_UDP, kCFSocketAcceptCallBack, (CFSocketCallBack)&UDPServerAcceptCallBack, &socketCtxt);
 	
     if (NULL == _ipv4socket) {
         if (error) *error = [[NSError alloc] initWithDomain:UDPServerErrorDomain code:kUDPServerNoSocketsAvailable userInfo:nil];
