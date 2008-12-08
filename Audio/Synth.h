@@ -70,6 +70,15 @@ public:
                 // Draw a square (border only)
                 CGContextStrokeRect(contextRef, rect);
                 break;
+            case Oscillator::SawtoothWave:
+                // Generate downward pointing triangle path
+                CGContextBeginPath(contextRef);
+                CGContextMoveToPoint(contextRef, rect.origin.x, rect.origin.y);
+                CGContextAddLineToPoint(contextRef, rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height);
+                CGContextAddLineToPoint(contextRef, rect.origin.x + rect.size.width, rect.origin.y);
+                CGContextClosePath(contextRef);
+                CGContextDrawPath(contextRef, kCGPathFillStroke);
+                break;
             default:
             case Oscillator::Sinusoid:
                 // Draw a circle (filled)
