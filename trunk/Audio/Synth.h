@@ -138,8 +138,11 @@ public:
         m_osc.setAmp(m_minAmp + m_ampRange * (m_x / m_xMax));
     }
     
-    Oscillator::Waveform getWaveform() { return m_osc.getWaveform(); }
-    
+    void incrementWaveform()
+    {
+        m_osc.incrementWaveform();
+    }
+
     void setWaveform(Oscillator::Waveform wave)
     {
         m_osc.setWaveform(wave);
@@ -302,10 +305,13 @@ public:
         }
     }
     
-    Oscillator::Waveform getWaveform()
+    void incrementWaveform()
     {
-        // just return the waveform of the first voice
-        return m_voices[0].getWaveform();
+        // set the waveform to the next one in the list
+        for (int i = 0; i < NUM_VOICES; i++)
+        {
+            m_voices[i].incrementWaveform();
+        }
     }
     
     void setWaveform(Oscillator::Waveform wave)

@@ -85,12 +85,17 @@ public:
         }
     }
     
+    void incrementWaveform()
+    {
+        setWaveform((Waveform)((m_waveform + 1) % NumWaveforms));
+    }
+    
     Waveform getWaveform() { return m_waveform; }
     
     void setWaveform(Waveform wave)
     {
         m_waveform = wave;
-        switch (wave)
+        switch (m_waveform)
         {
             case TriangleWave:
             {
