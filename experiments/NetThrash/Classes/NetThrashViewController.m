@@ -100,23 +100,53 @@ NSString *headers[] = {
 #pragma mark TableView Data Source Methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    NSInteger retVal = 0;
+    if (section == 0) retVal = 1;
+    if (section == 1) retVal = 3;
+
+    return retVal;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *theCell = [tableView dequeueReusableCellWithIdentifier:@"junk"];
-    if (!theCell)
-    {
-        theCell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 0, 0) reuseIdentifier:@"junk"];
-        theCell.text = @"hi there.";
-        theCell.accessoryType = UITableViewCellAccessoryCheckmark;
+    UITableViewCell *theCell = nil;
+    
+    switch (indexPath.section) {
+        case 0:
+            theCell = [tableView dequeueReusableCellWithIdentifier:@"serverSwitch"];
+            if (!theCell)
+            {
+                theCell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 0, 0) reuseIdentifier:@"serverSwitch"];
+                theCell.text = @"Server";
+                theCell.accessoryType = UITableViewCellAccessoryNone;
+                
+                // add switch
+                UISwitch *serverSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+                theCell.accessoryView = serverSwitch;
+                [serverSwitch release];
+            }
+            break;
+        case 1:
+            theCell = [tableView dequeueReusableCellWithIdentifier:@"pairingItem"];
+            if (!theCell)
+            {
+                theCell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 0, 0) reuseIdentifier:@"pairingItem"];
+            }
+            theCell.text = [NSString stringWithFormat:@"Bonjour %d", indexPath.row];
+            if (indexPath.row == 1)
+            {
+                theCell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            break;
+        default:
+            break;
     }
+
     return theCell;
 }
 
