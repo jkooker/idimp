@@ -14,18 +14,6 @@ static const int kFilteringFactor               = 0.1;
 static const int kMinShakeInterval              = 1;
 static const int kShakeAccelerationThreshold    = 2.0;
 
-Oscillator::Waveform NextWaveform(Oscillator::Waveform waveform)
-{
-    if (waveform < Oscillator::NumWaveforms - 1)
-    {
-        return (Oscillator::Waveform) (waveform + 1);
-    }
-    else
-    {
-        return (Oscillator::Waveform) 0;
-    }
-}
-
 @implementation MainViewController
 
 
@@ -72,7 +60,7 @@ Oscillator::Waveform NextWaveform(Oscillator::Waveform waveform)
         NSLog(@"Detected shake gesture.");
         // Cycle through waveforms
         TouchSynth *mainSynth = AudioEngine::getInstance()->getSynth();
-        mainSynth->setWaveform(NextWaveform(mainSynth->getWaveform()));
+        mainSynth->incrementWaveform();
     }
 }
 
