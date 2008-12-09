@@ -7,6 +7,8 @@
 //
 
 #import "NetThrashViewController.h"
+#import "AsyncUdpSocket.h"
+#import "NetThrashAppDelegate.h"
 
 NSString *headers[] = {
     @"Network",
@@ -82,7 +84,20 @@ enum NetworkTableViewSections {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self setupServer];
+    //[self setupServer];
+    
+    // Advertise over Bonjour
+    netService = [[NSNetService alloc] initWithDomain:@"local." type:@"_idimp._udp." name:@"" port:23711];
+    if (netService == nil)
+    {
+        NSLog(@"error: could not initialize NetService");
+    }
+    else
+    {
+        [netService scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+        [netService publish];
+        [netService setDelegate:self];
+    }
     
     // Start searching for Bonjour services
     browser = [[NSNetServiceBrowser alloc] init];
@@ -195,6 +210,19 @@ enum NetworkTableViewSections {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	NSLog(@"%s", _cmd);
+    
+    if (![[[services objectAtIndex:indexPath.row] addresses] count])
+        NSLog(@"oops, can't send because we haven't resolved addresses for this service");
+    
+    // send a datagram to that address
+    const char *message = "Hello iDiMP!";
+    
+    AsyncUdpSocket *sharedSocket = ((NetThrashAppDelegate *)[UIApplication sharedApplication].delegate).socket;
+    [sharedSocket sendData:[NSData dataWithBytes:message length:strlen(message)]
+        toAddress:[[[services objectAtIndex:indexPath.row] addresses] objectAtIndex:0]
+        withTimeout:5.0
+        tag:0];
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
@@ -248,6 +276,16 @@ enum NetworkTableViewSections {
 }
 
 #pragma mark NSNetService Delegate Methods
+
+- (void)netService:(NSNetService *)sender didNotPublish:(NSDictionary *)errorDict
+{
+	NSLog(@"%s", _cmd);
+}
+
+- (void)netServiceDidPublish:(NSNetService *)sender
+{
+	NSLog(@"%s", _cmd);
+}
 
 - (void)netServiceDidResolveAddress:(NSNetService *)sender
 {

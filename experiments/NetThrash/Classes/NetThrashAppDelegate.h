@@ -7,16 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AsyncUdpSocket.h"
 
 @class NetThrashViewController;
 
 @interface NetThrashAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     NetThrashViewController *viewController;
+    
+    AsyncUdpSocket *socket;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet NetThrashViewController *viewController;
+@property (nonatomic, retain) AsyncUdpSocket *socket;
 
 @end
 
