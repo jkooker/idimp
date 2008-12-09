@@ -14,6 +14,12 @@ NSString *headers[] = {
     @""
 };
 
+enum NetworkTableViewSections {
+    NetworkSection = 0,
+    PairingSection,
+    NumberOfSections
+};
+
 // The Bonjour application protocol, which must:
 // 1) be no longer than 14 characters
 // 2) contain only lower-case letters, digits, and hyphens
@@ -111,41 +117,52 @@ NSString *headers[] = {
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger retVal = 0;
-    if (section == 0) retVal = 1;
-    if (section == 1) retVal = 3;
+    if (section == NetworkSection) retVal = 1;
+    if (section == PairingSection) retVal = [services count] ? [services count] : 1;
 
     return retVal;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    static NSString *serverSwitchCellID = @"serverSwitch";
+    static NSString *pairingItemCellID = @"pairingItem";
+    
     UITableViewCell *theCell = nil;
     
     switch (indexPath.section) {
-        case 0:
-            theCell = [tableView dequeueReusableCellWithIdentifier:@"serverSwitch"];
+        case NetworkSection:
+            theCell = [tableView dequeueReusableCellWithIdentifier:serverSwitchCellID];
             if (!theCell)
             {
-                theCell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 0, 0) reuseIdentifier:@"serverSwitch"];
+                theCell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:serverSwitchCellID];
                 theCell.text = @"Server";
                 theCell.accessoryType = UITableViewCellAccessoryNone;
                 
                 // add switch
-                UISwitch *serverSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+                UISwitch *serverSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
                 theCell.accessoryView = serverSwitch;
                 [serverSwitch release];
             }
             break;
-        case 1:
-            theCell = [tableView dequeueReusableCellWithIdentifier:@"pairingItem"];
+        case PairingSection:
+            theCell = [tableView dequeueReusableCellWithIdentifier:pairingItemCellID];
             if (!theCell)
             {
-                theCell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 0, 0) reuseIdentifier:@"pairingItem"];
+                theCell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:pairingItemCellID];
             }
-            theCell.text = [NSString stringWithFormat:@"Bonjour %d", indexPath.row];
-            if (indexPath.row == 1)
+            
+            if (![services count])
             {
-                theCell.accessoryType = UITableViewCellAccessoryCheckmark;
+                // put in the "searching" label
+                theCell.text = @"Searching...";
+                theCell.accessoryType = UITableViewCellAccessoryNone;
+            }
+            else
+            {
+                // show all the available services
+                theCell.text = [[services objectAtIndex:[indexPath row]] name];
+                theCell.accessoryType = UITableViewCellAccessoryNone;
             }
             break;
         default:
@@ -184,6 +201,7 @@ NSString *headers[] = {
 	NSLog(@"netservice found: %@ %@", [aNetService name], moreComing ? @"(moreComing)" : @"");
     
     [services addObject:aNetService];
+    [networkingTableView reloadData];
     [aNetService setDelegate:self];
     [aNetService resolveWithTimeout:5];
 }
@@ -199,6 +217,7 @@ NSString *headers[] = {
             [[currentService domain] isEqual:[aNetService domain]])
         {
             [services removeObject:currentService];
+            [networkingTableView reloadData];
             foundService = YES;
             break;
         }

@@ -13,6 +13,8 @@
     UDPServer *server;
     NSNetServiceBrowser *browser;
     NSMutableArray *services;
+    
+    IBOutlet UITableView *networkingTableView;
 }
 
 - (void)setupServer;
