@@ -9,6 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "AsyncUdpSocket.h"
 
+typedef enum DMPDataPacketTag {
+    DMPDataPacketTagNone = 0,
+    DMPDataPacketTagStart,
+    DMPDataPacketTagEnd
+} DMPDataPacketTag_t;
+
+typedef struct DMPDataPacket {
+    DMPDataPacketTag_t tag;
+    uint8_t data[4096];
+} DMPDataPacket;
+
+
 @class NetThrashViewController;
 
 @interface NetThrashAppDelegate : NSObject <UIApplicationDelegate> {
@@ -16,6 +28,8 @@
     NetThrashViewController *viewController;
     
     AsyncUdpSocket *socket;
+    NSUInteger sentDatagramCount;
+    NSUInteger receivedDatagramCount;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;

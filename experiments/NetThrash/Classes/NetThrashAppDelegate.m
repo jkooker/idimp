@@ -41,23 +41,56 @@
 
 #pragma mark AsyncUdpSocket Delegate Methods
 
+#define MAX_SENT_DATAGRAMS 200
+
 - (void)onUdpSocket:(AsyncUdpSocket *)sock didSendDataWithTag:(long)tag
 {
 	NSLog(@"%s", _cmd);
+    
+    sentDatagramCount++;
+    
+    // if tag is "start" then reset our count
+    if (tag == DMPDataPacketTagStart) sentDatagramCount = 1;
+    
+    
+    // keep sending until we hit our count, then send an end packet
+    if (sentDatagramCount < MAX_SENT_DATAGRAMS)
+    {
+        DMPDataPacket p;
+        memset(&p, 0, sizeof(p));
+        
+        p.tag = (sentDatagramCount < MAX_SENT_DATAGRAMS - 1) ? DMPDataPacketTagNone : DMPDataPacketTagEnd;
+        
+        [self.socket sendData:[NSData dataWithBytes:&p length:sizeof(p)]
+            toAddress:viewController.savedAddress
+            withTimeout:5
+            tag:p.tag];
+    }
 }
 
 - (void)onUdpSocket:(AsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error
 {
-	NSLog(@"%s", _cmd);
+	NSLog(@"%s %@", _cmd, error);
 }
 
 - (BOOL)onUdpSocket:(AsyncUdpSocket *)sock didReceiveData:(NSData *)data withTag:(long)tag fromHost:(NSString *)host port:(UInt16)port
 {
 	NSLog(@"%s", _cmd);
     
-    // assumption: incoming data is a null-terminated string
-    NSLog(@"received data: %s", [data bytes]);
+    receivedDatagramCount++;
+    const DMPDataPacket *p = [data bytes];
     
+    // log when start and end come
+    if (p->tag == DMPDataPacketTagStart)
+    {
+        NSLog(@"received start packet!");
+        receivedDatagramCount = 1;
+    }
+    else if (p->tag == DMPDataPacketTagEnd)
+    {
+        NSLog(@"received end packet! receivedDatagramCount = %d", receivedDatagramCount);
+    }
+        
     [sock receiveWithTimeout:-1 tag:0];
     
     return YES;

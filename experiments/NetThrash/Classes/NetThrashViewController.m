@@ -22,6 +22,7 @@ enum NetworkTableViewSections {
     NumberOfSections
 };
 
+
 // The Bonjour application protocol, which must:
 // 1) be no longer than 14 characters
 // 2) contain only lower-case letters, digits, and hyphens
@@ -34,33 +35,13 @@ enum NetworkTableViewSections {
 
 @implementation NetThrashViewController
 
+@synthesize savedAddress;
+
 - (void) _showAlert:(NSString*)title
 {
 	UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:title message:@"Check your networking configuration." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	[alertView show];
 	[alertView release];
-}
-
-- (void)setupServer
-{
-    [server release];
-    server = nil;
-    
-    server = [UDPServer new];
-    [server setDelegate:self];
-    
-    NSError* error;
-	if(server == nil || ![server start:&error]) {
-		NSLog(@"Failed creating server: %@", error);
-		[self _showAlert:@"Failed creating server"];
-		return;
-	}
-	
-	// Start advertising to clients, passing nil for the name to tell Bonjour to pick the default name
-	if(![server enableBonjourWithDomain:@"local" applicationProtocol:[UDPServer bonjourTypeFromIdentifier:kDMPIdentifier] name:nil]) {
-		[self _showAlert:@"Failed advertising server"];
-		return;
-	}
 }
 
 /*
@@ -214,40 +195,34 @@ enum NetworkTableViewSections {
     if (![[[services objectAtIndex:indexPath.row] addresses] count])
         NSLog(@"oops, can't send because we haven't resolved addresses for this service");
     
-    // send a datagram to that address
-    const char *message = "Hello iDiMP!";
-    
     AsyncUdpSocket *sharedSocket = ((NetThrashAppDelegate *)[UIApplication sharedApplication].delegate).socket;
-    [sharedSocket sendData:[NSData dataWithBytes:message length:strlen(message)]
-        toAddress:[[[services objectAtIndex:indexPath.row] addresses] objectAtIndex:0]
-        withTimeout:5.0
-        tag:0];
+    //[sharedSocket connectToAddress:[[[services objectAtIndex:indexPath.row] addresses] objectAtIndex:0] error:&error];
     
+    // send a starter packet
+    DMPDataPacket p;
+    memset(&p, 0, sizeof(p));
+    p.tag = DMPDataPacketTagStart;
+    
+    self.savedAddress = [[[services objectAtIndex:indexPath.row] addresses] objectAtIndex:0];
+    
+    [sharedSocket sendData:[NSData dataWithBytes:&p length:sizeof(p)]
+        toAddress:self.savedAddress
+        withTimeout:5
+        tag:DMPDataPacketTagStart];
+        
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
-#pragma mark UDPServer Delegate Methods
-
-- (void) serverDidEnableBonjour:(UDPServer*)server withName:(NSString*)string
-{
-	NSLog(@"%s", _cmd);
-}
-
-- (void)didAcceptConnectionForServer:(UDPServer*)server inputStream:(NSInputStream *)istr outputStream:(NSOutputStream *)ostr
-{
-	NSLog(@"%s", _cmd);
 }
 
 #pragma mark NSNetServiceBrowser Delegate Methods
 
 - (void)netServiceBrowserWillSearch:(NSNetServiceBrowser *)aNetServiceBrowser
 {
-	NSLog(@"%s", _cmd);
+	//NSLog(@"%s", _cmd);
 }
 
 - (void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didFindService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
 {
-	NSLog(@"netservice found: %@ %@", [aNetService name], moreComing ? @"(moreComing)" : @"");
+	//NSLog(@"netservice found: %@ %@", [aNetService name], moreComing ? @"(moreComing)" : @"");
     
     [services addObject:aNetService];
     [networkingTableView reloadData];

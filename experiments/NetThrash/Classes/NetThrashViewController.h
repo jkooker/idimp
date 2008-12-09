@@ -10,15 +10,15 @@
 #import "UDPServer.h"
 
 @interface NetThrashViewController : UIViewController <UDPServerDelegate> {
-    UDPServer *server;
     NSNetService *netService;
     NSNetServiceBrowser *browser;
     NSMutableArray *services;
+    NSData *savedAddress;
     
     IBOutlet UITableView *networkingTableView;
 }
 
-- (void)setupServer;
+@property (nonatomic, retain) NSData *savedAddress;
 
 @end
 
