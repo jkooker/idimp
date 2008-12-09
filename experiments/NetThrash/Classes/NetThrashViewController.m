@@ -156,12 +156,13 @@ enum NetworkTableViewSections {
             {
                 // put in the "searching" label
                 theCell.text = @"Searching...";
-                theCell.accessoryType = UITableViewCellAccessoryNone;
+                theCell.textColor = [UIColor colorWithWhite:0.5 alpha:0.5];
             }
             else
             {
                 // show all the available services
                 theCell.text = [[services objectAtIndex:[indexPath row]] name];
+                theCell.textColor = [UIColor blackColor];
                 theCell.accessoryType = UITableViewCellAccessoryNone;
             }
             break;
@@ -175,6 +176,26 @@ enum NetworkTableViewSections {
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     return headers[section];
+}
+
+#pragma mark TableView Delegate Methods
+
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	// Ignore the selection if there are no services.
+	if ([services count] == 0)
+		return nil;
+    
+    // The Network Section just contains the server switch. It doesn't allow selections.
+    if (indexPath.section == NetworkSection)
+        return nil;
+
+	return indexPath;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	NSLog(@"%s", _cmd);
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark UDPServer Delegate Methods
