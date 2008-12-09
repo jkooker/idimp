@@ -21,6 +21,7 @@
 		289233AF0DB2D0DB0083E9F9 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233AB0DB2D0DB0083E9F9 /* RootViewController.m */; };
 		289233B00DB2D0DB0083E9F9 /* FlipsideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233AD0DB2D0DB0083E9F9 /* FlipsideViewController.m */; };
 		32DA732A0EDE19F00038F6B8 /* AudioEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32DA73290EDE19F00038F6B8 /* AudioEngine.cpp */; };
+		32F871210EEDC9D00073FFAE /* TouchSynth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32F871200EEDC9D00073FFAE /* TouchSynth.cpp */; };
 		9B6C40A20ED78A1D007E73EC /* AudioButtonTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */; };
 		9B6C40C90ED78B7A007E73EC /* AudioBasics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */; };
 		9B6C40CB0ED78B7A007E73EC /* AudioButtonTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */; };
@@ -51,7 +52,8 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* iDiMP_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iDiMP_Prefix.pch; sourceTree = "<group>"; };
 		32DA73290EDE19F00038F6B8 /* AudioEngine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AudioEngine.cpp; sourceTree = "<group>"; };
-		32DCC9DE0EDA737E00D7F0ED /* Synth.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = Synth.h; sourceTree = "<group>"; };
+		32F8711F0EEDC9D00073FFAE /* TouchSynth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchSynth.h; sourceTree = "<group>"; };
+		32F871200EEDC9D00073FFAE /* TouchSynth.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TouchSynth.cpp; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioButtonTestViewController.xib; sourceTree = "<group>"; };
 		9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioBasics.cpp; sourceTree = "<group>"; };
@@ -174,7 +176,8 @@
 		9B6C40BD0ED78B7A007E73EC /* Audio */ = {
 			isa = PBXGroup;
 			children = (
-				32DCC9DE0EDA737E00D7F0ED /* Synth.h */,
+				32F8711F0EEDC9D00073FFAE /* TouchSynth.h */,
+				32F871200EEDC9D00073FFAE /* TouchSynth.cpp */,
 				9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */,
 				9B6C40BF0ED78B7A007E73EC /* AudioBasics.h */,
 				9B6C40C20ED78B7A007E73EC /* AudioButtonTestViewController.h */,
@@ -262,6 +265,7 @@
 				9B6C40C90ED78B7A007E73EC /* AudioBasics.cpp in Sources */,
 				9B6C40CB0ED78B7A007E73EC /* AudioButtonTestViewController.mm in Sources */,
 				32DA732A0EDE19F00038F6B8 /* AudioEngine.cpp in Sources */,
+				32F871210EEDC9D00073FFAE /* TouchSynth.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

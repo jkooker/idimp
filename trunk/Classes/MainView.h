@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "AudioEngine.h"
-#import "Synth.h"
+#import "TouchSynth.h"
 
 @interface MainView : UIView {
     TouchSynth* _synth; // TODO: maybe the synth should be owned by this class and added to the audio engine explicitly?

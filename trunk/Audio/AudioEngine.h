@@ -15,7 +15,7 @@
 #import "AudioBasics.h"
 #import "AudioEffect.h"
 #import "Wavefile.h"
-#import "Synth.h"
+#import "TouchSynth.h"
 
 /** AudioEngine class.
  * The AudioEngine class controls all audio reocrding and playback.
