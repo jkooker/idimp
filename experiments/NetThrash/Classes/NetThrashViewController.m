@@ -48,12 +48,11 @@ NSString *headers[] = {
 		return;
 	}
 	
-	//Start advertising to clients, passing nil for the name to tell Bonjour to pick use default name
+	// Start advertising to clients, passing nil for the name to tell Bonjour to pick the default name
 	if(![server enableBonjourWithDomain:@"local" applicationProtocol:[UDPServer bonjourTypeFromIdentifier:kDMPIdentifier] name:nil]) {
 		[self _showAlert:@"Failed advertising server"];
 		return;
 	}
-
 }
 
 /*
@@ -78,6 +77,12 @@ NSString *headers[] = {
     [super viewDidLoad];
     
     [self setupServer];
+    
+    // Start searching for Bonjour services
+    browser = [[NSNetServiceBrowser alloc] init];
+    services = [[NSMutableArray array] retain];
+    [browser setDelegate:self];
+    [browser searchForServicesOfType:@"_idimp._udp." inDomain:@"local."];
 }
 
 
@@ -167,5 +172,21 @@ NSString *headers[] = {
 	NSLog(@"%s", _cmd);
 }
 
+#pragma mark NSNetServiceBrowser Delegate Methods
+
+- (void)netServiceBrowserWillSearch:(NSNetServiceBrowser *)aNetServiceBrowser
+{
+	NSLog(@"%s", _cmd);
+}
+
+- (void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didFindService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
+{
+	NSLog(@"netservice found: %@", [aNetService name]);
+}
+
+- (void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didRemoveService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
+{
+	NSLog(@"netservice removed: %@", [aNetService name]);
+}
 
 @end

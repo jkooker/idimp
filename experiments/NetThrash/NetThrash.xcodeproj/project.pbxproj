@@ -16,6 +16,7 @@
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		28D7ACF80DDB3853001CB0EB /* NetThrashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D7ACF70DDB3853001CB0EB /* NetThrashViewController.m */; };
 		9B38FADC0EE48B0900513EC0 /* UDPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B38FADB0EE48B0900513EC0 /* UDPServer.m */; };
+		9B3F71990EEE13CC00EA944E /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B3F71970EEE13CC00EA944E /* AsyncUdpSocket.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,8 @@
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9B38FADA0EE48B0900513EC0 /* UDPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPServer.h; sourceTree = "<group>"; };
 		9B38FADB0EE48B0900513EC0 /* UDPServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPServer.m; sourceTree = "<group>"; };
+		9B3F71970EEE13CC00EA944E /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncUdpSocket.m; sourceTree = "<group>"; };
+		9B3F71980EEE13CC00EA944E /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncUdpSocket.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +62,8 @@
 				28D7ACF70DDB3853001CB0EB /* NetThrashViewController.m */,
 				9B38FADA0EE48B0900513EC0 /* UDPServer.h */,
 				9B38FADB0EE48B0900513EC0 /* UDPServer.m */,
+				9B3F71980EEE13CC00EA944E /* AsyncUdpSocket.h */,
+				9B3F71970EEE13CC00EA944E /* AsyncUdpSocket.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -170,6 +175,7 @@
 				1D3623260D0F684500981E51 /* NetThrashAppDelegate.m in Sources */,
 				28D7ACF80DDB3853001CB0EB /* NetThrashViewController.m in Sources */,
 				9B38FADC0EE48B0900513EC0 /* UDPServer.m in Sources */,
+				9B3F71990EEE13CC00EA944E /* AsyncUdpSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

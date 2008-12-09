@@ -11,6 +11,8 @@
 
 @interface NetThrashViewController : UIViewController <UDPServerDelegate> {
     UDPServer *server;
+    NSNetServiceBrowser *browser;
+    //NSMutableArray *services;
 }
 
 - (void)setupServer;
