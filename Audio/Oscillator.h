@@ -17,187 +17,110 @@ static const float DEFAULT_AMPLITUDE = 1.0;
 static const int WAVETABLE_POINTS = 2048;
 static const int MAX_AMPLITUDE_16_BITS = 32767;
 
+/**
+ * Oscillator class
+ * Implements wavetable synthesis for sinusoids, square waves, sawtooth waves, and triangle waves.
+ */
 class Oscillator
 {   
 public:
-    enum Waveform {
-        Sinusoid = 0,
-        SquareWave,
-        SawtoothWave,
-        TriangleWave,
-        NumWaveforms
+   /**
+    * Enum of different types of waveforms supported.
+    */
+    enum Waveform { 
+        Sinusoid = 0, /*!< Sinusoid */ 
+        SquareWave,   /*!< Square Wave */ 
+        SawtoothWave, /*!< Sawtooth Wave */ 
+        TriangleWave, /*!< Triangle Wave */ 
+        NumWaveforms  /*!< Number of possible waveforms */ 
     };
 
-    Oscillator() :
-        m_waveform(Sinusoid),
-        m_freq(DEFAULT_FREQUENCY_IN_HZ),
-        m_wavetable(NULL),
-        m_hop(m_freq * WAVETABLE_POINTS / AUDIO_SAMPLE_RATE),
-        m_nextSampleIndex(0.0),
-        m_amp(DEFAULT_AMPLITUDE)
-    {
-        printf("Oscillator::Oscillator\n");
-        m_wavetable = new float[WAVETABLE_POINTS];
-        setWaveform(m_waveform);
-    }
+   /** 
+    * Oscillator constructor
+    */
+    Oscillator();
+        
+   /** 
+    * Oscillator destructor
+    */
+    virtual ~Oscillator();
+        
+   /**
+    * Get the current amplitude of this Oscillator
+    * @return the amplitude in the range of [-1.0, 1.0]
+    * @see setAmp
+    */
+    float getAmp() const;
     
-    virtual ~Oscillator()
-    {
-        printf("Oscillator::~Oscillator\n");
-        if (m_wavetable != NULL)
-        {
-            delete m_wavetable;
-            m_wavetable = NULL;
-        }
-    }
+   /**
+    * Set the current ampitude of this Oscillator
+    * @param the new amplitude
+    * @see getAmp
+    */
+    void setAmp(float amp);
     
-    float getAmp() { return m_amp; }
+   /**
+    * Get the current frequency of this Oscillator
+    * @return the frequency in Hertz
+    * @see setFreq
+    */
+    float getFreq() const;
+   
+   /**
+    * Set the current frequency of this Oscillator
+    * @param the new frequency
+    * @see getFreq
+    */ 
+    void setFreq(float freq);
     
-    void setAmp(float amp) 
-    { 
-        //printf("Oscillator::setAmp amp = %f\n", amp);
-        // TODO: modify Oscillator so that amplitude changes don't cause
-        // sudden discontinuities in the waveform (smooth changes over some number of samples)
-        m_amp = amp; 
-    }
+    /**
+    * Switch to the next available waveform, in order of the Waveform enum
+    */
+    void incrementWaveform();
+        
+   /**
+    * Get the current Waveform used to generate this Oscillator's wavetable
+    * @return the Waveform used by this Oscillator
+    * @see setWaveform
+    */
+    Waveform getWaveform() const;
     
-    float getFreq() { return m_freq; }
+   /**
+    * Set the current Waveform used to generate this Oscillator's wavetable
+    * @param wave the requested Waveform
+    * @see getWaveform
+    */
+    void setWaveform(Waveform wave);
     
-    void setFreq(float freq)
-    {
-        // check for valid range
-        if (freq < -20000 || freq > 20000)
-        {
-            printf("Oscillator::setFreq frequency out of range: %f\n", freq);
-            return;
-        }
-        m_freq = freq;
-        m_nextSampleIndex -= m_hop;
-        m_hop = freq * WAVETABLE_POINTS / AUDIO_SAMPLE_RATE;
-        m_nextSampleIndex += m_hop;
-        while (m_nextSampleIndex < 0)
-        {
-            m_nextSampleIndex += WAVETABLE_POINTS;
-        }
-        while (m_nextSampleIndex >= WAVETABLE_POINTS)
-        {
-            m_nextSampleIndex -= WAVETABLE_POINTS;
-        }
-    }
+   /** 
+    * Generate the next buffer of samples from this Oscillator's wavetable and store in a mono buffer
+    * @param buffer the buffer in which to store the computed samples (previous buffer contents will be erased)
+    * @param numSamples the number of samples to generate
+    * @see nextSampleBuffer
+    */
+    void nextSampleBufferMono(float* buffer, int numSamples);
+        
+   /** 
+    * Generate the next buffer of samples from this Oscillator's wavetable and store in a buffer 
+    * with the given number of interleaved channels.
+    * @param buffer the buffer in which to store the computed samples (previous buffer contents will be erased)
+    * @param numSamples the number of samples to generate for each channel
+    * @param numChannels the number of channels of samples to generate
+    * @see nextSampleBufferMono
+    * @see addNextSamplesToBuffer
+    */
+    void nextSampleBuffer(float* buffer, int numSamplesPerChannel, int numChannels);
     
-    void incrementWaveform()
-    {
-        setWaveform((Waveform)((m_waveform + 1) % NumWaveforms));
-    }
-    
-    Waveform getWaveform() const { return m_waveform; }
-    
-    void setWaveform(Waveform wave)
-    {
-        m_waveform = wave;
-        switch (m_waveform)
-        {
-            case TriangleWave:
-            {
-                int halftable = WAVETABLE_POINTS / 2;
-                // ramp up
-                for (int i = 0; i < halftable; i++)
-                {
-                    m_wavetable[i] = (4.0 * i / (float) WAVETABLE_POINTS) - 1.0;
-                }   
-                // ramp down
-                for (int i = halftable; i < WAVETABLE_POINTS; i++)
-                {
-                    m_wavetable[i] = 1.0 - (4.0 * (i - halftable) / (float) WAVETABLE_POINTS);
-                }            
-                break;
-            }
-            case SawtoothWave:
-            {
-                for (int i = 0; i < WAVETABLE_POINTS; i++)
-                {
-                    m_wavetable[i] = (2.0 * i / (float) WAVETABLE_POINTS) - 1.0;
-                }            
-                break;
-            }
-            case SquareWave:
-            {
-                int halftable = WAVETABLE_POINTS / 2;
-                for (int i = 0; i < halftable; i++)
-                {
-                    m_wavetable[i] = 1.0;
-                }   
-                for (int i = halftable; i < WAVETABLE_POINTS; i++)
-                {
-                    m_wavetable[i] = -1.0;
-                }            
-                break;
-            }
-            default:    
-            case Sinusoid:
-            {
-                for (int i = 0; i < WAVETABLE_POINTS; i++)
-                {
-                    m_wavetable[i] = cos(TWO_PI * i / WAVETABLE_POINTS);
-                }            
-                break;
-            }
-        }
-    }
-    
-    void nextSampleBufferMono(float* buffer, int numSamples)
-    {
-        nextSampleBuffer(buffer, numSamples, 1);
-    }
-    
-    void nextSampleBuffer(float* buffer, int numSamplesPerChannel, int numChannels)
-    {
-        float ampScalar = m_amp;
-        for (int n = 0; n < numSamplesPerChannel; n++)
-        {
-            // same thing in all channels
-            float nextSample = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
-            for (int ch = 0; ch < numChannels; ch++)
-            {
-                // overwrite existing data
-                buffer[(numChannels * n) + ch] = nextSample;
-            }
-            m_nextSampleIndex += m_hop;
-            while (m_nextSampleIndex < 0)
-            {
-                m_nextSampleIndex += WAVETABLE_POINTS;
-            }
-            while (m_nextSampleIndex >= WAVETABLE_POINTS)
-            {
-                m_nextSampleIndex -= WAVETABLE_POINTS;
-            }
-        }
-    }
-    
-    void addNextSamplesToBuffer(float* buffer, int numSamplesPerChannel, int numChannels)
-    {
-        float ampScalar = m_amp;
-        for (int n = 0; n < numSamplesPerChannel; n++)
-        {
-            // same thing in all channels
-            float nextSample = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
-            for (int ch = 0; ch < numChannels; ch++)
-            {
-                // add to existing data - don't overwrite
-                buffer[(numChannels * n) + ch] += nextSample;
-            }
-            m_nextSampleIndex += m_hop;
-            while (m_nextSampleIndex < 0)
-            {
-                m_nextSampleIndex += WAVETABLE_POINTS;
-            }
-            while (m_nextSampleIndex >= WAVETABLE_POINTS)
-            {
-                m_nextSampleIndex -= WAVETABLE_POINTS;
-            }
-        }
-    }
-    
+   /** 
+    * Generate the next buffer of samples from this Oscillator's wavetable and add them to a buffer 
+    * with the given number of interleaved channels.
+    * @param buffer the buffer in which to store the computed samples (added to the buffer's previous contents)
+    * @param numSamples the number of samples to generate for each channel
+    * @param numChannels the number of channels of samples to generate
+    * @see nextSampleBuffer
+    */
+    void addNextSamplesToBuffer(float* buffer, int numSamplesPerChannel, int numChannels);
+        
 protected:
     Waveform m_waveform;
     float m_freq;
