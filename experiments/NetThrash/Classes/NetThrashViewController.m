@@ -181,12 +181,47 @@ NSString *headers[] = {
 
 - (void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didFindService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
 {
-	NSLog(@"netservice found: %@", [aNetService name]);
+	NSLog(@"netservice found: %@ %@", [aNetService name], moreComing ? @"(moreComing)" : @"");
+    
+    [services addObject:aNetService];
+    [aNetService setDelegate:self];
+    [aNetService resolveWithTimeout:5];
 }
 
 - (void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didRemoveService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
 {
-	NSLog(@"netservice removed: %@", [aNetService name]);
+    BOOL foundService = NO;
+    
+    for (NSNetService *currentService in services)
+    {
+        if ([[currentService name] isEqual:[aNetService name]] &&
+            [[currentService type] isEqual:[aNetService type]] &&
+            [[currentService domain] isEqual:[aNetService domain]])
+        {
+            [services removeObject:currentService];
+            foundService = YES;
+            break;
+        }
+    }
+    
+	NSLog(@"netservice removed: %@ (%@)", [aNetService name], foundService ? @"successfully" : @"unsuccessfully");
+}
+
+#pragma mark NSNetService Delegate Methods
+
+- (void)netServiceDidResolveAddress:(NSNetService *)sender
+{
+    const char *firstAddressData = (const char *)[[[sender addresses] objectAtIndex:0] bytes];
+    NSLog(@"address resolved. %@ = %@ (%hhu.%hhu.%hhu.%hhu) (1 of %d)",
+        [sender name],
+        [[sender addresses] objectAtIndex:0],
+        firstAddressData[4], firstAddressData[5], firstAddressData[6], firstAddressData[7],
+        [[sender addresses] count]);
+}
+
+- (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict
+{
+    NSLog(@"did not resolve address for %@.", [sender name]);
 }
 
 @end
