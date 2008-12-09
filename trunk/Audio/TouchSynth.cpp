@@ -23,7 +23,7 @@ Voice::Voice() :
     setPosition(0.0, 0.0);
 }
 
-void Voice::draw(CGContextRef contextRef, CGRect& bounds)
+void Voice::draw(CGContextRef contextRef, CGRect& bounds) const
 {
     if (!m_isOn) return;
     
@@ -156,7 +156,7 @@ void TouchSynth::removeAllVoices()
     }
 }
 
-void TouchSynth::drawVoices(CGContextRef contextRef, CGRect& bounds)
+void TouchSynth::drawVoices(CGContextRef contextRef, CGRect& bounds) const
 {
     for (int i = 0; i < NUM_VOICES; i++)
     {

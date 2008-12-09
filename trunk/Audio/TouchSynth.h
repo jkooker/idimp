@@ -40,7 +40,7 @@ public:
     * @param bounds the bounding rectangle into which this Voice will be rendered
     */
     void draw(CGContextRef contextRef, 
-              CGRect& bounds);
+              CGRect& bounds) const;
     
     float getX() const { return m_x; }
     float getY() const { return m_y; }
@@ -177,7 +177,7 @@ public:
     * @param bounds the bounding rectangle into which the Voices will be rendered
     */      
     void drawVoices(CGContextRef contextRef, 
-                    CGRect& bounds);    
+                    CGRect& bounds) const;    
     
    /**
     * print debugging information for each Voice in this TouchSynth

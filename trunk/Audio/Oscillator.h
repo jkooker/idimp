@@ -90,7 +90,7 @@ public:
         setWaveform((Waveform)((m_waveform + 1) % NumWaveforms));
     }
     
-    Waveform getWaveform() { return m_waveform; }
+    Waveform getWaveform() const { return m_waveform; }
     
     void setWaveform(Waveform wave)
     {
