@@ -107,6 +107,7 @@ FILE_PATTERNS          = *.c \
                          *.hpp \
                          *.h++ \
                          *.m \
+                         *.mm \
                          *.mm
 RECURSIVE              = YES
 EXCLUDE                = 
