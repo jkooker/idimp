@@ -121,12 +121,7 @@ public:
     * TouchSynth constructor
     */
     TouchSynth();
-        
-   /**
-    * TouchSynth destructor
-    */
-    ~TouchSynth();
-        
+    
    /**
     * Add a Voice to this TouchSynth
     * @param xPos the starting horizontal position of the Voice on the touch screen
@@ -221,8 +216,6 @@ public:
 private:
 
     Voice m_voices[NUM_VOICES];
-    float* m_silenceBuffer;
-    int m_silenceBufferSize;
 };
 
 #endif // TOUCH_SYNTH_H
