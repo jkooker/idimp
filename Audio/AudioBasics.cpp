@@ -40,7 +40,7 @@ void AudioSamplesMixFloat2ToFloat(const float* in1, const float* in2, float* out
     }
 }
 
-void AudioSamplesMixFloat2ToFloat(const float* in1, const float* in2, const float* in3, float* out1, int numSamples)
+void AudioSamplesMixFloat3ToFloat(const float* in1, const float* in2, const float* in3, float* out1, int numSamples)
 {
     const float* pIn1 = in1;
     const float* pIn2 = in2;

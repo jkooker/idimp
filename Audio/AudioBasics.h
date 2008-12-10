@@ -43,10 +43,16 @@ void AudioSamplesShortToFloat(const short* in,
                               float* out, 
                               int numSamples);
                               
-void AudioSamplesMixFloatToFloat(const float* in1, 
-                                 const float* in2, 
-                                 float* out1, 
-                                 int numSamples);
+void AudioSamplesMixFloat2ToFloat(const float* in1, 
+                                  const float* in2, 
+                                  float* out1, 
+                                  int numSamples);
+                                  
+void AudioSamplesMixFloat3ToFloat(const float* in1, 
+                                  const float* in2, 
+                                  const float* in3,
+                                  float* out1, 
+                                  int numSamples);
                                  
 void AudioSamplesMixFloat2ToShort(const float* in1, 
                                   const float* in2, 
