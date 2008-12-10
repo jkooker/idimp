@@ -109,6 +109,50 @@ bool AudioEngine::removeSynthesisEffect(AudioEffect* e)
     return false;
 }
 
+void AudioEngine::addNetworkEffect(AudioEffect* e)
+{
+    m_networkEffects.push_back(e);
+}
+
+bool AudioEngine::removeNetworkEffect(AudioEffect* e)
+{
+    for (std::vector<AudioEffect*>::iterator it = m_networkEffects.begin(); it != m_networkEffects.end(); it++) 
+    {
+        if ((*it) == e)
+        {
+            // effect found
+            m_networkEffects.erase(it);
+            printf("AudioEngine::removeNetworkEffect effect found!\n");
+            return true;
+        }
+    }
+    // effect not found
+    printf("AudioEngine::removeNetworkEffect effect NOT found!\n");
+    return false;
+}
+
+void AudioEngine::addMasterEffect(AudioEffect* e)
+{
+    m_masterEffects.push_back(e);
+}
+
+bool AudioEngine::removeMasterEffect(AudioEffect* e)
+{
+    for (std::vector<AudioEffect*>::iterator it = m_masterEffects.begin(); it != m_masterEffects.end(); it++) 
+    {
+        if ((*it) == e)
+        {
+            // effect found
+            m_masterEffects.erase(it);
+            printf("AudioEngine::removeMasterEffect effect found!\n");
+            return true;
+        }
+    }
+    // effect not found
+    printf("AudioEngine::removeMasterEffect effect NOT found!\n");
+    return false;
+}
+
 OSStatus AudioEngine::recordingCallback(void *inRefCon, 
                                         AudioUnitRenderActionFlags *ioActionFlags, 
                                         const AudioTimeStamp *inTimeStamp, 
@@ -176,6 +220,7 @@ AudioEngine::AudioEngine() :
     m_debugFile(NULL),
     m_recordingIsMuted(false),
     m_synthIsMuted(false),
+    m_networkIsMuted(true),
     m_playbackSamplesAllChannels(0),
     m_tempRecordedBuffer(NULL),
     m_tempSynthesizedBuffer(NULL),
@@ -344,6 +389,28 @@ void AudioEngine::get_synthesized_data_for_playback(float* buffer, int numSample
         for (int effect = 0; effect < m_synthEffects.size(); effect++)
         {
             m_synthEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+        }
+    }
+}
+
+void AudioEngine::get_network_data_for_playback(float* buffer, int numSamplesAllChannels)
+{
+    // copy network data to temp buffer in float form if there is any - otherwise insert silence
+    if (m_networkIsMuted)
+    {
+        fill_buffer_with_silence(buffer, numSamplesAllChannels);
+    }
+    else
+    {
+        // fill buffer of shorts from network - data is expected to be interleaved (sample1_left, sample1_right, sample2_left, sample2_right, etc.)
+        
+        // convert shorts to floats for processing
+        //AudioSamplesShortToFloat(<networkData here>, buffer, numSamplesAllChannels);
+        
+        // do processing on network data
+        for (int effect = 0; effect < m_networkEffects.size(); effect++)
+        {
+            m_networkEffects[effect]->Process(buffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
         }
     }
 }
