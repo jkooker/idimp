@@ -47,13 +47,6 @@ AudioEngine::~AudioEngine()
         m_debugFile = NULL;
     }
     
-    // free silence buffer
-    if (m_silenceBuffer != NULL)
-    {
-        delete m_silenceBuffer;
-        m_silenceBuffer = NULL;
-    }
-    
     // free temp buffers
     if (m_tempRecordedBuffer != NULL)
     {
@@ -183,7 +176,6 @@ AudioEngine::AudioEngine() :
     m_debugFile(NULL),
     m_recordingIsMuted(false),
     m_synthIsMuted(false),
-    m_silenceBuffer(NULL),
     m_playbackSamplesAllChannels(0),
     m_tempRecordedBuffer(NULL),
     m_tempSynthesizedBuffer(NULL),
@@ -262,21 +254,6 @@ void AudioEngine::allocate_input_buffers(UInt32 inNumberFrames)
     }
 }
 
-void AudioEngine::allocate_silence_buffer(int n)
-{
-    // NOTE: we don't need to check to make sure that n hasn't changed from previous
-    // calls since allocate_temp_buffers already does this check first
-    if (m_silenceBuffer == NULL)
-    {
-        // allocate silence buffer for future use
-        m_silenceBuffer = new float[n];
-        for (int i = 0; i < n; i++)
-        {
-            m_silenceBuffer[i] = 0.0f; // can this be done with memset instead?
-        }
-    }
-}
-
 void AudioEngine::allocate_temp_buffers(int numSamplesAllChannels)
 {
     // TODO: check to make sure m_playbackSamplesAllChannels hasn't changed once buffers have been allocated
@@ -325,11 +302,8 @@ void AudioEngine::enable_recording()
 
 void AudioEngine::fill_buffer_with_silence(float* buffer, int n)
 {
-    // make sure slience buffer has been initialized
-    allocate_silence_buffer(n);
-    
     // insert silence
-    memcpy(buffer, m_silenceBuffer, n * sizeof(float));
+    memset(buffer, 0, n * sizeof(float));
 }
 
 void AudioEngine::get_recorded_data_for_playback(float* buffer, int numSamplesAllChannels)
