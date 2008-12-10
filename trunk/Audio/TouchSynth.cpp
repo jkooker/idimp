@@ -79,19 +79,8 @@ void Voice::draw(CGContextRef contextRef, CGRect& bounds) const
 
 // ---- TouchSynth public methods ----
 
-TouchSynth::TouchSynth() :
-    m_silenceBuffer(NULL),
-    m_silenceBufferSize(0)
+TouchSynth::TouchSynth()
 { }
-
-TouchSynth::~TouchSynth()
-{
-    if (m_silenceBuffer != NULL)
-    {
-        delete m_silenceBuffer;
-        m_silenceBuffer = NULL;
-    }
-}
 
 bool TouchSynth::addTouchVoice(float xPos, float yPos)
 {
