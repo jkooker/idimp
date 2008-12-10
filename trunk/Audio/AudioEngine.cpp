@@ -58,6 +58,11 @@ AudioEngine::~AudioEngine()
         delete m_tempSynthesizedBuffer;
         m_tempSynthesizedBuffer = NULL;
     }
+    if (m_tempNetworkBuffer != NULL)
+    {
+        delete m_tempNetworkBuffer;
+        m_tempNetworkBuffer = NULL;
+    }
 }
 
 AudioEngine* AudioEngine::getInstance()
@@ -224,6 +229,7 @@ AudioEngine::AudioEngine() :
     m_playbackSamplesAllChannels(0),
     m_tempRecordedBuffer(NULL),
     m_tempSynthesizedBuffer(NULL),
+    m_tempNetworkBuffer(NULL),
     m_isStarted(false)
 {
     printf("AudioEngine::AudioEngine\n");
@@ -310,6 +316,10 @@ void AudioEngine::allocate_temp_buffers(int numSamplesAllChannels)
     if (m_tempSynthesizedBuffer == NULL)
     {
         m_tempSynthesizedBuffer = new float[numSamplesAllChannels];
+    }
+    if (m_tempNetworkBuffer == NULL)
+    {
+        m_tempNetworkBuffer = new float[numSamplesAllChannels];
     }
 }
 
@@ -496,10 +506,20 @@ OSStatus AudioEngine::playback_callback(AudioUnitRenderActionFlags *ioActionFlag
         
         get_synthesized_data_for_playback(m_tempSynthesizedBuffer, numSamplesAllChannels);
         
+        get_network_data_for_playback(m_tempNetworkBuffer, numSamplesAllChannels);
+        
         // TODO: make sure that the playback buffer is large enough for the recorded data ??
         
-        // copy recorded and synthesized data into playback buffer
-        AudioSamplesMixFloatToShort(m_tempRecordedBuffer, m_tempSynthesizedBuffer, (short*)ioData->mBuffers[i].mData, numSamplesAllChannels);
+        // TODO: need a separate mix here to send to the network output - ideally it would consist of recorded
+        // input plus synthesized input mixed together and processed with master effects (will not contain network input)
+        
+        // copy recorded, synthesized, and networked data into playback buffer
+        AudioSamplesMixFloat3ToShort(m_tempRecordedBuffer, 
+                                     m_tempSynthesizedBuffer, 
+                                     m_tempNetworkBuffer, 
+                                     (short*)ioData->mBuffers[i].mData, 
+                                     numSamplesAllChannels);
+                                     
         ioData->mBuffers[i].mDataByteSize = numSamplesAllChannels * AUDIO_BIT_DEPTH_IN_BYTES;
     }
     
