@@ -278,6 +278,7 @@ private:
     int m_playbackSamplesAllChannels;
     float* m_tempRecordedBuffer;
     float* m_tempSynthesizedBuffer;
+    float* m_tempNetworkBuffer;
     std::vector<AudioEffect*> m_recordingEffects;
     std::vector<AudioEffect*> m_synthEffects;
     std::vector<AudioEffect*> m_networkEffects;

@@ -29,7 +29,7 @@ void AudioSamplesShortToFloat(const short* in, float* out, int numSamples)
     }
 }
 
-void AudioSamplesMixFloatToFloat(const float* in1, const float* in2, float* out1, int numSamples)
+void AudioSamplesMixFloat2ToFloat(const float* in1, const float* in2, float* out1, int numSamples)
 {
     const float* pIn1 = in1;
     const float* pIn2 = in2;
@@ -40,7 +40,19 @@ void AudioSamplesMixFloatToFloat(const float* in1, const float* in2, float* out1
     }
 }
 
-void AudioSamplesMixFloatToShort(const float* in1, const float* in2, short* out1, int numSamples)
+void AudioSamplesMixFloat2ToFloat(const float* in1, const float* in2, const float* in3, float* out1, int numSamples)
+{
+    const float* pIn1 = in1;
+    const float* pIn2 = in2;
+    const float* pIn3 = in3;
+    float* pOut1 = out1;
+    for (int n = 0; n < numSamples; n++)
+    {
+        *(pOut1++) = ( *(pIn1++) + *(pIn2++) + *(pIn3++) ) / 3.0;
+    }
+}
+
+void AudioSamplesMixFloat2ToShort(const float* in1, const float* in2, short* out1, int numSamples)
 {
     const float* pIn1 = in1;
     const float* pIn2 = in2;
@@ -48,6 +60,18 @@ void AudioSamplesMixFloatToShort(const float* in1, const float* in2, short* out1
     for (int n = 0; n < numSamples; n++)
     {
         *(pOut1++) = (short)(AUDIO_MAX_AMPLITUDE *  ((*(pIn1++) + *(pIn2++)) / 2.0));
+    }
+}
+
+void AudioSamplesMixFloat3ToShort(const float* in1, const float* in2, const float* in3, short* out1, int numSamples)
+{
+    const float* pIn1 = in1;
+    const float* pIn2 = in2;
+    const float* pIn3 = in3;
+    short* pOut1 = out1;
+    for (int n = 0; n < numSamples; n++)
+    {
+        *(pOut1++) = (short)(AUDIO_MAX_AMPLITUDE *  (( *(pIn1++) + *(pIn2++) + *(pIn3++) ) / 3.0));
     }
 }
 
