@@ -172,8 +172,6 @@ private:
 
     void allocate_input_buffers(UInt32 inNumberFrames);
         
-    void allocate_silence_buffer(int n);
-        
     void allocate_temp_buffers(int numSamplesAllChannels);
         
     void enable_playback();
@@ -221,7 +219,6 @@ private:
     Wavefile* m_debugFile;
     bool m_recordingIsMuted;
     bool m_synthIsMuted;
-    float* m_silenceBuffer;
     int m_playbackSamplesAllChannels;
     float* m_tempRecordedBuffer;
     float* m_tempSynthesizedBuffer;
