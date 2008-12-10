@@ -279,6 +279,8 @@ private:
     float* m_tempRecordedBuffer;
     float* m_tempSynthesizedBuffer;
     float* m_tempNetworkBuffer;
+    float* m_tempMixedPlaybackBuffer;
+    float* m_tempMixedNetworkOutputBuffer;
     std::vector<AudioEffect*> m_recordingEffects;
     std::vector<AudioEffect*> m_synthEffects;
     std::vector<AudioEffect*> m_networkEffects;

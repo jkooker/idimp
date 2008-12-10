@@ -63,6 +63,16 @@ AudioEngine::~AudioEngine()
         delete m_tempNetworkBuffer;
         m_tempNetworkBuffer = NULL;
     }
+    if (m_tempMixedPlaybackBuffer != NULL)
+    {
+        delete m_tempMixedPlaybackBuffer;
+        m_tempMixedPlaybackBuffer = NULL;
+    }
+    if (m_tempMixedNetworkOutputBuffer != NULL)
+    {
+        delete m_tempMixedNetworkOutputBuffer;
+        m_tempMixedNetworkOutputBuffer = NULL;
+    }
 }
 
 AudioEngine* AudioEngine::getInstance()
@@ -230,6 +240,8 @@ AudioEngine::AudioEngine() :
     m_tempRecordedBuffer(NULL),
     m_tempSynthesizedBuffer(NULL),
     m_tempNetworkBuffer(NULL),
+    m_tempMixedPlaybackBuffer(NULL),
+    m_tempMixedNetworkOutputBuffer(NULL),
     m_isStarted(false)
 {
     printf("AudioEngine::AudioEngine\n");
@@ -320,6 +332,14 @@ void AudioEngine::allocate_temp_buffers(int numSamplesAllChannels)
     if (m_tempNetworkBuffer == NULL)
     {
         m_tempNetworkBuffer = new float[numSamplesAllChannels];
+    }
+    if (m_tempMixedPlaybackBuffer == NULL)
+    {
+        m_tempMixedPlaybackBuffer = new float[numSamplesAllChannels];
+    }
+    if (m_tempMixedNetworkOutputBuffer == NULL)
+    {
+        m_tempMixedNetworkOutputBuffer = new float[numSamplesAllChannels];
     }
 }
 
@@ -508,22 +528,36 @@ OSStatus AudioEngine::playback_callback(AudioUnitRenderActionFlags *ioActionFlag
         
         get_network_data_for_playback(m_tempNetworkBuffer, numSamplesAllChannels);
         
-        // TODO: make sure that the playback buffer is large enough for the recorded data ??
-        
-        // TODO: need a separate mix here to send to the network output - ideally it would consist of recorded
-        // input plus synthesized input mixed together and processed with master effects (will not contain network input)
-        
-        // copy recorded, synthesized, and networked data into playback buffer
-        AudioSamplesMixFloat3ToShort(m_tempRecordedBuffer, 
+        // mix recorded, synthesized, and networked data to be processed with master effects for playback
+        AudioSamplesMixFloat3ToFloat(m_tempRecordedBuffer, 
                                      m_tempSynthesizedBuffer, 
                                      m_tempNetworkBuffer, 
-                                     (short*)ioData->mBuffers[i].mData, 
+                                     m_tempMixedPlaybackBuffer, 
                                      numSamplesAllChannels);
                                      
-        ioData->mBuffers[i].mDataByteSize = numSamplesAllChannels * AUDIO_BIT_DEPTH_IN_BYTES;
+        // mix recorded and synthesized data only to be processed with master effects for network output
+        AudioSamplesMixFloat2ToFloat(m_tempRecordedBuffer, 
+                                     m_tempSynthesizedBuffer, 
+                                     m_tempMixedNetworkOutputBuffer, 
+                                     numSamplesAllChannels);
+                                     
+        // apply master effects
+        for (int effect = 0; effect < m_masterEffects.size(); effect++)
+        {
+            m_masterEffects[effect]->Process(m_tempMixedPlaybackBuffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+            m_masterEffects[effect]->Process(m_tempMixedNetworkOutputBuffer, numSamplesAllChannels / AUDIO_NUM_CHANNELS, AUDIO_NUM_CHANNELS);
+        }
+                                     
+        // convert to shorts for playback to DAC
+        AudioSamplesFloatToShort(m_tempMixedPlaybackBuffer, 
+                                 (short*)ioData->mBuffers[i].mData, 
+                                 numSamplesAllChannels); 
+                                 
+        // TODO: convert to shorts for network output (we could send floats, but that's twice as much data to send...
     }
     
 #ifdef WRITE_DEBUG_FILE
+    // write what we sent to the DAC to a file for debugging
     m_debugFile->WriteAudioBuffers(ioData);
 #endif
     
