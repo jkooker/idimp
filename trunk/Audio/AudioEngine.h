@@ -37,6 +37,7 @@ public:
     
    /**
     * Add a recording effect to this AudioEngine.
+    * Recording effects are only applied to audio recorded from the microphone.
     * @param e A pointer to the AudioEffect to be added.
     * @see removeRecordingEffect
     */
@@ -44,6 +45,7 @@ public:
    
    /** 
     * Remove a recording effect from this AudioEngine.
+    * Recording effects are only applied to audio recorded from the microphone.
     * @param e A pointer to the AudioEffect to be removed.
     * @return true if the requested AudioEffect was found and removed, false otherwise.
     * @see addRecordingEffect
@@ -52,6 +54,7 @@ public:
     
    /**
     * Add a synthesis effect to this AudioEngine.
+    * Synthesis effects are only applied to the synthesized audio.
     * @param e A pointer to the AudioEffect to be added.
     * @see removeSynthesisEffect
     */
@@ -59,11 +62,46 @@ public:
     
    /** 
     * Remove a synthesis effect from this AudioEngine.
+    * Synthesis effects are only applied to the synthesized audio.
     * @param e A pointer to the AudioEffect to be removed.
     * @return true if the requested AudioEffect was found and removed, false otherwise.
     * @see addSynthesisEffect
     */
     bool removeSynthesisEffect(AudioEffect* e);
+    
+   /**
+    * Add a network effect to this AudioEngine.
+    * Network effects are only applied to the audio input from the network.
+    * @param e A pointer to the AudioEffect to be added.
+    * @see removeNetworkEffect
+    */
+    void addNetworkEffect(AudioEffect* e);    
+   
+   /** 
+    * Remove a network effect from this AudioEngine.
+    * Network effects are only applied to the audio input from the network.
+    * @param e A pointer to the AudioEffect to be removed.
+    * @return true if the requested AudioEffect was found and removed, false otherwise.
+    * @see addNetworkEffect
+    */
+    bool removeNetworkEffect(AudioEffect* e);  
+    
+   /**
+    * Add a master effect to this AudioEngine.
+    * Master effects are applied to the mixed audio immediately before playback.
+    * @param e A pointer to the AudioEffect to be added.
+    * @see removeMasterEffect
+    */
+    void addMasterEffect(AudioEffect* e);    
+   
+   /** 
+    * Remove a master effect from this AudioEngine.
+    * Master effects are applied to the mixed audio immediately before playback.
+    * @param e A pointer to the AudioEffect to be removed.
+    * @return true if the requested AudioEffect was found and removed, false otherwise.
+    * @see addMasterEffect
+    */
+    bool removeMasterEffect(AudioEffect* e);  
     
    /** 
     * Get a pointer to the TouchSynth object associated with this AudioEngine.
@@ -98,7 +136,21 @@ public:
     * @see getMuteSynth
     */
     void setMuteSynth(bool on) { m_synthIsMuted = on; }
+   
+   /**
+    * Find out whether or not networked audio is muted.
+    * @return true if networked audio is muted, false otherwise.
+    * @see setMuteNetwork
+    */
+    bool getMuteNetwork() { return m_networkIsMuted; }
     
+   /**
+    * Enable or disable muting of networked audio.
+    * @param true to mute networked audio, false to unmute.
+    * @see getMuteNetwork
+    */
+    void setMuteNetwork(bool on) { m_networkIsMuted = on; }
+      
    /**
     * Find out whether audio playback and recording have been started.
     * @return true if started, false otherwise.
@@ -186,6 +238,9 @@ private:
         
     void get_synthesized_data_for_playback(float* buffer, 
                                            int numSamplesAllChannels);
+                                           
+    void get_network_data_for_playback(float* buffer, 
+                                       int numSamplesAllChannels);
                                                
     void init_audio_format();
     
@@ -219,11 +274,14 @@ private:
     Wavefile* m_debugFile;
     bool m_recordingIsMuted;
     bool m_synthIsMuted;
+    bool m_networkIsMuted;
     int m_playbackSamplesAllChannels;
     float* m_tempRecordedBuffer;
     float* m_tempSynthesizedBuffer;
     std::vector<AudioEffect*> m_recordingEffects;
     std::vector<AudioEffect*> m_synthEffects;
+    std::vector<AudioEffect*> m_networkEffects;
+    std::vector<AudioEffect*> m_masterEffects;
     TouchSynth m_synth;
     bool m_isStarted;
 };
