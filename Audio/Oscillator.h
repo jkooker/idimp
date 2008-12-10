@@ -53,11 +53,25 @@ public:
     float getAmp() const;
     
    /**
-    * Set the current ampitude of this Oscillator
+    * Set the current ampitude of this Oscillator.
+    * The amplitude will immediately jump to this new amplitude at the start of 
+    * the next processing block.  If you want to avoid discontinuities due to these
+    * sudden jumps, use setAmpSmooth instead.
     * @param the new amplitude
     * @see getAmp
+    * @see setAmpSmooth
     */
     void setAmp(float amp);
+    
+   /**
+    * Set the current ampitude of this Oscillator.
+    * The amplitude will gradually change from the current amplitude to the new 
+    * amplitude over the period of one processing block.
+    * @param the new amplitude
+    * @see getAmp
+    * @see setAmp
+    */
+    void setAmpSmooth(float amp);
     
    /**
     * Get the current frequency of this Oscillator
@@ -128,6 +142,7 @@ protected:
     float m_hop;
     float m_nextSampleIndex;
     float m_amp;
+    float m_oldAmp;
 };
 
 #endif // OSCILLATOR_H
