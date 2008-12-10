@@ -11,14 +11,11 @@
 
 @interface AudioButtonTestViewController : UIViewController <UIAccelerometerDelegate> {
 
-    IBOutlet UIButton* _playButton;
     IBOutlet UISlider* _ringModFreqSlider;
     IBOutlet UITextField* _ringModFreqTextField;
     IBOutlet UISlider* _ampSlider;
     IBOutlet UITextField* _ampTextField;
     IBOutlet UISegmentedControl* _waveformSelector;
-    IBOutlet UISwitch* _recordedInputSwitch;
-    IBOutlet UISwitch* _synthInputSwitch;
     AudioEngine* _audioEngine;
     AudioEffectParameter* _ringModFreqParam;
     AudioEffectParameter* _ampParam;
@@ -26,20 +23,14 @@
     AudioEffect* _ampEffect;
 }
 
-@property (nonatomic, retain) IBOutlet UIButton* _playButton;
 @property (nonatomic, retain) IBOutlet UISlider* _ringModFreqSlider;
 @property (nonatomic, retain) IBOutlet UITextField* _ringModFreqTextField;
 @property (nonatomic, retain) IBOutlet UISlider* _ampSlider;
 @property (nonatomic, retain) IBOutlet UITextField* _ampTextField;
 @property (nonatomic, retain) IBOutlet UISegmentedControl* _waveformSelector;
-@property (nonatomic, retain) IBOutlet UISwitch* _recordedInputSwitch;
-@property (nonatomic, retain) IBOutlet UISwitch* _synthInputSwitch;
 
 - (void) myInit;
 - (void) dealloc;
-- (IBAction) playOrStop: (id) sender;
-- (IBAction) recordedInputSwitchChanged: (id) sender;
-- (IBAction) synthInputSwitchChanged: (id) sender;
 - (IBAction) ringModFreqSliderChanged: (id) sender;
 - (IBAction) ampSliderChanged: (id) sender;
 - (IBAction) waveformSelected: (id) sender;

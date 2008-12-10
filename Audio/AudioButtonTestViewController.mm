@@ -12,14 +12,11 @@ static const float kAccelerometerInterval = 0.01;
 
 @implementation AudioButtonTestViewController
 
-@synthesize _playButton;
 @synthesize _ringModFreqSlider;
 @synthesize _ringModFreqTextField;
 @synthesize _ampSlider;
 @synthesize _ampTextField;
 @synthesize _waveformSelector;
-@synthesize _recordedInputSwitch;
-@synthesize _synthInputSwitch;
 
 - (void) myInit
 {   
@@ -81,72 +78,7 @@ static const float kAccelerometerInterval = 0.01;
     [[UIAccelerometer sharedAccelerometer] setUpdateInterval:kAccelerometerInterval]; // in seconds
     [[UIAccelerometer sharedAccelerometer] setDelegate:self];
     
-    // init switch states
-    [_recordedInputSwitch setOn:!_audioEngine->getMuteRecording()];
-    [_synthInputSwitch setOn:!_audioEngine->getMuteSynth()];
-    
-    // init play/stop button
-    if (_audioEngine->isStarted())
-    {
-        [_playButton setTitle: @"Stop" forState: UIControlStateNormal ];
-        [_playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
-    }
-    else
-    {
-        [_playButton setTitle: @"Play" forState: UIControlStateNormal ];
-        [_playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
-    }
-    
     [super viewDidLoad];
-}
-
-// respond to a tap on the Play button. If stopped, start playing. If playing, stop.
-- (IBAction) playOrStop: (id) sender {
-
-	NSLog(@"playOrStop called:");
-    
-    if (_audioEngine->isStarted())
-    {
-        [_playButton setTitle: @"Play" forState: UIControlStateNormal ];
-        [_playButton setTitle: @"Play" forState: UIControlStateHighlighted ];
-        _audioEngine->stop();
-    }
-    else
-    {
-        [_playButton setTitle: @"Stop" forState: UIControlStateNormal ];
-        [_playButton setTitle: @"Stop" forState: UIControlStateHighlighted ];
-        _audioEngine->start();
-    }
-}
-
-- (IBAction) recordedInputSwitchChanged: (id) sender 
-{
-	bool recordingIsOn = [_recordedInputSwitch isOn];
-    if (recordingIsOn)
-    {
-        NSLog(@"recordedInputSwitchChanged unmuting recording");
-        _audioEngine->setMuteRecording(false);
-    }
-    else
-    {
-        NSLog(@"recordedInputSwitchChanged muting recording");
-        _audioEngine->setMuteRecording(true);
-    }
-}
-
-- (IBAction) synthInputSwitchChanged: (id) sender 
-{
-	bool synthIsOn = [_synthInputSwitch isOn];
-    if (synthIsOn)
-    {
-        NSLog(@"synthInputSwitchChanged unmuting synth");
-        _audioEngine->setMuteSynth(false);
-    }
-    else
-    {
-        NSLog(@"synthInputSwitchChanged muting synth");
-        _audioEngine->setMuteSynth(true);
-    }
 }
 
 - (IBAction) ringModFreqSliderChanged: (id) sender
