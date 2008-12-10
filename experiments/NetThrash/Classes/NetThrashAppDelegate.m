@@ -52,7 +52,6 @@
     // if tag is "start" then reset our count
     if (tag == DMPDataPacketTagStart) sentDatagramCount = 1;
     
-    
     // keep sending until we hit our count, then send an end packet
     if (sentDatagramCount < MAX_SENT_DATAGRAMS)
     {
@@ -60,6 +59,7 @@
         memset(&p, 0, sizeof(p));
         
         p.tag = (sentDatagramCount < MAX_SENT_DATAGRAMS - 1) ? DMPDataPacketTagNone : DMPDataPacketTagEnd;
+        p.index = sentDatagramCount;
         
         [self.socket sendData:[NSData dataWithBytes:&p length:sizeof(p)]
             toAddress:viewController.savedAddress
@@ -75,20 +75,20 @@
 
 - (BOOL)onUdpSocket:(AsyncUdpSocket *)sock didReceiveData:(NSData *)data withTag:(long)tag fromHost:(NSString *)host port:(UInt16)port
 {
-	NSLog(@"%s", _cmd);
+	//NSLog(@"%s", _cmd);
     
     receivedDatagramCount++;
     const DMPDataPacket *p = [data bytes];
     
-    // log when start and end come
+    NSLog(@"received data. index %d. total %d. %@%@",
+        p->index,
+        receivedDatagramCount,
+        (p->tag == DMPDataPacketTagStart) ? @"START" : @"",
+        (p->tag == DMPDataPacketTagEnd) ? @"END" : @"");
+    
     if (p->tag == DMPDataPacketTagStart)
     {
-        NSLog(@"received start packet!");
         receivedDatagramCount = 1;
-    }
-    else if (p->tag == DMPDataPacketTagEnd)
-    {
-        NSLog(@"received end packet! receivedDatagramCount = %d", receivedDatagramCount);
     }
         
     [sock receiveWithTimeout:-1 tag:0];

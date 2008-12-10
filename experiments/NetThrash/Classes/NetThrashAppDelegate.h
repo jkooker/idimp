@@ -17,6 +17,7 @@ typedef enum DMPDataPacketTag {
 
 typedef struct DMPDataPacket {
     DMPDataPacketTag_t tag;
+    uint8_t index;
     uint8_t data[4096];
 } DMPDataPacket;
 
