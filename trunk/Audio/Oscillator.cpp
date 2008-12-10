@@ -17,7 +17,8 @@ Oscillator::Oscillator() :
     m_wavetable(NULL),
     m_hop(m_freq * WAVETABLE_POINTS / AUDIO_SAMPLE_RATE),
     m_nextSampleIndex(0.0),
-    m_amp(DEFAULT_AMPLITUDE)
+    m_amp(DEFAULT_AMPLITUDE),
+    m_oldAmp(DEFAULT_AMPLITUDE)
 {
     printf("Oscillator::Oscillator\n");
     m_wavetable = new float[WAVETABLE_POINTS];
@@ -36,13 +37,9 @@ Oscillator::~Oscillator()
 
 float Oscillator::getAmp() const { return m_amp; }
 
-void Oscillator::setAmp(float amp) 
-{ 
-    //printf("Oscillator::setAmp amp = %f\n", amp);
-    // TODO: modify Oscillator so that amplitude changes don't cause
-    // sudden discontinuities in the waveform (smooth changes over some number of samples)
-    m_amp = amp; 
-}
+void Oscillator::setAmp(float amp) { m_amp = amp; m_oldAmp = amp; }
+
+void Oscillator::setAmpSmooth(float amp) { m_amp = amp; };
 
 float Oscillator::getFreq() const { return m_freq; }
 
@@ -135,11 +132,15 @@ void Oscillator::nextSampleBufferMono(float* buffer, int numSamples)
 
 void Oscillator::nextSampleBuffer(float* buffer, int numSamplesPerChannel, int numChannels)
 {
-    float ampScalar = m_amp;
+    float goalAmp = m_amp;
+    float amplitudeDelta = goalAmp - m_oldAmp;
     for (int n = 0; n < numSamplesPerChannel; n++)
     {
+        float percentage = n / (float)numSamplesPerChannel;
+        float amp = m_oldAmp + (amplitudeDelta * percentage);
+        
         // same thing in all channels
-        float nextSample = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
+        float nextSample = amp * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
         for (int ch = 0; ch < numChannels; ch++)
         {
             // overwrite existing data
@@ -155,15 +156,20 @@ void Oscillator::nextSampleBuffer(float* buffer, int numSamplesPerChannel, int n
             m_nextSampleIndex -= WAVETABLE_POINTS;
         }
     }
+    m_oldAmp = goalAmp;
 }
 
 void Oscillator::addNextSamplesToBuffer(float* buffer, int numSamplesPerChannel, int numChannels)
 {
-    float ampScalar = m_amp;
+    float goalAmp = m_amp;
+    float amplitudeDelta = goalAmp - m_oldAmp;
     for (int n = 0; n < numSamplesPerChannel; n++)
     {
+        float percentage = n / (float)numSamplesPerChannel;
+        float amp = m_oldAmp + (amplitudeDelta * percentage);
+        
         // same thing in all channels
-        float nextSample = ampScalar * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
+        float nextSample = amp * m_wavetable[(int)(m_nextSampleIndex + 0.5) % WAVETABLE_POINTS];
         for (int ch = 0; ch < numChannels; ch++)
         {
             // add to existing data - don't overwrite
@@ -179,5 +185,6 @@ void Oscillator::addNextSamplesToBuffer(float* buffer, int numSamplesPerChannel,
             m_nextSampleIndex -= WAVETABLE_POINTS;
         }
     }
+    m_oldAmp = goalAmp;
 }
 

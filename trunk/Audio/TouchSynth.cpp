@@ -90,9 +90,7 @@ bool TouchSynth::addTouchVoice(float xPos, float yPos)
         if (!m_voices[i].isOn())
         {
             // found an unused voice
-            m_voices[i].setPosition(xPos, yPos);
-            //printf("TouchSynth::addTouchVoice added x = %f, y = %f\n", xPos, yPos);
-            m_voices[i].turnOn();
+            m_voices[i].turnOn(xPos, yPos);
             return (true);
         }
     }

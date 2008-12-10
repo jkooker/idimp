@@ -47,9 +47,19 @@ public:
     
     bool isOn() const { return m_isOn; }
     
-    void turnOn() 
+    void turnOn(float x, float y) 
     { 
         printf("Voice::turnOn %02X\n", this);
+
+        // store new coordinates
+        m_x = x;
+        m_y = y;
+        
+        // set oscillator parameters based on position
+        // map y to frequency and x to amplitude
+        m_osc.setFreq(m_minFreq + m_freqRange * (1.0 - m_y / m_yMax));
+        m_osc.setAmp(m_minAmp + m_ampRange * (m_x / m_xMax));
+
         m_isOn = true; 
     }
     
@@ -79,7 +89,7 @@ public:
         // update oscillator parameters based on new position
         // map y to frequency and x to amplitude
         m_osc.setFreq(m_minFreq + m_freqRange * (1.0 - m_y / m_yMax));
-        m_osc.setAmp(m_minAmp + m_ampRange * (m_x / m_xMax));
+        m_osc.setAmpSmooth(m_minAmp + m_ampRange * (m_x / m_xMax));
     }
     
     void incrementWaveform()
