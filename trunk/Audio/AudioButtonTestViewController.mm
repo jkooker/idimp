@@ -34,7 +34,7 @@ static const float kAccelerometerInterval = 0.01;
     _ampEffect = NULL;
     _ampEffect = new AmplitudeScale();
     _audioEngine->addRecordingEffect(_ringModEffect);
-    _audioEngine->addRecordingEffect(_ampEffect);
+    _audioEngine->addMasterEffect(_ampEffect);
     _ringModFreqParam = _ringModEffect->getParameter(0);
     _ampParam = _ampEffect->getParameter(0);
 }
@@ -53,29 +53,12 @@ static const float kAccelerometerInterval = 0.01;
     }
     if (_ampEffect != NULL)
     {
-        _audioEngine->removeRecordingEffect(_ampEffect);
+        _audioEngine->removeMasterEffect(_ampEffect);
         delete _ampEffect;
         _ampEffect = NULL;
     }
     [super dealloc];
 }
-
-/*
-// Override initWithNibName:bundle: to load the view using a nib file then perform additional customization that is not appropriate for viewDidLoad.
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
-        // Custom initialization
-    }
-    return self;
-}
-*/
-
-/*
-// Implement loadView to create a view hierarchy programmatically.
-- (void)loadView {
-}
-*/
-
 
 // Implement viewDidLoad to do additional setup after loading the view.
 - (void)viewDidLoad {
@@ -200,11 +183,8 @@ static const float kAccelerometerInterval = 0.01;
 
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {
-    double angleZY = atan2(acceleration.y, acceleration.z);
-    //double angleXZ = atan2(acceleration.z, acceleration.x);
-    //NSLog(@"accel: x = %2.2f, y = %2.2f, z = %2.2f, angleXZ = %2.2f, angleZY = %2.2f", acceleration.x, acceleration.y, acceleration.z, angleZY, angleXZ);
-    
     // change amplitude based on rotation around X axis
+    double angleZY = atan2(acceleration.y, acceleration.z);
     float amp = (angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI);
     _ampParam->setValue(amp);
     [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
