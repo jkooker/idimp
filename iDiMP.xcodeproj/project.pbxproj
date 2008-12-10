@@ -21,6 +21,8 @@
 		289233AF0DB2D0DB0083E9F9 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233AB0DB2D0DB0083E9F9 /* RootViewController.m */; };
 		289233B00DB2D0DB0083E9F9 /* FlipsideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233AD0DB2D0DB0083E9F9 /* FlipsideViewController.m */; };
 		32DA732A0EDE19F00038F6B8 /* AudioEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32DA73290EDE19F00038F6B8 /* AudioEngine.cpp */; };
+		32EF71900EF053D7004D4261 /* MasterAudioControls.xib in Resources */ = {isa = PBXBuildFile; fileRef = 32EF718F0EF053D7004D4261 /* MasterAudioControls.xib */; };
+		32EF71980EF05B1E004D4261 /* MasterAudioControlsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 32EF71970EF05B1E004D4261 /* MasterAudioControlsViewController.mm */; };
 		32F871210EEDC9D00073FFAE /* TouchSynth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32F871200EEDC9D00073FFAE /* TouchSynth.cpp */; };
 		32F872360EEDEE6D0073FFAE /* Oscillator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32F872350EEDEE6D0073FFAE /* Oscillator.cpp */; };
 		9B6C40A20ED78A1D007E73EC /* AudioButtonTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */; };
@@ -53,6 +55,9 @@
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* iDiMP_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iDiMP_Prefix.pch; sourceTree = "<group>"; };
 		32DA73290EDE19F00038F6B8 /* AudioEngine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AudioEngine.cpp; sourceTree = "<group>"; };
+		32EF718F0EF053D7004D4261 /* MasterAudioControls.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MasterAudioControls.xib; sourceTree = "<group>"; };
+		32EF71960EF05B1E004D4261 /* MasterAudioControlsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterAudioControlsViewController.h; sourceTree = "<group>"; };
+		32EF71970EF05B1E004D4261 /* MasterAudioControlsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterAudioControlsViewController.mm; sourceTree = "<group>"; };
 		32F8711F0EEDC9D00073FFAE /* TouchSynth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchSynth.h; sourceTree = "<group>"; };
 		32F871200EEDC9D00073FFAE /* TouchSynth.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TouchSynth.cpp; sourceTree = "<group>"; };
 		32F872350EEDEE6D0073FFAE /* Oscillator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Oscillator.cpp; sourceTree = "<group>"; };
@@ -154,6 +159,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				32EF718F0EF053D7004D4261 /* MasterAudioControls.xib */,
 				9B873FA20ED67F360041A31B /* at_symbol.png */,
 				9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */,
 				280E754A0DD40C5E005A515E /* FlipsideView.xib */,
@@ -183,6 +189,8 @@
 				9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */,
 				9B6C40BF0ED78B7A007E73EC /* AudioBasics.h */,
 				9B6C40C20ED78B7A007E73EC /* AudioButtonTestViewController.h */,
+				32EF71960EF05B1E004D4261 /* MasterAudioControlsViewController.h */,
+				32EF71970EF05B1E004D4261 /* MasterAudioControlsViewController.mm */,
 				9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */,
 				9B6C40C40ED78B7A007E73EC /* AudioEffect.h */,
 				9B6C40CE0ED78BD8007E73EC /* AudioEngine.h */,
@@ -248,6 +256,7 @@
 				280E754F0DD40C5E005A515E /* MainWindow.xib in Resources */,
 				9B873FA30ED67F360041A31B /* at_symbol.png in Resources */,
 				9B6C40A20ED78A1D007E73EC /* AudioButtonTestViewController.xib in Resources */,
+				32EF71900EF053D7004D4261 /* MasterAudioControls.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +279,7 @@
 				32DA732A0EDE19F00038F6B8 /* AudioEngine.cpp in Sources */,
 				32F871210EEDC9D00073FFAE /* TouchSynth.cpp in Sources */,
 				32F872360EEDEE6D0073FFAE /* Oscillator.cpp in Sources */,
+				32EF71980EF05B1E004D4261 /* MasterAudioControlsViewController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
