@@ -53,6 +53,8 @@
     _networkAmpEffect = new AmplitudeScale();
     _audioEngine->addNetworkEffect(_networkAmpEffect);    
     
+    _networkController = [NetworkController sharedInstance];
+    
     [window addSubview:[rootViewController view]];
     [window makeKeyAndVisible];
 }
