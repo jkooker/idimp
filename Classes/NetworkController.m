@@ -68,8 +68,7 @@ static NetworkController *sharedNetworkController = nil;
 - (id)init
 {
     if (self = [super init]) {
-        
-        
+        services = [[NSMutableArray array] retain];
     }
     return self;
 }
