@@ -87,7 +87,11 @@ void Voice::turnOn(float x, float y)
     // set oscillator parameters based on position
     // map y to frequency and x to amplitude
     m_osc.setFreq(m_minFreq + m_freqRange * (1.0 - m_y / m_yMax));
-    m_osc.setAmp(m_minAmp + m_ampRange * (m_x / m_xMax));
+    
+    // set the amplitude to zero first so we will ramp up to the starting amplitude over the period of one buffer
+    // this will avoid the clicks due to sudden turning on of voices
+    m_osc.setAmp(0.0);
+    m_osc.setAmpSmooth(m_minAmp + m_ampRange * (m_x / m_xMax));
     
     m_isOn = true; 
 }
