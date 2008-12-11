@@ -74,7 +74,7 @@
         [infoButton removeFromSuperview];
         [self.view addSubview:flipsideView];
         [self.view insertSubview:flipsideNavigationBar aboveSubview:flipsideView];
-        NSLog(@"%@", NSStringFromCGRect([flipsideView bounds]));
+        //NSLog(@"%@", NSStringFromCGRect([flipsideView bounds]));
 
         // Hack to make the tab view controller start at the right height
 #define STATUSBARHEIGHT 20

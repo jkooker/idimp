@@ -23,14 +23,15 @@ enum NetworkTableViewSections {
 
 @implementation NetworkViewController
 
+/*
 // The designated initializer. Override to perform setup that is required before the view is loaded.
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         // Custom initialization
-        services = [NetworkController sharedInstance].services;
     }
     return self;
 }
+*/
 
 /*
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
@@ -38,12 +39,17 @@ enum NetworkTableViewSections {
 }
 */
 
-/*
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _networkController = [NetworkController sharedInstance];
+    services = _networkController.services;
+    _networkController.clientTableView = networkTableView;
+    [_networkController startBonjourSearch];
 }
-*/
+
 
 /*
 // Override to allow orientations other than the default portrait orientation.
@@ -150,7 +156,7 @@ enum NetworkTableViewSections {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSLog(@"%s", _cmd);
+    NSLog(@"%@ %s", [self class], _cmd);
     
 #if 0
     
