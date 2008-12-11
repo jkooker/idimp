@@ -117,7 +117,8 @@ static NetworkController *sharedNetworkController = nil;
 - (void)sendAudioBuffer:(short*)buffer length:(int)length channels:(int)numChannels
 {
     // chop down to mono
-    for (int i = 0; i < length / numChannels; i++) {
+    int numSamplesMono = length / numChannels;
+    for (int i = 0; i < numSamplesMono; i++) {
         savedPacket.slices[oldestSlice].data[i] = buffer[numChannels * i];
     }
     
