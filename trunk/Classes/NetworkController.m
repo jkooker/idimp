@@ -76,17 +76,7 @@ static NetworkController *sharedNetworkController = nil;
     {
         services = [[NSMutableArray array] retain];
         
-        // Initialize UDP socket
-        socket = [[AsyncUdpSocket alloc] initWithDelegate:self];
-        NSError *error = nil;
-        if (![socket bindToPort:kiDiMPSocketPort error:&error])
-        {
-            NSLog(@"could not bindToPort. %@", error);
-        }
-        NSLog(@"created socket. host: %@, port: %d", [socket localHost], [socket localPort]);
-        [socket receiveWithTimeout:-1 tag:0];
-        
-        // Advertise over Bonjour
+        // Prepare Bonjour service
         netService = [[NSNetService alloc] initWithDomain:@"local." type:kBonjourServiceType name:@"" port:kiDiMPSocketPort];
         if (netService == nil)
         {
@@ -101,12 +91,17 @@ static NetworkController *sharedNetworkController = nil;
         // Prepare Bonjour browser
         browser = [[NSNetServiceBrowser alloc] init];
         [browser setDelegate:self];
+        browserIsSearching = NO;
     }
     return self;
 }
 
 - (void)dealloc
 {
+    NSLog(@"%@ %s", [self class], _cmd);
+
+    [socket close];
+    [socket release];
     [services release];
     [netService release];
     [browser release];
@@ -151,6 +146,32 @@ static NetworkController *sharedNetworkController = nil;
     }
 }
 
+- (void)startAudioServer
+{
+    // Initialize UDP socket
+    socket = [[AsyncUdpSocket alloc] initWithDelegate:self];
+
+    NSError *error = nil;
+    if (![socket bindToPort:kiDiMPSocketPort error:&error])
+    {
+        NSLog(@"could not bindToPort. %@", error);
+    }
+    NSLog(@"created socket. host: %@, port: %d", [socket localHost], [socket localPort]);
+    [socket receiveWithTimeout:-1 tag:0];
+
+    [self startBonjourPublishing];
+    [self startBonjourSearch];
+}
+
+- (void)stopAudioServer
+{
+    [self stopBonjourSearch];
+    [self stopBonjourPublishing];
+    [socket close];
+    [socket release];
+    socket = nil;
+}
+
 #pragma mark Bonjour Controls
 - (void)startBonjourPublishing
 {
@@ -165,12 +186,22 @@ static NetworkController *sharedNetworkController = nil;
 
 - (void)startBonjourSearch
 {
-    [browser searchForServicesOfType:kBonjourServiceType inDomain:@"local."];
+    if (!browserIsSearching)
+    {
+        [browser searchForServicesOfType:kBonjourServiceType inDomain:@"local."];
+        browserIsSearching = YES;
+        // reset found services
+        [services removeAllObjects];
+    }
 }
 
 - (void)stopBonjourSearch
 {
-    [browser stop];
+    if (browserIsSearching)
+    {
+        [browser stop];
+        browserIsSearching = NO;
+    }
 }
 
 

@@ -9,8 +9,8 @@
 #import "NetworkViewController.h"
 
 NSString *headers[] = {
-    @"Network",
-    @"Audio Destination",
+    @"Network",             // NetworkSection
+    @"Audio Destination",   // PairingSection
     @""
 };
 
@@ -82,13 +82,24 @@ enum NetworkTableViewSections {
     // get new value of serverswitch
     if ([serverSwitch isOn])
     {
-        [_networkController startBonjourPublishing];
+        [_networkController startAudioServer];
     }
     else
     {
-        [_networkController stopBonjourPublishing];
+        [_networkController stopAudioServer];
     }
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+}
+
 
 #pragma mark TableView Data Source Methods
 

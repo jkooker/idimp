@@ -34,6 +34,7 @@ typedef struct DMPDataPacket {
     AsyncUdpSocket *socket;
     NSNetService *netService;
     NSNetServiceBrowser *browser;
+    BOOL browserIsSearching;
     NSMutableArray *services; // Active NSNetServices
     NSData *savedAddress; // Current destination of network audio
     UITableView *clientTableView;
@@ -53,6 +54,9 @@ typedef struct DMPDataPacket {
 
 - (void)sendAudioBuffer:(short*)buffer length:(int)length channels:(int)numChannels;
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels;
+
+- (void)startAudioServer;
+- (void)stopAudioServer;
 
 - (void)startBonjourPublishing;
 - (void)stopBonjourPublishing;
