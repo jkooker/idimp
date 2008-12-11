@@ -32,6 +32,8 @@
 		9B6F0C230EF0921F00547213 /* NetworkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B6F0C220EF0921F00547213 /* NetworkView.xib */; };
 		9B873FA30ED67F360041A31B /* at_symbol.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B873FA20ED67F360041A31B /* at_symbol.png */; };
 		9BEE4F680EF0966B00167384 /* NetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4F670EF0966B00167384 /* NetworkViewController.m */; };
+		9BEE4F6E0EF09C8900167384 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4F6D0EF09C8900167384 /* AsyncUdpSocket.m */; };
+		9BEE4FA70EF0BE5F00167384 /* NetworkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4FA60EF0BE5F00167384 /* NetworkController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,7 +79,11 @@
 		9B6F0C220EF0921F00547213 /* NetworkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkView.xib; sourceTree = "<group>"; };
 		9B873FA20ED67F360041A31B /* at_symbol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = at_symbol.png; path = Graphics/at_symbol.png; sourceTree = "<group>"; };
 		9BEE4F660EF0966B00167384 /* NetworkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkViewController.h; path = Classes/NetworkViewController.h; sourceTree = "<group>"; };
-		9BEE4F670EF0966B00167384 /* NetworkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkViewController.m; path = Classes/NetworkViewController.m; sourceTree = "<group>"; };
+		9BEE4F670EF0966B00167384 /* NetworkViewController.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = NetworkViewController.m; path = Classes/NetworkViewController.m; sourceTree = "<group>"; };
+		9BEE4F6C0EF09C8900167384 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncUdpSocket.h; path = Classes/AsyncUdpSocket.h; sourceTree = "<group>"; };
+		9BEE4F6D0EF09C8900167384 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncUdpSocket.m; path = Classes/AsyncUdpSocket.m; sourceTree = "<group>"; };
+		9BEE4FA50EF0BE5F00167384 /* NetworkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkController.h; path = Classes/NetworkController.h; sourceTree = "<group>"; };
+		9BEE4FA60EF0BE5F00167384 /* NetworkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkController.m; path = Classes/NetworkController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,8 +218,12 @@
 		9BAE64960EF0882400B6DBEF /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				9BEE4F6C0EF09C8900167384 /* AsyncUdpSocket.h */,
+				9BEE4F6D0EF09C8900167384 /* AsyncUdpSocket.m */,
 				9BEE4F660EF0966B00167384 /* NetworkViewController.h */,
 				9BEE4F670EF0966B00167384 /* NetworkViewController.m */,
+				9BEE4FA50EF0BE5F00167384 /* NetworkController.h */,
+				9BEE4FA60EF0BE5F00167384 /* NetworkController.m */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -298,6 +308,8 @@
 				32F872360EEDEE6D0073FFAE /* Oscillator.cpp in Sources */,
 				32EF71980EF05B1E004D4261 /* MasterAudioControlsViewController.mm in Sources */,
 				9BEE4F680EF0966B00167384 /* NetworkViewController.m in Sources */,
+				9BEE4F6E0EF09C8900167384 /* AsyncUdpSocket.m in Sources */,
+				9BEE4FA70EF0BE5F00167384 /* NetworkController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
