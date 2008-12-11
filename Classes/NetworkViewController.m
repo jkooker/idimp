@@ -175,6 +175,13 @@ enum NetworkTableViewSections {
         }
         selectedServiceIndex = indexPath.row;
         [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+        
+#if 1
+        // debug: send a packet (this seems to be necessary to initialize the 
+        short *buffer = new short[10];
+        [_networkController sendAudioBuffer:buffer length:10];
+        delete buffer;
+#endif
     }
     
     //[sharedSocket connectToAddress:[[[services objectAtIndex:indexPath.row] addresses] objectAtIndex:0] error:&error];
