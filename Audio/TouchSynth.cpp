@@ -76,6 +76,47 @@ void Voice::draw(CGContextRef contextRef, CGRect& bounds) const
     }
 }
 
+void Voice::turnOn(float x, float y) 
+{ 
+    printf("Voice::turnOn %02X\n", this);
+    
+    // store new coordinates
+    m_x = x;
+    m_y = y;
+    
+    // set oscillator parameters based on position
+    // map y to frequency and x to amplitude
+    m_osc.setFreq(m_minFreq + m_freqRange * (1.0 - m_y / m_yMax));
+    m_osc.setAmp(m_minAmp + m_ampRange * (m_x / m_xMax));
+    
+    m_isOn = true; 
+}
+
+void Voice::turnOff() 
+{ 
+    printf("Voice::turnOff %02X\n", this);
+    m_isOn = false; 
+}
+
+void Voice::renderAddToBuffer(float* output, int numSamplesPerChannel, int numChannels)
+{
+    if (m_isOn)
+    {
+        m_osc.addNextSamplesToBuffer(output, numSamplesPerChannel, numChannels);
+    }
+}
+
+void Voice::setPosition(float x, float y)
+{
+    // store new coordinates
+    m_x = x;
+    m_y = y;
+    
+    // update oscillator parameters based on new position
+    // map y to frequency and x to amplitude
+    m_osc.setFreq(m_minFreq + m_freqRange * (1.0 - m_y / m_yMax));
+    m_osc.setAmpSmooth(m_minAmp + m_ampRange * (m_x / m_xMax));
+}
 
 // ---- TouchSynth public methods ----
 
