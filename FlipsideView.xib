@@ -9,7 +9,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="40"/>
-			<integer value="56"/>
+			<integer value="50"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -49,18 +49,18 @@
 			<object class="IBUITabBarController" id="556180313">
 				<object class="IBUISimulatedTabBarMetrics" key="IBUISimulatedBottomBarMetrics"/>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
-				<object class="IBUIViewController" key="IBUISelectedViewController" id="655727956">
-					<string key="IBUITitle">About</string>
-					<object class="IBUITabBarItem" key="IBUITabBarItem" id="831106887">
-						<string key="IBUITitle">About</string>
+				<object class="IBUIViewController" key="IBUISelectedViewController" id="989612582">
+					<string key="IBUITitle">AudioTest</string>
+					<object class="IBUITabBarItem" key="IBUITabBarItem" id="111713685">
+						<string key="IBUITitle">Audio Params</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">at_symbol.png</string>
+							<string key="NSResourceName">checkmark.png</string>
 						</object>
 						<reference key="IBUITabBar"/>
 					</object>
 					<reference key="IBUIParentViewController" ref="556180313"/>
-					<string key="IBUINibName">AboutView</string>
+					<string key="IBUINibName">AudioButtonTestViewController</string>
 				</object>
 				<object class="NSMutableArray" key="IBUIViewControllers">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -77,19 +77,7 @@
 						<reference key="IBUIParentViewController" ref="556180313"/>
 						<string key="IBUINibName">MasterAudioControls</string>
 					</object>
-					<object class="IBUIViewController" id="989612582">
-						<string key="IBUITitle">AudioTest</string>
-						<object class="IBUITabBarItem" key="IBUITabBarItem" id="111713685">
-							<string key="IBUITitle">AudioTest</string>
-							<object class="NSCustomResource" key="IBUIImage">
-								<string key="NSClassName">NSImage</string>
-								<string key="NSResourceName">checkmark.png</string>
-							</object>
-							<reference key="IBUITabBar"/>
-						</object>
-						<reference key="IBUIParentViewController" ref="556180313"/>
-						<string key="IBUINibName">AudioButtonTestViewController</string>
-					</object>
+					<reference ref="989612582"/>
 					<object class="IBUIViewController" id="698542309">
 						<string key="IBUITitle">Network</string>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="237463830">
@@ -103,7 +91,19 @@
 						<reference key="IBUIParentViewController" ref="556180313"/>
 						<string key="IBUINibName">NetworkView</string>
 					</object>
-					<reference ref="655727956"/>
+					<object class="IBUIViewController" id="655727956">
+						<string key="IBUITitle">About</string>
+						<object class="IBUITabBarItem" key="IBUITabBarItem" id="831106887">
+							<string key="IBUITitle">About</string>
+							<object class="NSCustomResource" key="IBUIImage">
+								<string key="NSClassName">NSImage</string>
+								<string key="NSResourceName">at_symbol.png</string>
+							</object>
+							<reference key="IBUITabBar"/>
+						</object>
+						<reference key="IBUIParentViewController" ref="556180313"/>
+						<string key="IBUINibName">AboutView</string>
+					</object>
 				</object>
 				<object class="IBUITabBar" key="IBUITabBar" id="948673132">
 					<nil key="NSNextResponder"/>
