@@ -49,8 +49,10 @@ enum NetworkTableViewSections {
     _networkController = [NetworkController sharedInstance];
     services = _networkController.services;
     _networkController.clientTableView = networkTableView;
-    [_networkController startBonjourPublishing];
     [_networkController startBonjourSearch];
+    
+    serverSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+    [serverSwitch addTarget:self action:@selector(serverDidSwitch) forControlEvents:UIControlEventValueChanged];
 }
 
 
@@ -69,7 +71,23 @@ enum NetworkTableViewSections {
 
 
 - (void)dealloc {
+    [serverSwitch release];
     [super dealloc];
+}
+
+- (void)serverDidSwitch
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+    
+    // get new value of serverswitch
+    if ([serverSwitch isOn])
+    {
+        [_networkController startBonjourPublishing];
+    }
+    else
+    {
+        [_networkController stopBonjourPublishing];
+    }
 }
 
 #pragma mark TableView Data Source Methods
@@ -105,9 +123,7 @@ enum NetworkTableViewSections {
                 theCell.accessoryType = UITableViewCellAccessoryNone;
                 
                 // add switch
-                UISwitch *serverSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
                 theCell.accessoryView = serverSwitch;
-                [serverSwitch release];
             }
             break;
         case PairingSection:
@@ -177,7 +193,7 @@ enum NetworkTableViewSections {
         [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
         
 #if 1
-        // debug: send a packet (this seems to be necessary to initialize the 
+        // debug: send a packet (this seems to be necessary to kick off the socket)
         short *buffer = new short[10];
         [_networkController sendAudioBuffer:buffer length:10];
         delete buffer;

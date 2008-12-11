@@ -179,6 +179,11 @@ static NetworkController *sharedNetworkController = nil;
     NSLog(@"did not resolve address for %@.", [sender name]);
 }
 
+- (void)netServiceDidStop:(NSNetService *)sender
+{
+	NSLog(@"%@ %s", [self class], _cmd);
+}
+
 #pragma mark NSNetServiceBrowser Delegate Methods
 
 - (void)netServiceBrowserWillSearch:(NSNetServiceBrowser *)aNetServiceBrowser
