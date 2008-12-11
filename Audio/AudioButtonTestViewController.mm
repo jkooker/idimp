@@ -14,8 +14,6 @@ static const float kAccelerometerInterval = 0.01;
 
 @synthesize _ringModFreqSlider;
 @synthesize _ringModFreqTextField;
-@synthesize _ampSlider;
-@synthesize _ampTextField;
 @synthesize _waveformSelector;
 
 - (void) myInit
@@ -28,12 +26,8 @@ static const float kAccelerometerInterval = 0.01;
     // at processing time, they will be called in the order they are added to the engine
     _ringModEffect = NULL;
     _ringModEffect = new RingMod();
-    _ampEffect = NULL;
-    _ampEffect = new AmplitudeScale();
     _audioEngine->addRecordingEffect(_ringModEffect);
-    _audioEngine->addMasterEffect(_ampEffect);
     _ringModFreqParam = _ringModEffect->getParameter(0);
-    _ampParam = _ampEffect->getParameter(0);
 }
 
 - (void) dealloc
@@ -47,12 +41,6 @@ static const float kAccelerometerInterval = 0.01;
         _audioEngine->removeRecordingEffect(_ringModEffect);
         delete _ringModEffect;
         _ringModEffect = NULL;
-    }
-    if (_ampEffect != NULL)
-    {
-        _audioEngine->removeMasterEffect(_ampEffect);
-        delete _ampEffect;
-        _ampEffect = NULL;
     }
     [super dealloc];
 }
@@ -68,12 +56,6 @@ static const float kAccelerometerInterval = 0.01;
     [_ringModFreqSlider setMinimumValue:_ringModFreqParam->getMinValue()];
     [_ringModFreqSlider setMaximumValue:_ringModFreqParam->getMaxValue()];
     
-    float amp = _ampParam->getValue();
-    [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
-    [_ampSlider setValue:amp animated:NO];
-    [_ampSlider setMinimumValue:_ampParam->getMinValue()];
-    [_ampSlider setMaximumValue:_ampParam->getMaxValue()];
-
     // Set up accelerometer
     [[UIAccelerometer sharedAccelerometer] setUpdateInterval:kAccelerometerInterval]; // in seconds
     [[UIAccelerometer sharedAccelerometer] setDelegate:self];
@@ -86,13 +68,6 @@ static const float kAccelerometerInterval = 0.01;
     int freq = (int)[_ringModFreqSlider value]; // for simplicity right now, use only integer values
     [_ringModFreqTextField setText:[NSString stringWithFormat:@"%d", freq]];
     _ringModFreqParam->setValue((float)freq);
-}
-
-- (IBAction) ampSliderChanged: (id) sender
-{
-    float amp = [_ampSlider value];
-    [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
-    _ampParam->setValue(amp);
 }
 
 - (IBAction) waveformSelected: (id) sender
@@ -116,11 +91,11 @@ static const float kAccelerometerInterval = 0.01;
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
 {
     // change amplitude based on rotation around X axis
-    double angleZY = atan2(acceleration.y, acceleration.z);
+    /*double angleZY = atan2(acceleration.y, acceleration.z);
     float amp = (angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI);
     _ampParam->setValue(amp);
     [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
-    [_ampSlider setValue:amp animated:NO];
+    [_ampSlider setValue:amp animated:NO];*/
 }
 
 @end

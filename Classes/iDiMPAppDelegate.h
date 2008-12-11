@@ -7,16 +7,28 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AudioEngine.h"
 
 @class RootViewController;
 
 @interface iDiMPAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     RootViewController *rootViewController;
+    
+    AudioEngine* _audioEngine;
+    AudioEffect* _masterAmpEffect;
+    AudioEffect* _recordingAmpEffect;
+    AudioEffect* _synthAmpEffect;
+    AudioEffect* _networkAmpEffect;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) IBOutlet RootViewController *rootViewController;
+
+- (AudioEffect*) masterAudioAmpEffect;
+- (AudioEffect*) recordingAudioAmpEffect;
+- (AudioEffect*) synthAudioAmpEffect;
+- (AudioEffect*) networkAudioAmpEffect;
 
 @end
 
