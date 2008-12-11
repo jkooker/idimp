@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * Actually is not used. The FlipsideView is immediately replaced with the UITabBarController's view.
+ */
 @interface FlipsideView : UIView {
 
 }

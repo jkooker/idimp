@@ -146,15 +146,16 @@ enum NetworkTableViewSections {
             
             if (![services count])
             {
-                // put in the "searching" label
-                theCell.text = @"Searching...";
+                // put in the "waiting" label
+                // TODO: change this to "searching" when appropriate
+                theCell.text = @"Waiting...";
                 theCell.textColor = [UIColor colorWithWhite:0.5 alpha:0.5];
             }
             else
             {
                 // show all the available services
                 theCell.text = [[services objectAtIndex:indexPath.row] name];
-                theCell.textColor = [UIColor blackColor];
+                theCell.textColor = ([theCell.text isEqualToString:[[UIDevice currentDevice] name]]) ? [UIColor colorWithWhite:0.5 alpha:0.5] : [UIColor blackColor];
                 theCell.accessoryType = (selectedServiceIndex == indexPath.row) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
             }
             break;
