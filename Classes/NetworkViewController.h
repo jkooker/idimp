@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "NetworkController.h"
 
 @interface NetworkViewController : UIViewController {
-
+    IBOutlet UITableView *networkTableView;
+    
+    NSMutableArray *services;
 }
 
 @end
