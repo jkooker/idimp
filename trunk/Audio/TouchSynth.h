@@ -69,33 +69,15 @@ public:
     * @see isOn
     * @see turnOff
     */
-    void turnOn(float x, float y) 
-    { 
-        printf("Voice::turnOn %02X\n", this);
-
-        // store new coordinates
-        m_x = x;
-        m_y = y;
+    void turnOn(float x, float y);
         
-        // set oscillator parameters based on position
-        // map y to frequency and x to amplitude
-        m_osc.setFreq(m_minFreq + m_freqRange * (1.0 - m_y / m_yMax));
-        m_osc.setAmp(m_minAmp + m_ampRange * (m_x / m_xMax));
-
-        m_isOn = true; 
-    }
-    
    /** 
     * Turn off this voice.
     * @see isOn
     * @see turnOn
     */
-    void turnOff() 
-    { 
-        printf("Voice::turnOff %02X\n", this);
-        m_isOn = false; 
-    }
-    
+    void turnOff();
+        
    /** 
     * Render this voice's audio and add it to the audio in the given buffer.
     * Assumes that the buffer has already been initialized with silence or the desired added audio.
@@ -103,14 +85,8 @@ public:
     * @numSamplesPerChannel the number of samples per channel to be rendered
     * @numChannels the number of channels to be rendered (Note: samples are interleaved) 
     */
-    void renderAddToBuffer(float* output, int numSamplesPerChannel, int numChannels)
-    {
-        if (m_isOn)
-        {
-            m_osc.addNextSamplesToBuffer(output, numSamplesPerChannel, numChannels);
-        }
-    }
-    
+    void renderAddToBuffer(float* output, int numSamplesPerChannel, int numChannels);
+        
    /**
     * Set the maximum X position on the screen (generally screen width)
     * @param x the new maximum X position
@@ -130,18 +106,8 @@ public:
     * @param x the new X position of this voice
     * @param y the new Y position of this voice
     */
-    void setPosition(float x, float y)
-    {
-        // store new coordinates
-        m_x = x;
-        m_y = y;
+    void setPosition(float x, float y);
         
-        // update oscillator parameters based on new position
-        // map y to frequency and x to amplitude
-        m_osc.setFreq(m_minFreq + m_freqRange * (1.0 - m_y / m_yMax));
-        m_osc.setAmpSmooth(m_minAmp + m_ampRange * (m_x / m_xMax));
-    }
-    
    /**
     * Increment the Waveform used by this voice to the next one in the list of Oscillator::Waveforms.
     * @see setWaveform
