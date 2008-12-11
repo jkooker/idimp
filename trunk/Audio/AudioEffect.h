@@ -12,7 +12,7 @@
 
 #import "Oscillator.h"
 
-/** AudioEffectParameter class
+/** AudioEffectParameter class.
  * The AudioEffectParameter class is a generic interface for parameters of an AudioEffect.
  */
 class AudioEffectParameter
@@ -20,7 +20,7 @@ class AudioEffectParameter
 public:
 
    /**
-    * AudioEffectParameter constructor
+    * AudioEffectParameter constructor.
     * @param displayName the name of this AudioEffectParameter for use in a GUI
     * @param description the description of this AudioEffectParameter for use in a GUI
     */
@@ -96,7 +96,7 @@ private:
     float m_maxValue;
 };
 
-/** AudioEffect class
+/** AudioEffect class.
  * The AudioEffect class is an abstract base class for specific audio processing effects.
  */
 class AudioEffect
@@ -104,7 +104,7 @@ class AudioEffect
 public:
 
    /**
-    * AudioEffect constructor
+    * AudioEffect constructor.
     * @param numParams the number of AudioEffectParameters this AudioEffect has
     */
     AudioEffect(int numParams) :
@@ -172,7 +172,7 @@ protected:
     int m_numParams;
 };
 
-/** AmplitudeScale class
+/** AmplitudeScale class.
  * The AmplitudeScale class is an AudioEffect which scales the amplitude of the contents of a 
  * given audio buffer.  Amplitude changes occur gradually over the period of one audio buffer to 
  * avoid discontinuities with sudden changes.
@@ -224,7 +224,7 @@ private:
 
 static const float RING_MOD_MAX_FREQ_HZ = 5000.0;
 
-/** RingMod class
+/** RingMod class.
  * The RingMod class is an AudioEffect which performs classic ring modulation on the
  * given audio buffer.
  */
