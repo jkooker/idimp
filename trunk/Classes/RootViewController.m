@@ -77,10 +77,11 @@
         NSLog(@"%@", NSStringFromCGRect([flipsideView bounds]));
 
         // Hack to make the tab view controller start at the right height
+#define STATUSBARHEIGHT 20
         flipsideView.frame = CGRectMake(flipsideView.frame.origin.x,
-            flipsideView.frame.origin.y - 20,
+            flipsideView.frame.origin.y - 20 + flipsideNavigationBar.frame.size.height,
             flipsideView.frame.size.width,
-            flipsideView.frame.size.height);
+            flipsideView.frame.size.height - flipsideNavigationBar.frame.size.height);
 
         [mainViewController viewDidDisappear:YES];
         [flipsideViewController viewDidAppear:YES];
