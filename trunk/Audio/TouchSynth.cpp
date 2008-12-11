@@ -31,8 +31,8 @@ void Voice::draw(CGContextRef contextRef, CGRect& bounds) const
     float xratio = (m_x / bounds.size.width);
     float yratio = 1 - (m_y / bounds.size.height);
     
-    CGContextSetRGBFillColor(contextRef, 0, xratio, 1 - xratio, 0.8 * yratio);
-    CGContextSetRGBStrokeColor(contextRef, 0, xratio, 1 - xratio, 0.2 + 0.8 * yratio);
+    CGContextSetRGBFillColor(contextRef, 0, yratio, 1 - yratio, 0.8 * xratio);
+    CGContextSetRGBStrokeColor(contextRef, 0, yratio, 1 - yratio, 0.2 + 0.8 * xratio);
     CGContextSetLineWidth(contextRef, 3);
     
     CGRect rect = CGRectMake(m_x - CIRCLE_RADIUS, m_y - CIRCLE_RADIUS, 2 * CIRCLE_RADIUS, 2 * CIRCLE_RADIUS);
