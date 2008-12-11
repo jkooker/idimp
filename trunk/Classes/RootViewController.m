@@ -72,11 +72,16 @@
         [mainViewController viewWillDisappear:YES];
         [mainView removeFromSuperview];
         [infoButton removeFromSuperview];
-        NSLog(@"%@", NSStringFromCGRect([flipsideView bounds]));
         [self.view addSubview:flipsideView];
-        NSLog(@"%@", NSStringFromCGRect([flipsideView bounds]));
         [self.view insertSubview:flipsideNavigationBar aboveSubview:flipsideView];
         NSLog(@"%@", NSStringFromCGRect([flipsideView bounds]));
+
+        // Hack to make the tab view controller start at the right height
+        flipsideView.frame = CGRectMake(flipsideView.frame.origin.x,
+            flipsideView.frame.origin.y - 20,
+            flipsideView.frame.size.width,
+            flipsideView.frame.size.height);
+
         [mainViewController viewDidDisappear:YES];
         [flipsideViewController viewDidAppear:YES];
 
