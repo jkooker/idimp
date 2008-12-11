@@ -127,30 +127,23 @@ static NetworkController *sharedNetworkController = nil;
     // increment oldestSlice
     oldestSlice = (oldestSlice + 1) % kNumSlicesPerPacket;
     
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    // send the data out
+    [self performSelectorOnMainThread:@selector(sendSavedPacket) withObject:nil waitUntilDone:NO];
+}
+
+- (void)sendSavedPacket
+{
     if (savedAddress)
     {
-        NSLog(@"sending data!");
+        //NSLog(@"sending data!");
         [socket sendData:[NSData dataWithBytes:&savedPacket length:sizeof(savedPacket)] toAddress:savedAddress withTimeout:kSendDataTimeout tag:0];
     }
-    [pool release];
 }
 
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels
 {
-#if 0
-static BOOL isdone = NO;
-    if (!isdone)
-    {
-        NSLog(@"samples per channel = %d, numChannels = %d", samplesPerChannel, numChannels);
-        isdone = YES;
-    }
-#endif
-
     // grab from big receive buffer
     for (int i = 0; i < samplesPerChannel; i++) {
-        // copy into buffer, all channels
+        // copy into buffer, mirror into all channels
         for (int j = 0; j < numChannels; j++) {
             buffer[(numChannels * i) + j] = audioReceiveBuffers[currentReceiveBufferIndex][i];
         }
@@ -268,17 +261,12 @@ static BOOL isdone = NO;
 
 - (BOOL)onUdpSocket:(AsyncUdpSocket *)sock didReceiveData:(NSData *)data withTag:(long)tag fromHost:(NSString *)host port:(UInt16)port
 {
-    NSLog(@"%@ %s", [self class], _cmd);
+    //NSLog(@"%@ %s", [self class], _cmd);
     
     DMPDataPacket *packet = (DMPDataPacket *)[data bytes];
     
     // throw each buffer into the big received buffer at index % 64
     for (int i = 0; i < kNumSlicesPerPacket; i++) {
-#if 1 //DEBUG
-static uint64_t receivedDataMask = 0;
-        receivedDataMask |= 1 << packet->slices[i].index;
-        printf("receivedDataMask = %x", receivedDataMask);
-#endif // DEBUG
         memcpy(&audioReceiveBuffers[packet->slices[i].index % kNumCachedReceiveBuffers] ,
             &(packet->slices[i].data),
             kNumSamplesPerChannel * sizeof(short));
