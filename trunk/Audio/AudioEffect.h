@@ -204,6 +204,19 @@ public:
     virtual void Process(float* buffer, int numSamplesPerChannel, int numChannels)
     {
         float goalAmp = m_params[0]->getValue();
+        
+        if (goalAmp == 0.0 && m_oldAmp == 0.0)
+        {
+            // just fill with silence
+            memset(buffer, 0, numChannels * numSamplesPerChannel * sizeof(float));
+            return;
+        } 
+        else if (goalAmp == 1.0 && m_oldAmp == 1.0)
+        {
+            // do nothing - unity gain
+            return;
+        }
+        
         float amplitudeDelta = goalAmp - m_oldAmp;
         for (int n = 0; n < numSamplesPerChannel; n++)
         {
