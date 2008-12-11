@@ -68,8 +68,6 @@
 
 - (IBAction) synthAudioLevelSliderChanged: (id) sender
 {
-    NSLog(@"MasterAudioControlsViewController synthAudioLevelSliderChanged");
-    
     [_appDelegate synthAudioAmpEffect]->getParameter(0)->setValue([_synthAudioLevelSlider value]);
     [_synthAudioLevelTextField setText:[NSString stringWithFormat:@"%f", [_synthAudioLevelSlider value]]];
 }
@@ -93,8 +91,6 @@
 
 - (IBAction) recordedAudioLevelSliderChanged: (id) sender
 {
-    NSLog(@"MasterAudioControlsViewController recordedAudioLevelSliderChanged");
-    
     [_appDelegate recordingAudioAmpEffect]->getParameter(0)->setValue([_recordedAudioLevelSlider value]);
     [_recordedAudioLevelTextField setText:[NSString stringWithFormat:@"%f", [_recordedAudioLevelSlider value]]];
 }
@@ -118,8 +114,6 @@
 
 - (IBAction) networkAudioLevelSliderChanged: (id) sender
 {
-    NSLog(@"MasterAudioControlsViewController networkAudioLevelSliderChanged");
-    
     [_appDelegate networkAudioAmpEffect]->getParameter(0)->setValue([_networkAudioLevelSlider value]);
     [_networkAudioLevelTextField setText:[NSString stringWithFormat:@"%f", [_networkAudioLevelSlider value]]];
 }
