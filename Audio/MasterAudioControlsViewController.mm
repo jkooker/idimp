@@ -32,9 +32,6 @@
     // get instance of audio engine
     _audioEngine = AudioEngine::getInstance();
 
-    // This should be suitably late to connect to the network controller.
-    _audioEngine->connectToNetworkController();
-    
     // init switch states
     [_recordedAudioMuteSwitch setOn: !_audioEngine->getMuteRecording()];
     [_synthAudioMuteSwitch setOn: !_audioEngine->getMuteSynth()];

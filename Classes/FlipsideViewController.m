@@ -7,6 +7,7 @@
 //
 
 #import "FlipsideViewController.h"
+#import "AudioEngine.h"
 
 
 @implementation FlipsideViewController
@@ -18,8 +19,25 @@
     [super viewDidLoad];
     self.view = tabBarController.view;
     self.view.backgroundColor = [UIColor viewFlipsideBackgroundColor];
+    
+    // This should be suitably late to connect to the network controller.
+    AudioEngine::getInstance()->connectToNetworkController();
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [[NetworkController sharedInstance] startBonjourSearch];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[NetworkController sharedInstance] stopBonjourSearch];
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
