@@ -31,6 +31,7 @@
 		9B6C40D70ED78CBE007E73EC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6C40D60ED78CBE007E73EC /* AudioToolbox.framework */; };
 		9B6F0C230EF0921F00547213 /* NetworkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B6F0C220EF0921F00547213 /* NetworkView.xib */; };
 		9B873FA30ED67F360041A31B /* at_symbol.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B873FA20ED67F360041A31B /* at_symbol.png */; };
+		9BBA213A0EF1C377008C22EE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BBA21390EF1C377008C22EE /* Default.png */; };
 		9BBCCF2F0EF16D870071DCE7 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BBCCF2E0EF16D870071DCE7 /* AboutView.xib */; };
 		9BBCCF360EF16ED30071DCE7 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BBCCF350EF16ED30071DCE7 /* AboutViewController.m */; };
 		9BEE4F680EF0966B00167384 /* NetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4F670EF0966B00167384 /* NetworkViewController.m */; };
@@ -83,6 +84,7 @@
 		9B6C40D60ED78CBE007E73EC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		9B6F0C220EF0921F00547213 /* NetworkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkView.xib; sourceTree = "<group>"; };
 		9B873FA20ED67F360041A31B /* at_symbol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = at_symbol.png; path = Graphics/at_symbol.png; sourceTree = "<group>"; };
+		9BBA21390EF1C377008C22EE /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Graphics/Default.png; sourceTree = "<group>"; };
 		9BBCCF2E0EF16D870071DCE7 /* AboutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
 		9BBCCF340EF16ED30071DCE7 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		9BBCCF350EF16ED30071DCE7 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 				9BEE50150EF0D5BF00167384 /* cloud.png */,
 				9BEE50160EF0D5BF00167384 /* pencil.png */,
 				8D1107310486CEB800E47090 /* Info.plist */,
+				9BBA21390EF1C377008C22EE /* Default.png */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				9BEE50180EF0D5BF00167384 /* cloud.png in Resources */,
 				9BEE50190EF0D5BF00167384 /* pencil.png in Resources */,
 				9BBCCF2F0EF16D870071DCE7 /* AboutView.xib in Resources */,
+				9BBA213A0EF1C377008C22EE /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
