@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AudioEngine.h"
 
-@interface AudioButtonTestViewController : UIViewController <UIAccelerometerDelegate> {
+@interface AudioButtonTestViewController : UIViewController {
 
     IBOutlet UISlider* _ringModFreqSlider;
     IBOutlet UITextField* _ringModFreqTextField;
@@ -27,8 +27,6 @@
 - (void) dealloc;
 - (IBAction) ringModFreqSliderChanged: (id) sender;
 - (IBAction) waveformSelected: (id) sender;
-- (void) accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration;
-
 
 @end
 

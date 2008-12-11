@@ -8,6 +8,7 @@
 
 #import "MainViewController.h"
 #import "MainView.h"
+#import "AudioEngine.h"
 
 static const int kAccelerometerFrequency        = 25; //Hz
 static const int kFilteringFactor               = 0.1;
@@ -55,6 +56,19 @@ static const int kShakeAccelerationThreshold    = 2.0;
 // This can be moved if we decide that more than just the main view needs to detect shaking
 - (void)accelerometer:(UIAccelerometer*)accelerometer didAccelerate:(UIAcceleration*)acceleration
 {
+    // change amplitude based on rotation around X axis
+    double angleZY = atan2(acceleration.y, acceleration.z);
+    float amp = (angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI);
+    AudioEffect* e = AudioEngine::getInstance()->getMasterEffect(0);
+    if (e != NULL)
+    {
+        e->getParameter(0)->setValue(amp);
+    }
+    else
+    {
+        NSLog(@"MainViewController::accelerometer master effect was NULL!!");
+    }
+    
     if ([self didShake:acceleration])
     {
         NSLog(@"Detected shake gesture.");

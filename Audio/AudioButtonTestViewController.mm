@@ -8,8 +8,6 @@
 
 #import "AudioButtonTestViewController.h"
 
-static const float kAccelerometerInterval = 0.01;
-
 @implementation AudioButtonTestViewController
 
 @synthesize _ringModFreqSlider;
@@ -56,10 +54,6 @@ static const float kAccelerometerInterval = 0.01;
     [_ringModFreqSlider setMinimumValue:_ringModFreqParam->getMinValue()];
     [_ringModFreqSlider setMaximumValue:_ringModFreqParam->getMaxValue()];
     
-    // Set up accelerometer
-    [[UIAccelerometer sharedAccelerometer] setUpdateInterval:kAccelerometerInterval]; // in seconds
-    [[UIAccelerometer sharedAccelerometer] setDelegate:self];
-    
     [super viewDidLoad];
 }
 
@@ -86,16 +80,6 @@ static const float kAccelerometerInterval = 0.01;
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning]; // Releases the view if it doesn't have a superview
     // Release anything that's not essential, such as cached data
-}
-
-- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration
-{
-    // change amplitude based on rotation around X axis
-    /*double angleZY = atan2(acceleration.y, acceleration.z);
-    float amp = (angleZY / PI) >= 0 ? (angleZY / PI) : -(angleZY / PI);
-    _ampParam->setValue(amp);
-    [_ampTextField setText:[NSString stringWithFormat:@"%f", amp]];
-    [_ampSlider setValue:amp animated:NO];*/
 }
 
 @end
