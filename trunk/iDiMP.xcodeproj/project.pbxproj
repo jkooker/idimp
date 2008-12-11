@@ -37,7 +37,7 @@
 /* Begin PBXFileReference section */
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* iDiMPAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iDiMPAppDelegate.h; sourceTree = "<group>"; };
-		1D3623250D0F684500981E51 /* iDiMPAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iDiMPAppDelegate.m; sourceTree = "<group>"; };
+		1D3623250D0F684500981E51 /* iDiMPAppDelegate.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = iDiMPAppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* iDiMP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iDiMP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		280E754A0DD40C5E005A515E /* FlipsideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FlipsideView.xib; sourceTree = "<group>"; };
@@ -196,9 +196,9 @@
 				9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */,
 				9B6C40BF0ED78B7A007E73EC /* AudioBasics.h */,
 				9B6C40C20ED78B7A007E73EC /* AudioButtonTestViewController.h */,
+				9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */,
 				32EF71960EF05B1E004D4261 /* MasterAudioControlsViewController.h */,
 				32EF71970EF05B1E004D4261 /* MasterAudioControlsViewController.mm */,
-				9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */,
 				9B6C40C40ED78B7A007E73EC /* AudioEffect.h */,
 				9B6C40CE0ED78BD8007E73EC /* AudioEngine.h */,
 				32DA73290EDE19F00038F6B8 /* AudioEngine.cpp */,
