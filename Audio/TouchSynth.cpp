@@ -47,11 +47,11 @@ void Voice::draw(CGContextRef contextRef, CGRect& bounds) const
             break;
             
         case Oscillator::SawtoothWave:
-            // Generate downward pointing triangle path
+            // Generate (sawtooth) right triangle path
             CGContextBeginPath(contextRef);
-            CGContextMoveToPoint(contextRef, rect.origin.x, rect.origin.y);
-            CGContextAddLineToPoint(contextRef, rect.origin.x + rect.size.width / 2, rect.origin.y + rect.size.height);
-            CGContextAddLineToPoint(contextRef, rect.origin.x + rect.size.width, rect.origin.y);
+            CGContextMoveToPoint(contextRef, rect.origin.x - rect.size.width * 0.2, rect.origin.y + rect.size.height - rect.size.height * 0.2);
+            CGContextAddLineToPoint(contextRef, rect.origin.x + rect.size.width - rect.size.width * 0.2, rect.origin.y + rect.size.height - rect.size.height * 0.2);
+            CGContextAddLineToPoint(contextRef, rect.origin.x + rect.size.width - rect.size.width * 0.2, rect.origin.y - rect.size.height * 0.2);
             CGContextClosePath(contextRef);
             CGContextDrawPath(contextRef, kCGPathFillStroke);
             break;
