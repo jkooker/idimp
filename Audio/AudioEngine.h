@@ -304,6 +304,7 @@ private:
     short* m_tempNetworkBufferShort;
     float* m_tempMixedPlaybackBuffer;
     float* m_tempMixedNetworkOutputBuffer;
+    short* m_tempMixedNetworkOutputBufferShort;
     std::vector<AudioEffect*> m_recordingEffects;
     std::vector<AudioEffect*> m_synthEffects;
     std::vector<AudioEffect*> m_networkEffects;

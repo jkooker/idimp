@@ -24,6 +24,7 @@
 }
 
 @property (nonatomic, retain) NSMutableArray *services;
+@property (nonatomic, retain) NSData *savedAddress;
 @property (nonatomic, retain) UITableView *clientTableView;
 
 + (NetworkController *)sharedInstance;

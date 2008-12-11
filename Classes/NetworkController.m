@@ -9,10 +9,12 @@
 #import "NetworkController.h"
 
 #define kBonjourServiceType @"_idimp._udp"
+#define kiDiMPSocketPort 23711
 
 @implementation NetworkController
 
 @synthesize services;
+@synthesize savedAddress;
 @synthesize clientTableView;
 
 #pragma mark Singleton implementation
@@ -73,8 +75,18 @@ static NetworkController *sharedNetworkController = nil;
     {
         services = [[NSMutableArray array] retain];
         
+        // Initialize UDP socket
+        socket = [[AsyncUdpSocket alloc] initWithDelegate:self];
+        NSError *error = nil;
+        if (![socket bindToPort:kiDiMPSocketPort error:&error])
+        {
+            NSLog(@"could not bindToPort. %@", error);
+        }
+        NSLog(@"created socket. host: %@, port: %d", [socket localHost], [socket localPort]);
+        [socket receiveWithTimeout:-1 tag:0];
+        
         // Advertise over Bonjour
-        netService = [[NSNetService alloc] initWithDomain:@"local." type:kBonjourServiceType name:@"" port:23711];
+        netService = [[NSNetService alloc] initWithDomain:@"local." type:kBonjourServiceType name:@"" port:kiDiMPSocketPort];
         if (netService == nil)
         {
             NSLog(@"error: could not initialize NetService");
@@ -103,7 +115,13 @@ static NetworkController *sharedNetworkController = nil;
 
 - (void)sendAudioBuffer:(short*)buffer length:(int)length
 {
-    // stub
+
+static BOOL printedit = NO;
+    if (!printedit)
+    {
+        NSLog(@"sendaudiobuffer length %d", length);
+        printedit = YES;
+    }
 }
 
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels
@@ -111,6 +129,7 @@ static NetworkController *sharedNetworkController = nil;
     // stub
 }
 
+#pragma mark Bonjour Controls
 - (void)startBonjourPublishing
 {
     [netService publish];

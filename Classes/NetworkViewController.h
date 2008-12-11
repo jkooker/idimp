@@ -14,6 +14,7 @@
     
     NetworkController *_networkController;
     NSMutableArray *services;
+    NSInteger selectedServiceIndex;
 }
 
 @end
