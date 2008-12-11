@@ -8,6 +8,7 @@
 
 #import "NetworkController.h"
 
+#define kBonjourServiceType @"_idimp._udp"
 
 @implementation NetworkController
 
@@ -67,10 +68,32 @@ static NetworkController *sharedNetworkController = nil;
 
 - (id)init
 {
-    if (self = [super init]) {
+    if (self = [super init])
+    {
         services = [[NSMutableArray array] retain];
+        
+        // Advertise over Bonjour
+        netService = [[NSNetService alloc] initWithDomain:@"local." type:kBonjourServiceType name:@"" port:23711];
+        if (netService == nil)
+        {
+            NSLog(@"error: could not initialize NetService");
+        }
+        else
+        {
+            [netService scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+            [netService publish];
+            [netService setDelegate:self];
+        }
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [services release];
+    [netService release];
+    
+    [super dealloc];
 }
 
 - (void)sendAudioBuffer:(short*)buffer length:(int)length
@@ -82,5 +105,33 @@ static NetworkController *sharedNetworkController = nil;
 {
     // stub
 }
+
+#pragma mark NSNetService Delegate Methods
+
+- (void)netService:(NSNetService *)sender didNotPublish:(NSDictionary *)errorDict
+{
+	NSLog(@"%@ %s", [self class], _cmd);
+}
+
+- (void)netServiceDidPublish:(NSNetService *)sender
+{
+	NSLog(@"%@ %s", [self class], _cmd);
+}
+
+- (void)netServiceDidResolveAddress:(NSNetService *)sender
+{
+    const char *firstAddressData = (const char *)[[[sender addresses] objectAtIndex:0] bytes];
+    NSLog(@"address resolved. %@ = %@ (%hhu.%hhu.%hhu.%hhu) (1 of %d)",
+        [sender name],
+        [[sender addresses] objectAtIndex:0],
+        firstAddressData[4], firstAddressData[5], firstAddressData[6], firstAddressData[7],
+        [[sender addresses] count]);
+}
+
+- (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict
+{
+    NSLog(@"did not resolve address for %@.", [sender name]);
+}
+
 
 @end

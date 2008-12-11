@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AudioEngine.h"
+#import "NetworkController.h"
 
 @class RootViewController;
 
@@ -20,6 +21,8 @@
     AudioEffect* _recordingAmpEffect;
     AudioEffect* _synthAmpEffect;
     AudioEffect* _networkAmpEffect;
+    
+    NetworkController *_networkController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
