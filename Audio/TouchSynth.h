@@ -35,18 +35,40 @@ public:
     Voice();
         
    /**
-    * draw a representation of this Voice in the given graphical context within the given bounds
+    * Draw a representation of this Voice in the given graphical context within the given bounds
     * @param contextRef the graphical context into which this Voice will be rendered
     * @param bounds the bounding rectangle into which this Voice will be rendered
     */
     void draw(CGContextRef contextRef, 
               CGRect& bounds) const;
     
+   /**
+    * Get the current X position of this voice on the screen.
+    * @return the current X position of this voice on the screen.
+    */
     float getX() const { return m_x; }
+    
+   /**
+    * Get the current Y position of this voice on the screen.
+    * @return the current Y position of this voice on the screen.
+    */
     float getY() const { return m_y; }
     
+   /**
+    * Query whether or not this voice is currently on (active).
+    * @return true if the voice is on, false otherwise
+    * @see turnOn
+    * @see turnOff
+    */
     bool isOn() const { return m_isOn; }
     
+   /**
+    * Turn on this voice with the given X,Y coordinates as its starting position.
+    * @param x the starting X position of this voice.
+    * @param y the starting Y position of this voice.
+    * @see isOn
+    * @see turnOff
+    */
     void turnOn(float x, float y) 
     { 
         printf("Voice::turnOn %02X\n", this);
@@ -63,12 +85,24 @@ public:
         m_isOn = true; 
     }
     
+   /** 
+    * Turn off this voice.
+    * @see isOn
+    * @see turnOn
+    */
     void turnOff() 
     { 
         printf("Voice::turnOff %02X\n", this);
         m_isOn = false; 
     }
     
+   /** 
+    * Render this voice's audio and add it to the audio in the given buffer.
+    * Assumes that the buffer has already been initialized with silence or the desired added audio.
+    * @param output the buffer into which this voice's audio data will be rendered/added
+    * @numSamplesPerChannel the number of samples per channel to be rendered
+    * @numChannels the number of channels to be rendered (Note: samples are interleaved) 
+    */
     void renderAddToBuffer(float* output, int numSamplesPerChannel, int numChannels)
     {
         if (m_isOn)
@@ -77,9 +111,25 @@ public:
         }
     }
     
+   /**
+    * Set the maximum X position on the screen (generally screen width)
+    * @param x the new maximum X position
+    * @see setMaxY
+    */ 
     void setMaxX(float x) { m_xMax = x; }
+    
+   /** 
+    * Set the maximum Y position on the screen (generally screen height)
+    * @param y the new maximum Y position
+    * @see setMaxX
+    */
     void setMaxY(float y) { m_yMax = y; }
     
+   /**
+    * Set the current position of this voice on the screen
+    * @param x the new X position of this voice
+    * @param y the new Y position of this voice
+    */
     void setPosition(float x, float y)
     {
         // store new coordinates
@@ -92,16 +142,28 @@ public:
         m_osc.setAmpSmooth(m_minAmp + m_ampRange * (m_x / m_xMax));
     }
     
+   /**
+    * Increment the Waveform used by this voice to the next one in the list of Oscillator::Waveforms.
+    * @see setWaveform
+    */    
     void incrementWaveform()
     {
         m_osc.incrementWaveform();
     }
 
+   /**
+    * Set the Waveform used by this voice to the given Waveform.
+    * @param wave the Waveform for this voice to use
+    * @see incrementWaveform
+    */
     void setWaveform(Oscillator::Waveform wave)
     {
         m_osc.setWaveform(wave);
     }
     
+   /**
+    * Print debugging information about this voice (X and Y positions and whether or not it is on).
+    */
     void print() const
     {
         printf("Voice %02X pos x = %f, y = %f, on = %d\n", this, m_x, m_y, m_isOn);

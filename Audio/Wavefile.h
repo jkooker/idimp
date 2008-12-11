@@ -14,9 +14,21 @@
 
 static const CFStringEncoding DEFAULT_STRING_ENCODING = kCFStringEncodingMacRoman;
 
+/**
+ * Wavefile class.
+ * This class encapsulates writing audio to a PCM wave file.
+ * iDiMP uses it in debug mode to store audio output for analysis.
+ */
 class Wavefile
 {
 public:
+   /**
+    * Wavefile constructor.
+    * The wavefile to be written is created and opened in this method.  
+    * If the file already exists, it will be overwritten.
+    * @param filename output audio file name - currently, it is assumed that this file lives 
+    * in the default directory and providing a full file path/URL is not implemented as an option.
+    */
     Wavefile(const char* filename) :
         m_debugFileID(0),
         m_debugFileByteOffset(0)
@@ -50,6 +62,10 @@ public:
         
     }
     
+   /**
+    * Wavefile destructor.
+    * This method closes the wavefile.
+    */
     ~Wavefile()
     {
         if (m_debugFileID > 0)
@@ -58,7 +74,10 @@ public:
         }
     }
     
-    
+   /**
+    * Write the contents of the given audio buffers to the file.
+    * @param bufferList a pointer to the AudioBufferList object which contains the audio data to be written.
+    */
     void WriteAudioBuffers(AudioBufferList* bufferList)
     {
         //printf("Wavefile::WriteAudioBuffers m_debugFileID = %d, m_debugFileByteOffset = %d, bufferList = %d\n", m_debugFileID, m_debugFileByteOffset, bufferList);

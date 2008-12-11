@@ -18,7 +18,7 @@ static const int WAVETABLE_POINTS = 2048;
 static const int MAX_AMPLITUDE_16_BITS = 32767;
 
 /**
- * Oscillator class
+ * Oscillator class.
  * Implements wavetable synthesis for sinusoids, square waves, sawtooth waves, and triangle waves.
  */
 class Oscillator
