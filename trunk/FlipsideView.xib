@@ -9,7 +9,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="40"/>
-			<integer value="51"/>
+			<integer value="48"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -45,25 +45,22 @@
 					</object>
 				</object>
 				<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
-				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics">
-					<int key="IBUIStatusBarStyle">2</int>
-				</object>
 			</object>
 			<object class="IBUITabBarController" id="556180313">
 				<object class="IBUISimulatedTabBarMetrics" key="IBUISimulatedBottomBarMetrics"/>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
-				<object class="IBUIViewController" key="IBUISelectedViewController" id="626154647">
-					<string key="IBUITitle">Audio Levels</string>
-					<object class="IBUITabBarItem" key="IBUITabBarItem" id="614410979">
-						<string key="IBUITitle">Audio Levels</string>
-						<object class="NSCustomResource" key="IBUIImage" id="148188959">
+				<object class="IBUIViewController" key="IBUISelectedViewController" id="698542309">
+					<string key="IBUITitle">Network</string>
+					<object class="IBUITabBarItem" key="IBUITabBarItem" id="237463830">
+						<string key="IBUITitle">Network</string>
+						<object class="NSCustomResource" key="IBUIImage" id="963428957">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">at_symbol.png</string>
 						</object>
 						<reference key="IBUITabBar"/>
 					</object>
 					<reference key="IBUIParentViewController" ref="556180313"/>
-					<string key="IBUINibName">MasterAudioControls</string>
+					<string key="IBUINibName">NetworkView</string>
 				</object>
 				<object class="NSMutableArray" key="IBUIViewControllers">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -71,27 +68,28 @@
 						<string key="IBUITitle">AudioTest</string>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="111713685">
 							<string key="IBUITitle">AudioTest</string>
-							<reference key="IBUIImage" ref="148188959"/>
+							<reference key="IBUIImage" ref="963428957"/>
 							<reference key="IBUITabBar"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="556180313"/>
 						<string key="IBUINibName">AudioButtonTestViewController</string>
 					</object>
-					<reference ref="626154647"/>
-					<object class="IBUIViewController" id="698542309">
-						<string key="IBUITitle">Debug</string>
-						<object class="IBUITabBarItem" key="IBUITabBarItem" id="237463830">
-							<string key="IBUITitle">Debug</string>
-							<reference key="IBUIImage" ref="148188959"/>
+					<object class="IBUIViewController" id="626154647">
+						<string key="IBUITitle">Audio Levels</string>
+						<object class="IBUITabBarItem" key="IBUITabBarItem" id="614410979">
+							<string key="IBUITitle">Audio Levels</string>
+							<reference key="IBUIImage" ref="963428957"/>
 							<reference key="IBUITabBar"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="556180313"/>
+						<string key="IBUINibName">MasterAudioControls</string>
 					</object>
+					<reference ref="698542309"/>
 					<object class="IBUIViewController" id="655727956">
 						<string key="IBUITitle">About</string>
 						<object class="IBUITabBarItem" key="IBUITabBarItem" id="831106887">
 							<string key="IBUITitle">About</string>
-							<reference key="IBUIImage" ref="148188959"/>
+							<reference key="IBUIImage" ref="963428957"/>
 							<reference key="IBUITabBar"/>
 						</object>
 						<reference key="IBUIParentViewController" ref="556180313"/>
@@ -250,13 +248,14 @@
 					<string>51.IBPluginDependency</string>
 					<string>52.IBPluginDependency</string>
 					<string>53.IBPluginDependency</string>
+					<string>54.CustomClassName</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>FlipsideViewController</string>
 					<string>UIResponder</string>
 					<string>FlipsideView</string>
-					<string>{{376, 335}, {320, 480}}</string>
+					<string>{{376, 355}, {320, 460}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>{{442, 308}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -267,6 +266,7 @@
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+					<string>NetworkViewController</string>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="unlocalizedProperties">
@@ -302,17 +302,11 @@
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>ampSliderChanged:</string>
-							<string>playOrStop:</string>
-							<string>recordedInputSwitchChanged:</string>
 							<string>ringModFreqSliderChanged:</string>
-							<string>synthInputSwitchChanged:</string>
 							<string>waveformSelected:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -324,22 +318,16 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_ampSlider</string>
 							<string>_ampTextField</string>
-							<string>_playButton</string>
-							<string>_recordedInputSwitch</string>
 							<string>_ringModFreqSlider</string>
 							<string>_ringModFreqTextField</string>
-							<string>_synthInputSwitch</string>
 							<string>_waveformSelector</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>UISlider</string>
 							<string>UITextField</string>
-							<string>UIButton</string>
-							<string>UISwitch</string>
 							<string>UISlider</string>
 							<string>UITextField</string>
-							<string>UISwitch</string>
 							<string>UISegmentedControl</string>
 						</object>
 					</object>
@@ -424,6 +412,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Audio/MasterAudioControlsViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NetworkViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/NetworkViewController.h</string>
 					</object>
 				</object>
 			</object>
