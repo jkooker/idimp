@@ -146,6 +146,7 @@ protected:
     float m_minAmp;
     float m_ampRange;
     bool m_isOn;
+    bool m_turnOffRequested;
 };
 
 /** TouchSynth class.
