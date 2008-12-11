@@ -82,7 +82,6 @@ static NetworkController *sharedNetworkController = nil;
         else
         {
             [netService scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-            [netService publish];
             [netService setDelegate:self];
         }
         
@@ -110,6 +109,16 @@ static NetworkController *sharedNetworkController = nil;
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels
 {
     // stub
+}
+
+- (void)startBonjourPublishing
+{
+    [netService publish];
+}
+
+- (void)stopBonjourPublishing
+{
+    [netService stop];
 }
 
 - (void)startBonjourSearch

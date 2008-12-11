@@ -47,6 +47,7 @@ enum NetworkTableViewSections {
     _networkController = [NetworkController sharedInstance];
     services = _networkController.services;
     _networkController.clientTableView = networkTableView;
+    [_networkController startBonjourPublishing];
     [_networkController startBonjourSearch];
 }
 

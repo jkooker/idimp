@@ -16,6 +16,7 @@
 #import "AudioEffect.h"
 #import "Wavefile.h"
 #import "TouchSynth.h"
+#import "NetworkController.h"
 
 /** AudioEngine class.
  * The AudioEngine class controls all audio reocrding and playback.
@@ -165,6 +166,12 @@ public:
     * @see getMuteNetwork
     */
     void setMuteNetwork(bool on) { m_networkIsMuted = on; }
+    
+   /**
+    * Establish connection to network controller.
+    * If this connection happens too early on startup, we get crashes when publishing Bonjour services.
+    */
+    void connectToNetworkController() { m_networkController = [NetworkController sharedInstance]; }
       
    /**
     * Find out whether audio playback and recording have been started.
@@ -294,6 +301,7 @@ private:
     float* m_tempRecordedBuffer;
     float* m_tempSynthesizedBuffer;
     float* m_tempNetworkBuffer;
+    short* m_tempNetworkBufferShort;
     float* m_tempMixedPlaybackBuffer;
     float* m_tempMixedNetworkOutputBuffer;
     std::vector<AudioEffect*> m_recordingEffects;
@@ -301,6 +309,7 @@ private:
     std::vector<AudioEffect*> m_networkEffects;
     std::vector<AudioEffect*> m_masterEffects;
     TouchSynth m_synth;
+    NetworkController *m_networkController;
     bool m_isStarted;
 };
 
