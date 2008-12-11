@@ -244,13 +244,15 @@ AudioEngine::AudioEngine() :
     m_debugFile(NULL),
     m_recordingIsMuted(false),
     m_synthIsMuted(false),
-    m_networkIsMuted(true),
+    m_networkIsMuted(false),
     m_playbackSamplesAllChannels(0),
     m_tempRecordedBuffer(NULL),
     m_tempSynthesizedBuffer(NULL),
     m_tempNetworkBuffer(NULL),
+    m_tempNetworkBufferShort(NULL),
     m_tempMixedPlaybackBuffer(NULL),
     m_tempMixedNetworkOutputBuffer(NULL),
+    m_networkController(nil),
     m_isStarted(false)
 {
     printf("AudioEngine::AudioEngine\n");
@@ -341,6 +343,10 @@ void AudioEngine::allocate_temp_buffers(int numSamplesAllChannels)
     if (m_tempNetworkBuffer == NULL)
     {
         m_tempNetworkBuffer = new float[numSamplesAllChannels];
+    }
+    if (m_tempNetworkBufferShort == NULL)
+    {
+        m_tempNetworkBufferShort = new short[numSamplesAllChannels];
     }
     if (m_tempMixedPlaybackBuffer == NULL)
     {
@@ -442,9 +448,15 @@ void AudioEngine::get_network_data_for_playback(float* buffer, int numSamplesAll
     else
     {
         // fill buffer of shorts from network - data is expected to be interleaved (sample1_left, sample1_right, sample2_left, sample2_right, etc.)
+        if (m_networkController != nil)
+        {
+            [m_networkController fillAudioBuffer:m_tempNetworkBufferShort
+                samplesPerChannel:numSamplesAllChannels / AUDIO_NUM_CHANNELS
+                channels:AUDIO_NUM_CHANNELS];
+        }
         
         // convert shorts to floats for processing
-        //AudioSamplesShortToFloat(<networkData here>, buffer, numSamplesAllChannels);
+        AudioSamplesShortToFloat(m_tempNetworkBufferShort, buffer, numSamplesAllChannels);
         
         // do processing on network data
         for (int effect = 0; effect < m_networkEffects.size(); effect++)

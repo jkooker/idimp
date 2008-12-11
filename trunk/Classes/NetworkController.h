@@ -31,6 +31,9 @@
 - (void)sendAudioBuffer:(short*)buffer length:(int)length;
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels;
 
+- (void)startBonjourPublishing;
+- (void)stopBonjourPublishing;
+
 - (void)startBonjourSearch;
 - (void)stopBonjourSearch;
 
