@@ -594,7 +594,7 @@ OSStatus AudioEngine::playback_callback(AudioUnitRenderActionFlags *ioActionFlag
         
         if (m_networkController != nil)
         {
-            [m_networkController sendAudioBuffer:m_tempMixedNetworkOutputBufferShort length:numSamplesAllChannels];
+            [m_networkController sendAudioBuffer:m_tempMixedNetworkOutputBufferShort length:numSamplesAllChannels channels:AUDIO_NUM_CHANNELS];
         }
     }
     

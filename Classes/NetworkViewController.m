@@ -195,7 +195,7 @@ enum NetworkTableViewSections {
 #if 1
         // debug: send a packet (this seems to be necessary to kick off the socket)
         short *buffer = new short[10];
-        [_networkController sendAudioBuffer:buffer length:10];
+        [_networkController sendAudioBuffer:buffer length:10 channels:1];
         delete buffer;
 #endif
     }

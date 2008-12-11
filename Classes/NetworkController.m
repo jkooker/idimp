@@ -10,6 +10,7 @@
 
 #define kBonjourServiceType @"_idimp._udp"
 #define kiDiMPSocketPort 23711
+#define kSendDataTimeout 1.0 // in seconds
 
 @implementation NetworkController
 
@@ -113,21 +114,47 @@ static NetworkController *sharedNetworkController = nil;
     [super dealloc];
 }
 
-- (void)sendAudioBuffer:(short*)buffer length:(int)length
+- (void)sendAudioBuffer:(short*)buffer length:(int)length channels:(int)numChannels
 {
+    // chop down to mono
+    for (int i = 0; i < length / numChannels; i++) {
+        savedPacket.slices[oldestSlice].data[i] = buffer[numChannels * i];
+    }
+    
+    // tag the latest slice with a new index (don't worry about currentSendBufferIndex wrapping around)
+    savedPacket.slices[oldestSlice].index = currentSendBufferIndex++;
+    
+    // increment oldestSlice
+    oldestSlice = (oldestSlice + 1) % kNumSlicesPerPacket;
+    
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     // send the data out
     if (savedAddress)
     {
         NSLog(@"sending data!");
-        [socket sendData:[NSData dataWithBytes:buffer length:length] toAddress:savedAddress withTimeout:2 tag:0];
+        [socket sendData:[NSData dataWithBytes:&savedPacket length:sizeof(savedPacket)] toAddress:savedAddress withTimeout:kSendDataTimeout tag:0];
     }
     [pool release];
 }
 
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels
 {
-    // stub
+#if 0
+static BOOL isdone = NO;
+    if (!isdone)
+    {
+        NSLog(@"samples per channel = %d, numChannels = %d", samplesPerChannel, numChannels);
+        isdone = YES;
+    }
+#endif
+
+    // grab from big receive buffer
+    for (int i = 0; i < samplesPerChannel; i++) {
+        // copy into buffer, all channels
+        for (int j = 0; j < numChannels; j++) {
+            buffer[(numChannels * i) + j] = audioReceiveBuffers[currentReceiveBufferIndex][i];
+        }
+    }
 }
 
 #pragma mark Bonjour Controls
@@ -138,6 +165,7 @@ static NetworkController *sharedNetworkController = nil;
 
 - (void)stopBonjourPublishing
 {
+    // Note: you must send a 'stop' for every 'publish' message, or it won't work.
     [netService stop];
 }
 
@@ -242,6 +270,20 @@ static NetworkController *sharedNetworkController = nil;
 {
     NSLog(@"%@ %s", [self class], _cmd);
     
+    DMPDataPacket *packet = (DMPDataPacket *)[data bytes];
+    
+    // throw each buffer into the big received buffer at index % 64
+    for (int i = 0; i < kNumSlicesPerPacket; i++) {
+#if 1 //DEBUG
+static uint64_t receivedDataMask = 0;
+        receivedDataMask |= 1 << packet->slices[i].index;
+        printf("receivedDataMask = %x", receivedDataMask);
+#endif // DEBUG
+        memcpy(&audioReceiveBuffers[packet->slices[i].index % kNumCachedReceiveBuffers] ,
+            &(packet->slices[i].data),
+            kNumSamplesPerChannel * sizeof(short));
+    }
+
     [sock receiveWithTimeout:-1 tag:0];
     
     return YES;

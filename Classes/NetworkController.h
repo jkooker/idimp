@@ -9,6 +9,22 @@
 #import <Foundation/Foundation.h>
 #import "AsyncUdpSocket.h"
 
+#define kNumSamplesPerChannel 1024
+#define kNumSlicesPerPacket 2
+// Make this a multiple of 2 for fast % computations
+#define kNumCachedReceiveBuffers 64
+
+typedef struct DMPDataPacketSlice
+{
+    uint8_t index; // maybe this should be 'tag'?
+    short data[kNumSamplesPerChannel];
+} DMPDataPacketSlice;
+
+typedef struct DMPDataPacket {
+    DMPDataPacketSlice slices[kNumSlicesPerPacket];
+} DMPDataPacket;
+
+
 /**
  * The NetworkController class is a singleton, and it provides the following services:
  * - Bonjour advertising and browsing
@@ -21,6 +37,12 @@
     NSMutableArray *services; // Active NSNetServices
     NSData *savedAddress; // Current destination of network audio
     UITableView *clientTableView;
+    
+    DMPDataPacket savedPacket;
+    uint8_t oldestSlice;
+    uint8_t currentSendBufferIndex;
+    short audioReceiveBuffers[kNumCachedReceiveBuffers][kNumSamplesPerChannel];
+    NSUInteger currentReceiveBufferIndex;
 }
 
 @property (nonatomic, retain) NSMutableArray *services;
@@ -29,7 +51,7 @@
 
 + (NetworkController *)sharedInstance;
 
-- (void)sendAudioBuffer:(short*)buffer length:(int)length;
+- (void)sendAudioBuffer:(short*)buffer length:(int)length channels:(int)numChannels;
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels;
 
 - (void)startBonjourPublishing;
