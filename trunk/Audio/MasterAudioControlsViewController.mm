@@ -10,9 +10,7 @@
 
 @implementation MasterAudioControlsViewController
 
-@synthesize _masterAudioLevelSlider;
 @synthesize _masterAudioMuteSwitch;
-@synthesize _masterAudioLevelTextField;
 @synthesize _synthAudioLevelSlider;
 @synthesize _synthAudioMuteSwitch;
 @synthesize _synthAudioLevelTextField;
@@ -41,26 +39,16 @@
     [_masterAudioMuteSwitch setOn: _audioEngine->isStarted()];
     
     // enable/disable sliders
-    [_masterAudioLevelSlider setEnabled: _audioEngine->isStarted()];
     [_recordedAudioLevelSlider setEnabled: !_audioEngine->getMuteRecording()];
     [_synthAudioLevelSlider setEnabled: !_audioEngine->getMuteSynth()];
     [_networkAudioLevelSlider setEnabled: !_audioEngine->getMuteNetwork()];
     
     // init text fields
-    [_masterAudioLevelTextField setText:[NSString stringWithFormat:@"%f", [_masterAudioLevelSlider value]]];
     [_recordedAudioLevelTextField setText:[NSString stringWithFormat:@"%f", [_recordedAudioLevelSlider value]]];
     [_synthAudioLevelTextField setText:[NSString stringWithFormat:@"%f", [_synthAudioLevelSlider value]]];
     [_networkAudioLevelTextField setText:[NSString stringWithFormat:@"%f", [_networkAudioLevelSlider value]]];
     
     [super viewDidLoad];
-}
-
-- (IBAction) masterAudioLevelSliderChanged: (id) sender
-{
-    NSLog(@"MasterAudioControlsViewController masterAudioLevelSliderChanged");
-    
-    [_appDelegate masterAudioAmpEffect]->getParameter(0)->setValue([_masterAudioLevelSlider value]);
-    [_masterAudioLevelTextField setText:[NSString stringWithFormat:@"%f", [_masterAudioLevelSlider value]]];
 }
 
 - (IBAction) masterAudioMuteSwitchChanged: (id) sender
@@ -69,13 +57,11 @@
     if (isOn)
     {
         NSLog(@"masterAudioMuteSwitchChanged starting all audio");
-        [_masterAudioLevelSlider setEnabled:true];
         _audioEngine->start();
     }
     else
     {
         NSLog(@"masterAudioMuteSwitchChanged stopping all audio");
-        [_masterAudioLevelSlider setEnabled:false];
         _audioEngine->stop();
     }
 }
