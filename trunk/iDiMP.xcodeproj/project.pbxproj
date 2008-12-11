@@ -34,6 +34,9 @@
 		9BEE4F680EF0966B00167384 /* NetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4F670EF0966B00167384 /* NetworkViewController.m */; };
 		9BEE4F6E0EF09C8900167384 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4F6D0EF09C8900167384 /* AsyncUdpSocket.m */; };
 		9BEE4FA70EF0BE5F00167384 /* NetworkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4FA60EF0BE5F00167384 /* NetworkController.m */; };
+		9BEE50170EF0D5BF00167384 /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BEE50140EF0D5BF00167384 /* checkmark.png */; };
+		9BEE50180EF0D5BF00167384 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BEE50150EF0D5BF00167384 /* cloud.png */; };
+		9BEE50190EF0D5BF00167384 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BEE50160EF0D5BF00167384 /* pencil.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,6 +87,9 @@
 		9BEE4F6D0EF09C8900167384 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncUdpSocket.m; path = Classes/AsyncUdpSocket.m; sourceTree = "<group>"; };
 		9BEE4FA50EF0BE5F00167384 /* NetworkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkController.h; path = Classes/NetworkController.h; sourceTree = "<group>"; };
 		9BEE4FA60EF0BE5F00167384 /* NetworkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkController.m; path = Classes/NetworkController.m; sourceTree = "<group>"; };
+		9BEE50140EF0D5BF00167384 /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checkmark.png; path = Graphics/checkmark.png; sourceTree = "<group>"; };
+		9BEE50150EF0D5BF00167384 /* cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cloud.png; path = Graphics/cloud.png; sourceTree = "<group>"; };
+		9BEE50160EF0D5BF00167384 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pencil.png; path = Graphics/pencil.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,11 +179,14 @@
 			children = (
 				32EF718F0EF053D7004D4261 /* MasterAudioControls.xib */,
 				9B6F0C220EF0921F00547213 /* NetworkView.xib */,
-				9B873FA20ED67F360041A31B /* at_symbol.png */,
 				9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */,
 				280E754A0DD40C5E005A515E /* FlipsideView.xib */,
 				280E754B0DD40C5E005A515E /* MainView.xib */,
 				280E754C0DD40C5E005A515E /* MainWindow.xib */,
+				9B873FA20ED67F360041A31B /* at_symbol.png */,
+				9BEE50140EF0D5BF00167384 /* checkmark.png */,
+				9BEE50150EF0D5BF00167384 /* cloud.png */,
+				9BEE50160EF0D5BF00167384 /* pencil.png */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 			);
 			name = Resources;
@@ -284,6 +293,9 @@
 				9B6C40A20ED78A1D007E73EC /* AudioButtonTestViewController.xib in Resources */,
 				32EF71900EF053D7004D4261 /* MasterAudioControls.xib in Resources */,
 				9B6F0C230EF0921F00547213 /* NetworkView.xib in Resources */,
+				9BEE50170EF0D5BF00167384 /* checkmark.png in Resources */,
+				9BEE50180EF0D5BF00167384 /* cloud.png in Resources */,
+				9BEE50190EF0D5BF00167384 /* pencil.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
