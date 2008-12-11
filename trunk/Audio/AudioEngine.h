@@ -90,16 +90,31 @@ public:
     * Add a master effect to this AudioEngine.
     * Master effects are applied to the mixed audio immediately before playback.
     * @param e A pointer to the AudioEffect to be added.
+    * @see getMasterEffect
     * @see removeMasterEffect
     */
     void addMasterEffect(AudioEffect* e);    
-   
+    
+   /**
+    * Get the master AudioEffect at the given index.
+    * Master effects are applied to the mixed audio immediately before playback.
+    * @param index the index of the effect (effects are applied in the order they are added
+    * and have corresponding indices).
+    * @return a pointer to the requested AudioEffect object or NULL if no AudioEffect exists
+    * at the given index.  The AudioEngine still owns the
+    * object - the caller is not responsible for freeing any memory.
+    * @see addMasterEffect
+    * @see removeMasterEffect
+    */
+    AudioEffect* getMasterEffect(int index);
+    
    /** 
     * Remove a master effect from this AudioEngine.
     * Master effects are applied to the mixed audio immediately before playback.
     * @param e A pointer to the AudioEffect to be removed.
     * @return true if the requested AudioEffect was found and removed, false otherwise.
     * @see addMasterEffect
+    * @see getMasterEffect
     */
     bool removeMasterEffect(AudioEffect* e);  
     

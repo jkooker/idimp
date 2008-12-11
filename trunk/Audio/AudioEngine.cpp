@@ -151,6 +151,15 @@ void AudioEngine::addMasterEffect(AudioEffect* e)
     m_masterEffects.push_back(e);
 }
 
+AudioEffect* AudioEngine::getMasterEffect(int index)
+{
+    if (index < 0 || index >= m_masterEffects.size())
+    {
+        return NULL;
+    }
+    else return m_masterEffects[index];
+}
+
 bool AudioEngine::removeMasterEffect(AudioEffect* e)
 {
     for (std::vector<AudioEffect*>::iterator it = m_masterEffects.begin(); it != m_masterEffects.end(); it++) 
