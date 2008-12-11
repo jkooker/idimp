@@ -18,14 +18,15 @@ Voice::Voice() :
     m_freqRange(DEFAULT_MAX_FREQUENCY_HZ - DEFAULT_MIN_FREQUENCY_HZ),
     m_minAmp(DEFAULT_MIN_AMPLITUDE),
     m_ampRange(DEFAULT_MAX_AMPLITUDE - DEFAULT_MIN_AMPLITUDE),
-    m_isOn(false)
+    m_isOn(false),
+    m_turnOffRequested(false)
 {
     setPosition(0.0, 0.0);
 }
 
 void Voice::draw(CGContextRef contextRef, CGRect& bounds) const
 {
-    if (!m_isOn) return;
+    if (!m_isOn || m_turnOffRequested) return;
     
     float xratio = (m_x / bounds.size.width);
     float yratio = 1 - (m_y / bounds.size.height);
@@ -99,7 +100,8 @@ void Voice::turnOn(float x, float y)
 void Voice::turnOff() 
 { 
     printf("Voice::turnOff %02X\n", this);
-    m_isOn = false; 
+    m_osc.setAmpSmooth(0.0);
+    m_turnOffRequested = true; // don't turn off until after next callback - this allows smooth ramping down to zero
 }
 
 void Voice::renderAddToBuffer(float* output, int numSamplesPerChannel, int numChannels)
@@ -107,6 +109,12 @@ void Voice::renderAddToBuffer(float* output, int numSamplesPerChannel, int numCh
     if (m_isOn)
     {
         m_osc.addNextSamplesToBuffer(output, numSamplesPerChannel, numChannels);
+    
+        if (m_turnOffRequested)
+        {
+            m_isOn = false;
+            m_turnOffRequested = false;
+        }
     }
 }
 
