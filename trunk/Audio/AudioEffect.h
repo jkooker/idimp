@@ -55,7 +55,7 @@ public:
     
    /** 
     * set the value of this AudioEffectParameter
-    * @param the new value of this AudioEffectParameter
+    * @param value the new value of this AudioEffectParameter
     * @see getValue
     */
     void setValue(float value) { m_value = value; }
@@ -63,13 +63,13 @@ public:
    /** 
     * get the minimum value of this AudioEffectParameter
     * @return the minimum value of this AudioEffectParameter
-    * @see getMinValue
+    * @see setMinValue
     */
     float getMinValue() const { return m_minValue; }
     
    /** 
     * set the minimum value of this AudioEffectParameter
-    * @param the new minimum value of this AudioEffectParameter
+    * @param minValue the new minimum value of this AudioEffectParameter
     * @see getMinValue
     */
     void setMinValue(float minValue) { m_minValue = minValue; }
@@ -77,13 +77,13 @@ public:
    /** 
     * get the maximum value of this AudioEffectParameter
     * @return the maximum value of this AudioEffectParameter
-    * @see getMaxValue
+    * @see setMaxValue
     */
     float getMaxValue() const { return m_maxValue; }
     
    /** 
     * set the maximum value of this AudioEffectParameter
-    * @param the new maximum value of this AudioEffectParameter
+    * @param maxValue the new maximum value of this AudioEffectParameter
     * @see getMaxValue
     */
     void setMaxValue(float maxValue) { m_maxValue = maxValue; }

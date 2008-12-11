@@ -148,7 +148,7 @@ public:
     
    /**
     * Enable or disable muting of synthesized audio.
-    * @param true to mute synthesized audio, false to unmute.
+    * @param on true to mute synthesized audio, false to unmute.
     * @see getMuteSynth
     */
     void setMuteSynth(bool on) { m_synthIsMuted = on; }
@@ -162,7 +162,7 @@ public:
     
    /**
     * Enable or disable muting of networked audio.
-    * @param true to mute networked audio, false to unmute.
+    * @param on true to mute networked audio, false to unmute.
     * @see getMuteNetwork
     */
     void setMuteNetwork(bool on) { m_networkIsMuted = on; }
@@ -198,7 +198,7 @@ public:
    /**
     * recordingCallback is the method called when there is recorded input available from the microphone.
     * Do not call this method directly.  Instead, to start/stop callbacks, use start() and stop().
-    * @param inRefcon a reference to the AudioEngine instance that will process this callback.
+    * @param inRefCon a reference to the AudioEngine instance that will process this callback.
     * @param ioActionFlags flags describing how an AudioUnit will render the recorded data.
     * @param inTimeStamp the time stamp of the recorded audio data.
     * @param inBusNumber the AudioUnit bus number for recording audio.
@@ -217,7 +217,7 @@ public:
    /**
     * playbackCallback is the method called when the audio output device wants to request audio samples for playback
     * Do not call this method directly.  Instead, to start/stop callbacks, use start() and stop().
-    * @param inRefcon a reference to the AudioEngine instance that will process this callback.
+    * @param inRefCon a reference to the AudioEngine instance that will process this callback.
     * @param ioActionFlags flags describing how an AudioUnit will render the audio data.
     * @param inTimeStamp the time stamp of the audio data.
     * @param inBusNumber the AudioUnit bus number for playing audio.

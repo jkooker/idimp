@@ -57,7 +57,7 @@ public:
     * The amplitude will immediately jump to this new amplitude at the start of 
     * the next processing block.  If you want to avoid discontinuities due to these
     * sudden jumps, use setAmpSmooth instead.
-    * @param the new amplitude
+    * @param amp the new amplitude
     * @see getAmp
     * @see setAmpSmooth
     */
@@ -67,7 +67,7 @@ public:
     * Set the current ampitude of this Oscillator.
     * The amplitude will gradually change from the current amplitude to the new 
     * amplitude over the period of one processing block.
-    * @param the new amplitude
+    * @param amp the new amplitude
     * @see getAmp
     * @see setAmp
     */
@@ -82,7 +82,7 @@ public:
    
    /**
     * Set the current frequency of this Oscillator
-    * @param the new frequency
+    * @param freq the new frequency
     * @see getFreq
     */ 
     void setFreq(float freq);
@@ -118,7 +118,7 @@ public:
     * Generate the next buffer of samples from this Oscillator's wavetable and store in a buffer 
     * with the given number of interleaved channels.
     * @param buffer the buffer in which to store the computed samples (previous buffer contents will be erased)
-    * @param numSamples the number of samples to generate for each channel
+    * @param numSamplesPerChannel the number of samples to generate for each channel
     * @param numChannels the number of channels of samples to generate
     * @see nextSampleBufferMono
     * @see addNextSamplesToBuffer
@@ -129,7 +129,7 @@ public:
     * Generate the next buffer of samples from this Oscillator's wavetable and add them to a buffer 
     * with the given number of interleaved channels.
     * @param buffer the buffer in which to store the computed samples (added to the buffer's previous contents)
-    * @param numSamples the number of samples to generate for each channel
+    * @param numSamplesPerChannel the number of samples to generate for each channel
     * @param numChannels the number of channels of samples to generate
     * @see nextSampleBuffer
     */

@@ -82,8 +82,8 @@ public:
     * Render this voice's audio and add it to the audio in the given buffer.
     * Assumes that the buffer has already been initialized with silence or the desired added audio.
     * @param output the buffer into which this voice's audio data will be rendered/added
-    * @numSamplesPerChannel the number of samples per channel to be rendered
-    * @numChannels the number of channels to be rendered (Note: samples are interleaved) 
+    * @param numSamplesPerChannel the number of samples per channel to be rendered
+    * @param numChannels the number of channels to be rendered (Note: samples are interleaved) 
     */
     void renderAddToBuffer(float* output, int numSamplesPerChannel, int numChannels);
         
@@ -220,8 +220,8 @@ public:
     
    /**
     * synthesize the audio for each Voice and render into the given output buffer
-    * @param buffer the output buffer into which the audio for the Voices will be rendered
-    * @param numSamplesPerChannels the number of samples per channel in the output buffer
+    * @param output the output buffer into which the audio for the Voices will be rendered
+    * @param numSamplesPerChannel the number of samples per channel in the output buffer
     * @param numChannels the number of audio channels in the audio buffer (interleaved)
     */  
     void renderAudioBuffer(float* output, 
