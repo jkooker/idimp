@@ -29,7 +29,9 @@
 		9B6C40C90ED78B7A007E73EC /* AudioBasics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */; };
 		9B6C40CB0ED78B7A007E73EC /* AudioButtonTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */; };
 		9B6C40D70ED78CBE007E73EC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6C40D60ED78CBE007E73EC /* AudioToolbox.framework */; };
+		9B6F0C230EF0921F00547213 /* NetworkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B6F0C220EF0921F00547213 /* NetworkView.xib */; };
 		9B873FA30ED67F360041A31B /* at_symbol.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B873FA20ED67F360041A31B /* at_symbol.png */; };
+		9BEE4F680EF0966B00167384 /* NetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4F670EF0966B00167384 /* NetworkViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,7 +74,10 @@
 		9B6C40C80ED78B7A007E73EC /* Wavefile.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = Wavefile.h; sourceTree = "<group>"; };
 		9B6C40CE0ED78BD8007E73EC /* AudioEngine.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = AudioEngine.h; sourceTree = "<group>"; };
 		9B6C40D60ED78CBE007E73EC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
+		9B6F0C220EF0921F00547213 /* NetworkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkView.xib; sourceTree = "<group>"; };
 		9B873FA20ED67F360041A31B /* at_symbol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = at_symbol.png; path = Graphics/at_symbol.png; sourceTree = "<group>"; };
+		9BEE4F660EF0966B00167384 /* NetworkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkViewController.h; path = Classes/NetworkViewController.h; sourceTree = "<group>"; };
+		9BEE4F670EF0966B00167384 /* NetworkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkViewController.m; path = Classes/NetworkViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				9B6C40BD0ED78B7A007E73EC /* Audio */,
+				9BAE64960EF0882400B6DBEF /* Network */,
 				289233A00DB2D0730083E9F9 /* Main View */,
 				281C6CD70DB2D82200F60ACC /* Flipside View */,
 				080E96DDFE201D6D7F000001 /* Application Controllers */,
@@ -160,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				32EF718F0EF053D7004D4261 /* MasterAudioControls.xib */,
+				9B6F0C220EF0921F00547213 /* NetworkView.xib */,
 				9B873FA20ED67F360041A31B /* at_symbol.png */,
 				9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */,
 				280E754A0DD40C5E005A515E /* FlipsideView.xib */,
@@ -200,6 +207,15 @@
 				9B6C40C80ED78B7A007E73EC /* Wavefile.h */,
 			);
 			path = Audio;
+			sourceTree = "<group>";
+		};
+		9BAE64960EF0882400B6DBEF /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				9BEE4F660EF0966B00167384 /* NetworkViewController.h */,
+				9BEE4F670EF0966B00167384 /* NetworkViewController.m */,
+			);
+			name = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,6 +273,7 @@
 				9B873FA30ED67F360041A31B /* at_symbol.png in Resources */,
 				9B6C40A20ED78A1D007E73EC /* AudioButtonTestViewController.xib in Resources */,
 				32EF71900EF053D7004D4261 /* MasterAudioControls.xib in Resources */,
+				9B6F0C230EF0921F00547213 /* NetworkView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,6 +297,7 @@
 				32F871210EEDC9D00073FFAE /* TouchSynth.cpp in Sources */,
 				32F872360EEDEE6D0073FFAE /* Oscillator.cpp in Sources */,
 				32EF71980EF05B1E004D4261 /* MasterAudioControlsViewController.mm in Sources */,
+				9BEE4F680EF0966B00167384 /* NetworkViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
