@@ -63,6 +63,11 @@ AudioEngine::~AudioEngine()
         delete m_tempNetworkBuffer;
         m_tempNetworkBuffer = NULL;
     }
+    if (m_tempNetworkBufferShort != NULL)
+    {
+        delete m_tempNetworkBufferShort;
+        m_tempNetworkBufferShort = NULL;
+    }
     if (m_tempMixedPlaybackBuffer != NULL)
     {
         delete m_tempMixedPlaybackBuffer;
@@ -72,6 +77,11 @@ AudioEngine::~AudioEngine()
     {
         delete m_tempMixedNetworkOutputBuffer;
         m_tempMixedNetworkOutputBuffer = NULL;
+    }
+    if (m_tempMixedNetworkOutputBufferShort != NULL)
+    {
+        delete m_tempMixedNetworkOutputBufferShort;
+        m_tempMixedNetworkOutputBufferShort = NULL;
     }
 }
 
@@ -252,6 +262,7 @@ AudioEngine::AudioEngine() :
     m_tempNetworkBufferShort(NULL),
     m_tempMixedPlaybackBuffer(NULL),
     m_tempMixedNetworkOutputBuffer(NULL),
+    m_tempMixedNetworkOutputBufferShort(NULL),
     m_networkController(nil),
     m_isStarted(false)
 {
@@ -355,6 +366,10 @@ void AudioEngine::allocate_temp_buffers(int numSamplesAllChannels)
     if (m_tempMixedNetworkOutputBuffer == NULL)
     {
         m_tempMixedNetworkOutputBuffer = new float[numSamplesAllChannels];
+    }
+    if (m_tempMixedNetworkOutputBufferShort == NULL)
+    {
+        m_tempMixedNetworkOutputBufferShort = new short[numSamplesAllChannels];
     }
 }
 
@@ -574,7 +589,13 @@ OSStatus AudioEngine::playback_callback(AudioUnitRenderActionFlags *ioActionFlag
                                  (short*)ioData->mBuffers[i].mData, 
                                  numSamplesAllChannels); 
                                  
-        // TODO: convert to shorts for network output (we could send floats, but that's twice as much data to send...
+        // convert to shorts for network output
+        AudioSamplesFloatToShort(m_tempMixedNetworkOutputBuffer, m_tempMixedNetworkOutputBufferShort, numSamplesAllChannels);
+        
+        if (m_networkController != nil)
+        {
+            [m_networkController sendAudioBuffer:m_tempMixedNetworkOutputBufferShort length:numSamplesAllChannels];
+        }
     }
     
 #ifdef WRITE_DEBUG_FILE

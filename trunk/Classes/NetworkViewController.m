@@ -44,6 +44,8 @@ enum NetworkTableViewSections {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    selectedServiceIndex = -1;
+    
     _networkController = [NetworkController sharedInstance];
     services = _networkController.services;
     _networkController.clientTableView = networkTableView;
@@ -124,9 +126,9 @@ enum NetworkTableViewSections {
             else
             {
                 // show all the available services
-                theCell.text = [[services objectAtIndex:[indexPath row]] name];
+                theCell.text = [[services objectAtIndex:indexPath.row] name];
                 theCell.textColor = [UIColor blackColor];
-                theCell.accessoryType = UITableViewCellAccessoryNone;
+                theCell.accessoryType = (selectedServiceIndex == indexPath.row) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
             }
             break;
         default:
@@ -158,28 +160,25 @@ enum NetworkTableViewSections {
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"%@ %s", [self class], _cmd);
-    
-#if 0
-    
+        
     if (![[[services objectAtIndex:indexPath.row] addresses] count])
+    {
         NSLog(@"oops, can't send because we haven't resolved addresses for this service");
+    }
+    else
+    {
+        _networkController.savedAddress = [[[services objectAtIndex:indexPath.row] addresses] objectAtIndex:0];
+        // add a checkmark to this one
+        if (selectedServiceIndex != -1)
+        {
+            [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedServiceIndex inSection:indexPath.section]].accessoryType = UITableViewCellAccessoryNone;
+        }
+        selectedServiceIndex = indexPath.row;
+        [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+    }
     
-    AsyncUdpSocket *sharedSocket = ((NetThrashAppDelegate *)[UIApplication sharedApplication].delegate).socket;
     //[sharedSocket connectToAddress:[[[services objectAtIndex:indexPath.row] addresses] objectAtIndex:0] error:&error];
     
-    // send a starter packet
-    DMPDataPacket p;
-    memset(&p, 0, sizeof(p));
-    p.tag = DMPDataPacketTagStart;
-    
-    self.savedAddress = [[[services objectAtIndex:indexPath.row] addresses] objectAtIndex:0];
-    
-    [sharedSocket sendData:[NSData dataWithBytes:&p length:sizeof(p)]
-        toAddress:self.savedAddress
-        withTimeout:5
-        tag:DMPDataPacketTagStart];
-#endif
-        
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
