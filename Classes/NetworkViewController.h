@@ -12,6 +12,7 @@
 @interface NetworkViewController : UIViewController {
     IBOutlet UITableView *networkTableView;
     
+    NetworkController *_networkController;
     NSMutableArray *services;
 }
 

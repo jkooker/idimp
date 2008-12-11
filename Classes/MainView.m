@@ -26,7 +26,7 @@
     _synth = _audioEngine->getSynth();
     
     CGRect bounds = [self bounds];
-    NSLog(@"bounds: w %f h %f", bounds.size.width, bounds.size.height);
+    //NSLog(@"bounds: w %f h %f", bounds.size.width, bounds.size.height);
     _synth->setDisplayBounds(bounds); // needed to map position to parameter ranges    
     _audioEngine->start();
 }

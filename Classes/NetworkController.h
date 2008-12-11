@@ -20,13 +20,18 @@
     NSNetServiceBrowser *browser;
     NSMutableArray *services; // Active NSNetServices
     NSData *savedAddress; // Current destination of network audio
+    UITableView *clientTableView;
 }
 
 @property (nonatomic, retain) NSMutableArray *services;
+@property (nonatomic, retain) UITableView *clientTableView;
 
 + (NetworkController *)sharedInstance;
 
 - (void)sendAudioBuffer:(short*)buffer length:(int)length;
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels;
+
+- (void)startBonjourSearch;
+- (void)stopBonjourSearch;
 
 @end

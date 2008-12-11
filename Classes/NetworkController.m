@@ -13,6 +13,7 @@
 @implementation NetworkController
 
 @synthesize services;
+@synthesize clientTableView;
 
 #pragma mark Singleton implementation
 
@@ -84,6 +85,10 @@ static NetworkController *sharedNetworkController = nil;
             [netService publish];
             [netService setDelegate:self];
         }
+        
+        // Prepare Bonjour browser
+        browser = [[NSNetServiceBrowser alloc] init];
+        [browser setDelegate:self];
     }
     return self;
 }
@@ -92,6 +97,7 @@ static NetworkController *sharedNetworkController = nil;
 {
     [services release];
     [netService release];
+    [browser release];
     
     [super dealloc];
 }
@@ -105,6 +111,17 @@ static NetworkController *sharedNetworkController = nil;
 {
     // stub
 }
+
+- (void)startBonjourSearch
+{
+    [browser searchForServicesOfType:kBonjourServiceType inDomain:@"local."];
+}
+
+- (void)stopBonjourSearch
+{
+    [browser stop];
+}
+
 
 #pragma mark NSNetService Delegate Methods
 
@@ -131,6 +148,49 @@ static NetworkController *sharedNetworkController = nil;
 - (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict
 {
     NSLog(@"did not resolve address for %@.", [sender name]);
+}
+
+#pragma mark NSNetServiceBrowser Delegate Methods
+
+- (void)netServiceBrowserWillSearch:(NSNetServiceBrowser *)aNetServiceBrowser
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+}
+
+- (void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didFindService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
+{
+	//NSLog(@"netservice found: %@ %@", [aNetService name], moreComing ? @"(moreComing)" : @"");
+    
+    [services addObject:aNetService];
+    if (clientTableView)
+    {
+        [clientTableView reloadData];
+    }
+    [aNetService setDelegate:self];
+    [aNetService resolveWithTimeout:5];
+}
+
+- (void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didRemoveService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
+{
+    BOOL foundService = NO;
+    
+    for (NSNetService *currentService in services)
+    {
+        if ([[currentService name] isEqual:[aNetService name]] &&
+            [[currentService type] isEqual:[aNetService type]] &&
+            [[currentService domain] isEqual:[aNetService domain]])
+        {
+            [services removeObject:currentService];
+            if (clientTableView)
+            {
+                [clientTableView reloadData];
+            }
+            foundService = YES;
+            break;
+        }
+    }
+    
+	NSLog(@"netservice removed: %@ (%@)", [aNetService name], foundService ? @"successfully" : @"unsuccessfully");
 }
 
 
