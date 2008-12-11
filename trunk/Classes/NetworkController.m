@@ -115,13 +115,14 @@ static NetworkController *sharedNetworkController = nil;
 
 - (void)sendAudioBuffer:(short*)buffer length:(int)length
 {
-
-static BOOL printedit = NO;
-    if (!printedit)
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    // send the data out
+    if (savedAddress)
     {
-        NSLog(@"sendaudiobuffer length %d", length);
-        printedit = YES;
+        NSLog(@"sending data!");
+        [socket sendData:[NSData dataWithBytes:buffer length:length] toAddress:savedAddress withTimeout:2 tag:0];
     }
+    [pool release];
 }
 
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels
@@ -220,6 +221,37 @@ static BOOL printedit = NO;
     
 	NSLog(@"netservice removed: %@ (%@)", [aNetService name], foundService ? @"successfully" : @"unsuccessfully");
 }
+
+#pragma mark AsyncUdpSocket Delegate Methods
+- (void)onUdpSocket:(AsyncUdpSocket *)sock didSendDataWithTag:(long)tag
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+}
+
+- (void)onUdpSocket:(AsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+}
+
+- (BOOL)onUdpSocket:(AsyncUdpSocket *)sock didReceiveData:(NSData *)data withTag:(long)tag fromHost:(NSString *)host port:(UInt16)port
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+    
+    [sock receiveWithTimeout:-1 tag:0];
+    
+    return YES;
+}
+
+- (void)onUdpSocket:(AsyncUdpSocket *)sock didNotReceiveDataWithTag:(long)tag dueToError:(NSError *)error
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+}
+
+- (void)onUdpSocketDidClose:(AsyncUdpSocket *)sock
+{
+    NSLog(@"%@ %s", [self class], _cmd);
+}
+
 
 
 @end
