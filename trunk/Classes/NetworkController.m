@@ -11,6 +11,7 @@
 #define kBonjourServiceType @"_idimp._udp"
 #define kiDiMPSocketPort 23711
 #define kSendDataTimeout 1.0 // in seconds
+#define kNetBufferLatency 4  // play four silent buffers before playing network audio
 
 @implementation NetworkController
 
@@ -137,11 +138,14 @@ static NetworkController *sharedNetworkController = nil;
 
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels
 {
+    // todo: wait <latency> before starting through our cache
+    
     // grab from big receive buffer
     for (int i = 0; i < samplesPerChannel; i++) {
         // copy into buffer, mirror into all channels
         for (int j = 0; j < numChannels; j++) {
             buffer[(numChannels * i) + j] = audioReceiveBuffers[currentReceiveBufferIndex][i];
+            currentReceiveBufferIndex = (currentReceiveBufferIndex + 1) % kNumCachedReceiveBuffers;
         }
     }
 }

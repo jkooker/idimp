@@ -12,7 +12,7 @@
 #define kNumSamplesPerChannel 1024
 #define kNumSlicesPerPacket 2
 // Make this a multiple of 2 for fast % computations
-#define kNumCachedReceiveBuffers 64
+#define kNumCachedReceiveBuffers 16
 
 typedef struct DMPDataPacketSlice
 {
