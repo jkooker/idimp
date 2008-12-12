@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 
+/**
+ * Mainly a placeholder. Currently sets the AboutView background.
+ */
 @interface AboutViewController : UIViewController {
 
 }

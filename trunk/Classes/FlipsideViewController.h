@@ -8,11 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * View Controller for FlipsideView.
+ * Holds a UITabBarController, which comprises the main part of the view.
+ * Provides viewDidAppear/Disappear notifications to tabs' view controllers.
+ */
 @interface FlipsideViewController : UIViewController <UITabBarControllerDelegate> {
     UITabBarController *tabBarController;
     UIViewController *currentViewController;
 }
 
+/**
+ * Tab Bar Controller instantiated in XIB.
+ */
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;
 
 @end

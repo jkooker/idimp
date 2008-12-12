@@ -8,11 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ * View controller for MainView. Handles accelerometer data.
+ */
 @interface MainViewController : UIViewController <UIAccelerometerDelegate> {
     UIAccelerationValue	_savedAcceleration[3]; // in three dimensions
     CFTimeInterval		_lastShakeTime;
 }
 
+/**
+ * Tests accelerometer input to determine if a shake gesture occurred.
+ * @return Whether a shake gesture occurred.
+ */
 - (BOOL) didShake:(UIAcceleration*)acceleration;
 
 @end
