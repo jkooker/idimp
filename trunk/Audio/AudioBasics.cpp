@@ -1,6 +1,6 @@
 /*
  *  AudioBasics.cpp
- *  AudioButtonTest
+ *  iDiMP
  *
  *  Created by Michelle Daniels on 11/18/08.
  *  Copyright 2008 UCSD. All rights reserved.

@@ -1,16 +1,19 @@
-//
-//  MasterAudioControlsViewController.h
-//  iDiMP
-//
-//  Created by Michelle Daniels on 12/10/08.
-//  Copyright 2008 UCSD. All rights reserved.
-//
+/**
+ *  @file MasterAudioControlsViewController.h
+ *  iDiMP 
+ *
+ *  Created by Michelle Daniels on 12/10/08.
+ *  Copyright 2008 UCSD. All rights reserved.
+ *
+ *  This file defines the interface for the MasterAudioControlsViewController class.
+ */
 
 #import <UIKit/UIKit.h>
 #import "iDiMPAppDelegate.h"
 
 /**
   * MasterAudioControlsViewController class.
+  * This class is the UIViewController for MasterAudioControls.xib
   */
 @interface MasterAudioControlsViewController : UIViewController {
     IBOutlet UISwitch* _masterAudioMuteSwitch;
