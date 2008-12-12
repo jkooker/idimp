@@ -11,6 +11,9 @@
 #import "AudioEngine.h"
 #import "TouchSynth.h"
 
+/**
+ * Main iDiMP user interface. Handles multitouch and displays current waveform.
+ */
 @interface MainView : UIView {
     TouchSynth* _synth; // TODO: maybe the synth should be owned by this class and added to the audio engine explicitly?
     AudioEngine* _audioEngine;

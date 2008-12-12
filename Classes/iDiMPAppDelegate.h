@@ -12,6 +12,9 @@
 
 @class RootViewController;
 
+/**
+ * Application delegate object.
+ */
 @interface iDiMPAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
     RootViewController *rootViewController;
@@ -25,7 +28,13 @@
     NetworkController *_networkController;
 }
 
+/**
+ * Window connected in XIB.
+ */
 @property (nonatomic, retain) IBOutlet UIWindow *window;
+/**
+ * RootViewController connected in XIB.
+ */
 @property (nonatomic, retain) IBOutlet RootViewController *rootViewController;
 
 - (AudioEffect*) masterAudioAmpEffect;

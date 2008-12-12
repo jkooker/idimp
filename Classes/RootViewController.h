@@ -11,6 +11,9 @@
 @class MainViewController;
 @class FlipsideViewController;
 
+/**
+ * Controls switching between MainView and FlipsideView.
+ */
 @interface RootViewController : UIViewController {
 
     UIButton *infoButton;
@@ -19,11 +22,26 @@
     UINavigationBar *flipsideNavigationBar;
 }
 
+/**
+ * Triggers the switch between MainView and FlipsideView.
+ */
 @property (nonatomic, retain) IBOutlet UIButton *infoButton;
+/**
+ * Instantiated by RootViewController.
+ */
 @property (nonatomic, retain) MainViewController *mainViewController;
+/**
+ * Instantiated by RootViewController, and tacked onto FlipsideView.
+ */
 @property (nonatomic, retain) UINavigationBar *flipsideNavigationBar;
+/**
+ * Instantiated by RootViewController.
+ */
 @property (nonatomic, retain) FlipsideViewController *flipsideViewController;
 
+/**
+ * Called by infoButton and Done button on the backside. Flips between the two views.
+ */
 - (IBAction)toggleView;
 
 @end
