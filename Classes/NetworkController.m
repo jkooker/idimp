@@ -138,13 +138,13 @@ static NetworkController *sharedNetworkController = nil;
 
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels
 {
-    // todo: wait <latency> before starting through our cache
+    // TODO: wait <latency> before starting through our cache
     
     // grab from big receive buffer
     for (int i = 0; i < samplesPerChannel; i++) {
         // copy into buffer, mirror into all channels
         for (int j = 0; j < numChannels; j++) {
-            buffer[(numChannels * i) + j] = audioReceiveBuffers[currentReceiveBufferIndex][i];
+            buffer[(numChannels * i) + j] = audioReceiveBuffers[currentReceiveBufferIndex].data[i];
         }
     }
     
@@ -302,11 +302,19 @@ static NetworkController *sharedNetworkController = nil;
     
     DMPDataPacket *packet = (DMPDataPacket *)[data bytes];
     
-    // throw each buffer into the big received buffer at index % 64
-    for (int i = 0; i < kNumSlicesPerPacket; i++) {
-        memcpy(&audioReceiveBuffers[packet->slices[i].index % kNumCachedReceiveBuffers] ,
-            &(packet->slices[i].data),
-            kNumSamplesPerChannel * sizeof(short));
+    // throw each buffer into the big received buffer at index % kNumCachedReceiveBuffers
+    int bufferIndexToWrite = 0;
+    for (int i = 0; i < kNumSlicesPerPacket; i++)
+    {
+        bufferIndexToWrite = packet->slices[i].index % kNumCachedReceiveBuffers;
+        
+        // don't overwrite the same data
+        if (packet->slices[i].index != audioReceiveBuffers[bufferIndexToWrite].index)
+        {
+            memcpy(&audioReceiveBuffers[bufferIndexToWrite] ,
+                &(packet->slices[i]),
+                sizeof(DMPDataPacketSlice));
+        }
     }
 
     [sock receiveWithTimeout:-1 tag:0];

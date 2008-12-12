@@ -12,7 +12,7 @@
 #define kNumSamplesPerChannel 1024
 #define kNumSlicesPerPacket 2
 // Make this a multiple of 2 for fast % computations
-#define kNumCachedReceiveBuffers 16
+#define kNumCachedReceiveBuffers 8
 
 typedef struct DMPDataPacketSlice
 {
@@ -42,7 +42,7 @@ typedef struct DMPDataPacket {
     DMPDataPacket savedPacket;
     uint8_t oldestSlice;
     uint8_t currentSendBufferIndex;
-    short audioReceiveBuffers[kNumCachedReceiveBuffers][kNumSamplesPerChannel];
+    DMPDataPacketSlice audioReceiveBuffers[kNumCachedReceiveBuffers];
     NSUInteger currentReceiveBufferIndex;
 }
 
