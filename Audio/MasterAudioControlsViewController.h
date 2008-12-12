@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "iDiMPAppDelegate.h"
 
+/**
+  * MasterAudioControlsViewController class.
+  */
 @interface MasterAudioControlsViewController : UIViewController {
     IBOutlet UISwitch* _masterAudioMuteSwitch;
     IBOutlet UISlider* _synthAudioLevelSlider;
@@ -36,12 +39,46 @@
 @property (nonatomic, retain) IBOutlet UISwitch* _networkAudioMuteSwitch;
 @property (nonatomic, retain) IBOutlet UITextField* _networkAudioLevelTextField;
 
+/**
+ * This callback is called when the UISwitch for muting master audio is toggled.
+ * @param sender the caller of the callback
+ */
 - (IBAction) masterAudioMuteSwitchChanged: (id) sender;
+
+/**
+ * This callback is called when the slider for changing the synthesized audio level is moved.
+ * @param sender the caller of the callback
+ */
 - (IBAction) synthAudioLevelSliderChanged: (id) sender;
+
+/**
+ * This callback is called when the UISwitch for muting synthesized audio is toggled.
+ * @param sender the caller of the callback
+ */
 - (IBAction) synthAudioMuteSwitchChanged: (id) sender;
+
+/**
+ * This callback is called when the slider for changing the recorded audio level is moved.
+ * @param sender the caller of the callback
+ */
 - (IBAction) recordedAudioLevelSliderChanged: (id) sender;
+
+/**
+ * This callback is called when the UISwitch for muting recorded audio is toggled.
+ * @param sender the caller of the callback
+ */
 - (IBAction) recordedAudioMuteSwitchChanged: (id) sender;
+
+/**
+ * This callback is called when the slider for changing the level of the streaming network input audio is moved.
+ * @param sender the caller of the callback
+ */
 - (IBAction) networkAudioLevelSliderChanged: (id) sender;
+
+/**
+ * This callback is called when the UISwitch for muting streaming network input audio is toggled.
+ * @param sender the caller of the callback
+ */
 - (IBAction) networkAudioMuteSwitchChanged: (id) sender;
 
 @end
