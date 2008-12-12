@@ -1,10 +1,11 @@
-/*
- *  TouchSynth.h
+/**
+ *  @file TouchSynth.h
  *  iDiMP
  *
  *  Created by Michelle Daniels on 12/8/08.
  *  Copyright 2008 UCSD. All rights reserved.
- *
+ *  
+ *  The interfaces for the Voice and TouchSynth classes are defined here.
  */
 
 #ifndef TOUCH_SYNTH_H
@@ -13,15 +14,15 @@
 #import <UIKit/UIKit.h>
 #import "Oscillator.h"
 
-static const float DEFAULT_MIN_FREQUENCY_HZ = 20.0;
-static const float DEFAULT_MAX_FREQUENCY_HZ = 3000.0;
-static const float DEFAULT_MIN_AMPLITUDE = 0.0;
-static const float DEFAULT_MAX_AMPLITUDE = 1.0;
+static const float DEFAULT_MIN_FREQUENCY_HZ = 20.0;   ///< Minimum frequency for a TouchSynth Voice (in Hz)
+static const float DEFAULT_MAX_FREQUENCY_HZ = 3000.0; ///< Maximum frequency for a TouchSynth Voice (in Hz)
+static const float DEFAULT_MIN_AMPLITUDE = 0.0;       ///< Minimum amplitude for a TouchSynth Voice
+static const float DEFAULT_MAX_AMPLITUDE = 1.0;       ///< Maximum amplitude for a TouchSynth Voice
 
-static const int NUM_VOICES = 5;
+static const int NUM_VOICES = 5;                      ///< Number of possible concurrent TouchSynth Voices
 
 // for drawing voices
-static const float CIRCLE_RADIUS = 80;
+static const float CIRCLE_RADIUS = 80;                ///< Size of shapes drawn to represent Voices
 
 /** Voice class.
  * The Voice class encapsulates both audio synthesis and graphical UI rendering for one Voice.
