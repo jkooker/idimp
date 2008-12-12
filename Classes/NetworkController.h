@@ -14,12 +14,18 @@
 // Make this a multiple of 2 for fast % computations
 #define kNumCachedReceiveBuffers 8
 
+/**
+ * Holds one buffer from Core Audio, along with a tag byte.
+ */
 typedef struct DMPDataPacketSlice
 {
     uint8_t index; // maybe this should be 'tag'?
     short data[kNumSamplesPerChannel];
 } DMPDataPacketSlice;
 
+/**
+ * For data redundancy, holds multiple DMPDataPacketSlice structs.
+ */
 typedef struct DMPDataPacket {
     DMPDataPacketSlice slices[kNumSlicesPerPacket];
 } DMPDataPacket;
