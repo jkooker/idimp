@@ -26,6 +26,9 @@
     _ringModEffect = new RingMod();
     _audioEngine->addRecordingEffect(_ringModEffect);
     _ringModFreqParam = _ringModEffect->getParameter(0);
+    
+    // init the appropriate segment for waveform selection UISegmentedControl
+    [_waveformSelector setSelectedSegmentIndex:_audioEngine->getSynth()->getWaveform()];
 }
 
 - (void) dealloc

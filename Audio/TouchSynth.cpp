@@ -263,6 +263,12 @@ void TouchSynth::incrementWaveform()
     }
 }
 
+Oscillator::Waveform TouchSynth::getWaveform() const
+{
+    // TODO: check to see if NUM_VOICES > 0 ??
+    return m_voices[0].getWaveform();
+}
+
 void TouchSynth::setWaveform(Oscillator::Waveform wave)
 {
     // TODO: check to make sure that wave is a valid value??
