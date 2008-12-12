@@ -15,25 +15,25 @@
 
 // ---- audio format constants
 
-static const float AUDIO_SAMPLE_RATE              = 44100.0;
-static const int   AUDIO_NUM_CHANNELS             = 2;
-static const int   AUDIO_BIT_DEPTH_IN_BYTES       = 2;
-static const int   AUDIO_BIT_DEPTH                = 8 * AUDIO_BIT_DEPTH_IN_BYTES;
-static const int   AUDIO_FORMAT_FRAMES_PER_PACKET = 1;
-static const int   AUDIO_FORMAT_ID                = kAudioFormatLinearPCM;
-static const int   AUDIO_FORMAT_FLAGS             = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
-static const int   AUDIO_FORMAT_IS_NONINTERLEAVED = FALSE;
+static const float AUDIO_SAMPLE_RATE              = 44100.0;                      ///< Sampling rate for iDiMP audio
+static const int   AUDIO_NUM_CHANNELS             = 2;                            ///< Number of channels for iDiMP audio
+static const int   AUDIO_BIT_DEPTH_IN_BYTES       = 2;                            ///< Bit depth in bytes for iDiMP audio
+static const int   AUDIO_BIT_DEPTH                = 8 * AUDIO_BIT_DEPTH_IN_BYTES; ///< Bit depth in bits for iDiMP audio
+static const int   AUDIO_FORMAT_FRAMES_PER_PACKET = 1;                            ///< Frames per packet for iDiMP audio
+static const int   AUDIO_FORMAT_ID                = kAudioFormatLinearPCM;        ///< Audio format for iDiMP audio
+static const int   AUDIO_FORMAT_FLAGS             = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked; ///< format parameters for iDiMP audio
+static const int   AUDIO_FORMAT_IS_NONINTERLEAVED = FALSE;                        ///< iDiMP audio is always interleaved
 
 // for audio units
-static const int AUDIO_OUTPUT_BUS = 0;
-static const int AUDIO_INPUT_BUS = 1;
+static const int AUDIO_OUTPUT_BUS = 0; ///< Bus number for output audio
+static const int AUDIO_INPUT_BUS = 1;  ///< Bus number for input audio
 
 // math constants
-static const float PI = 3.14159265359;
-static const float TWO_PI = (2 * PI);
+static const float PI = 3.14159265359; ///< Approximation of PI
+static const float TWO_PI = (2 * PI);  ///< 2 PI, for convenience
 
 // amplitude
-static const short AUDIO_MAX_AMPLITUDE = (1 << (AUDIO_BIT_DEPTH - 1)) - 1;
+static const short AUDIO_MAX_AMPLITUDE = (1 << (AUDIO_BIT_DEPTH - 1)) - 1; ///< maximum audio amplitude given bit depth
 
 /** 
  * This function converts an array of audio samples from floats in the 
