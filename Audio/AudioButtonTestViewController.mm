@@ -1,6 +1,6 @@
 //
 //  AudioButtonTestViewController.mm
-//  AudioButtonTest
+//  iDiMP
 //
 //  Created by Michelle Daniels on 11/2/08.
 //  Copyright UCSD 2008. All rights reserved.

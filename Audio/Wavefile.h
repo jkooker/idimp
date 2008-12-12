@@ -1,10 +1,11 @@
-/*
- *  Wavefile.h
- *  AudioButtonTest
+/**
+ *  @file Wavefile.h
+ *  iDiMP
  *
  *  Created by Michelle Daniels on 11/18/08.
  *  Copyright 2008 UCSD. All rights reserved.
  *
+ *  This file defines the interface for the Wavefile class.
  */
 
 #ifndef WAVEFILE_H
@@ -12,7 +13,7 @@
 
 #import "AudioBasics.h"
 
-static const CFStringEncoding DEFAULT_STRING_ENCODING = kCFStringEncodingMacRoman;
+static const CFStringEncoding DEFAULT_STRING_ENCODING = kCFStringEncodingMacRoman; ///< Default string encoding type - needed for generating file URLs
 
 /**
  * Wavefile class.

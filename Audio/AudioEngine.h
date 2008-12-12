@@ -1,10 +1,11 @@
-/*
- *  AudioEngine.h
- *  AudioButtonTest
+/**
+ *  @file AudioEngine.h
+ *  iDiMP
  *
  *  Created by Michelle Daniels on 11/15/08.
  *  Copyright 2008 UCSD. All rights reserved.
  *
+ *  This file defines the interface for the AudioEngine class.
  */
 
 #ifndef AUDIO_ENGINE_H
@@ -19,7 +20,7 @@
 #import "NetworkController.h"
 
 /** AudioEngine class.
- * The AudioEngine class controls all audio reocrding and playback.
+ * The AudioEngine class controls all audio recording, playback, and processing.
  * It follows the singleton pattern.
  */
 class AudioEngine

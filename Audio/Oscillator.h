@@ -1,10 +1,11 @@
-/*
- *  Oscillator.h
- *  AudioButtonTest
+/**
+ *  @file Oscillator.h
+ *  iDiMP
  *
  *  Created by Michelle Daniels on 11/6/08.
  *  Copyright 2008 UCSD. All rights reserved.
  *
+ *  This file defines the interface for the Oscillator class.
  */
 
 #ifndef OSCILLATOR_H
@@ -12,10 +13,9 @@
 
 #import "AudioBasics.h"
 
-static const float DEFAULT_FREQUENCY_IN_HZ  = 440.0;
-static const float DEFAULT_AMPLITUDE = 1.0;
-static const int WAVETABLE_POINTS = 2048;
-static const int MAX_AMPLITUDE_16_BITS = 32767;
+static const float DEFAULT_FREQUENCY_IN_HZ  = 440.0; ///< Default (initial) Oscillator frequency in Hz
+static const float DEFAULT_AMPLITUDE = 1.0;          ///< Default (initial) Oscillator amplitude in Hz
+static const int WAVETABLE_POINTS = 2048;            ///< Number of points in the table for wavetable synthesis
 
 /**
  * Oscillator class.

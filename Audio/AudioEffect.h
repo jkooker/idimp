@@ -1,10 +1,11 @@
-/*
- *  AudioEffect.h
- *  AudioButtonTest
+/**
+ *  @file AudioEffect.h
+ *  iDiMP
  *
  *  Created by Michelle Daniels on 11/11/08.
  *  Copyright 2008 UCSD. All rights reserved.
  *
+ *  This file defines the interfaces for AudioEffect and related classes. 
  */
 
 #ifndef AUDIO_EFFECT_H
