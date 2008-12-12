@@ -9,6 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "NetworkController.h"
 
+/**
+ * NetworkViewController is the view controller for NetworkView.
+ * It interfaces between the Network Tab and the NetworkController.
+ */
 @interface NetworkViewController : UIViewController {
     IBOutlet UITableView *networkTableView;
     UISwitch *serverSwitch;

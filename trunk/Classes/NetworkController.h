@@ -47,22 +47,59 @@ typedef struct DMPDataPacket {
     NSUInteger currentReceiveBufferIndex;
 }
 
+/**
+ * A list of available Bonjour iDiMP NetServices.
+ * Used to populate the Audio Destination table section.
+ */
 @property (nonatomic, retain) NSMutableArray *services;
+/**
+ * The selected destination for networked audio.
+ */
 @property (nonatomic, retain) NSData *savedAddress;
+/**
+ * Used to provide update notifications, instead of implementing an entire delegate protocol.
+ */
 @property (nonatomic, retain) UITableView *clientTableView;
 
+/**
+ * Obtains the shared instance of the singleton class.
+ */
 + (NetworkController *)sharedInstance;
 
+/**
+ * Called by AudioEngine to queue a buffer for network transmit.
+ */
 - (void)sendAudioBuffer:(short*)buffer length:(int)length channels:(int)numChannels;
+/**
+ * Called by AudioEngine to obtain received network audio.
+ */
 - (void)fillAudioBuffer:(short*)buffer samplesPerChannel:(int)samplesPerChannel channels:(int)numChannels;
 
+/**
+ * Creates and binds the UDP socket, and starts Bonjour publishing and searching.
+ */
 - (void)startAudioServer;
+/**
+ * Closes and destroys the UDP socket, and stops Bonjour publishing and searching.
+ */
 - (void)stopAudioServer;
 
+/**
+ * Advertises the Bonjour service.
+ */
 - (void)startBonjourPublishing;
+/**
+ * Stops advertising the Bonjour service.
+ */
 - (void)stopBonjourPublishing;
 
+/**
+ * Searches for iDiMP UDP Bonjour services.
+ */
 - (void)startBonjourSearch;
+/**
+ * Stops searching for iDiMP UDP Bonjour services.
+ */
 - (void)stopBonjourSearch;
 
 @end
