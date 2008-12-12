@@ -92,12 +92,12 @@ enum NetworkTableViewSections {
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    NSLog(@"%@ %s", [self class], _cmd);
+    [[NetworkController sharedInstance] startBonjourSearch];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    NSLog(@"%@ %s", [self class], _cmd);
+    [[NetworkController sharedInstance] stopBonjourSearch];
 }
 
 

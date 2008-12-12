@@ -27,12 +27,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [[NetworkController sharedInstance] startBonjourSearch];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [[NetworkController sharedInstance] stopBonjourSearch];
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
