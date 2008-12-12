@@ -10,6 +10,7 @@
 
 @interface FlipsideViewController : UIViewController <UITabBarControllerDelegate> {
     UITabBarController *tabBarController;
+    UIViewController *currentViewController;
 }
 
 @property (nonatomic, retain) IBOutlet UITabBarController *tabBarController;

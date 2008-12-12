@@ -14,11 +14,12 @@
 
 @synthesize tabBarController;
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view = tabBarController.view;
     self.view.backgroundColor = [UIColor viewFlipsideBackgroundColor];
+    
+    currentViewController = nil;
     
     // This should be suitably late to connect to the network controller.
     AudioEngine::getInstance()->connectToNetworkController();
@@ -37,6 +38,14 @@
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
     NSLog(@"%@ %s", [self class], _cmd);
+    
+    if (currentViewController)
+    {
+        [currentViewController viewWillDisappear:NO];
+    }
+    
+    [viewController viewWillAppear:NO];
+    currentViewController = viewController;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
