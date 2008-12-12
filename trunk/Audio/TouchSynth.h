@@ -24,7 +24,7 @@ static const int NUM_VOICES = 5;
 static const float CIRCLE_RADIUS = 80;
 
 /** Voice class.
- * The Voice class encapsulates both audio synthesis and graphical UI rendering for one Voice
+ * The Voice class encapsulates both audio synthesis and graphical UI rendering for one Voice.
  */
 class Voice
 {
@@ -43,27 +43,27 @@ public:
               CGRect& bounds) const;
     
    /**
-    * Get the current X position of this voice on the screen.
-    * @return the current X position of this voice on the screen.
+    * Get the current X position of this Voice on the screen.
+    * @return the current X position of this Voice on the screen.
     */
     float getX() const { return m_x; }
     
    /**
-    * Get the current Y position of this voice on the screen.
-    * @return the current Y position of this voice on the screen.
+    * Get the current Y position of this Voice on the screen.
+    * @return the current Y position of this Voice on the screen.
     */
     float getY() const { return m_y; }
     
    /**
-    * Query whether or not this voice is currently on (active).
-    * @return true if the voice is on, false otherwise
+    * Query whether or not this Voice is currently on (active).
+    * @return true if the Voice is on, false otherwise
     * @see turnOn
     * @see turnOff
     */
     bool isOn() const { return m_isOn; }
     
    /**
-    * Turn on this voice with the given X,Y coordinates as its starting position.
+    * Turn on this Voice with the given X,Y coordinates as its starting position.
     * @param x the starting X position of this voice.
     * @param y the starting Y position of this voice.
     * @see isOn
@@ -72,54 +72,59 @@ public:
     void turnOn(float x, float y);
         
    /** 
-    * Turn off this voice.
+    * Turn off this Voice.
     * @see isOn
     * @see turnOn
     */
     void turnOff();
         
    /** 
-    * Render this voice's audio and add it to the audio in the given buffer.
+    * Render this Voice's audio and add it to the audio in the given buffer.
     * Assumes that the buffer has already been initialized with silence or the desired added audio.
-    * @param output the buffer into which this voice's audio data will be rendered/added
+    * @param output the buffer into which this Voice's audio data will be rendered/added
     * @param numSamplesPerChannel the number of samples per channel to be rendered
     * @param numChannels the number of channels to be rendered (Note: samples are interleaved) 
     */
     void renderAddToBuffer(float* output, int numSamplesPerChannel, int numChannels);
         
    /**
-    * Set the maximum X position on the screen (generally screen width)
+    * Set the maximum X position on the screen (generally screen width).
     * @param x the new maximum X position
     * @see setMaxY
     */ 
     void setMaxX(float x) { m_xMax = x; }
     
    /** 
-    * Set the maximum Y position on the screen (generally screen height)
+    * Set the maximum Y position on the screen (generally screen height).
     * @param y the new maximum Y position
     * @see setMaxX
     */
     void setMaxY(float y) { m_yMax = y; }
     
    /**
-    * Set the current position of this voice on the screen
-    * @param x the new X position of this voice
-    * @param y the new Y position of this voice
+    * Set the current position of this Voice on the screen.
+    * @param x the new X position of this Voice
+    * @param y the new Y position of this Voice
     */
     void setPosition(float x, float y);
         
    /**
-    * Increment the Waveform used by this voice to the next one in the list of Oscillator::Waveforms.
+    * Increment the Waveform used by this Voice to the next one in the list of Oscillator::Waveforms.
     * @see setWaveform
     */    
     void incrementWaveform()
     {
         m_osc.incrementWaveform();
     }
+    
+   /**
+    * Get the Waveform used by this Voice.
+    */
+    Oscillator::Waveform getWaveform() const { return m_osc.getWaveform(); }
 
    /**
-    * Set the Waveform used by this voice to the given Waveform.
-    * @param wave the Waveform for this voice to use
+    * Set the Waveform used by this Voice to the given Waveform.
+    * @param wave the Waveform for this Voice to use
     * @see incrementWaveform
     */
     void setWaveform(Oscillator::Waveform wave)
@@ -128,7 +133,7 @@ public:
     }
     
    /**
-    * Print debugging information about this voice (X and Y positions and whether or not it is on).
+    * Print debugging information about this Voice (X and Y positions and whether or not it is on).
     */
     void print() const
     {
@@ -245,10 +250,19 @@ public:
     * Switch each Voice in this TouchSynth to the next Waveform in the list
     */
     void incrementWaveform();
+    
+   /**
+    * Get the Waveform currently in use for this TouchSynth's voices.
+    * Assumes that all voices are using the same Waveform.
+    * @return the currently used Waveform
+    * @see setWaveform
+    */
+    Oscillator::Waveform getWaveform() const;
       
    /**
     * Set the Waveform for each voice in this TouchSynth to the given Waveform.
     * @param wave the requested Waveform
+    * @see getWaveform
     */
     void setWaveform(Oscillator::Waveform wave);
         
