@@ -145,9 +145,10 @@ static NetworkController *sharedNetworkController = nil;
         // copy into buffer, mirror into all channels
         for (int j = 0; j < numChannels; j++) {
             buffer[(numChannels * i) + j] = audioReceiveBuffers[currentReceiveBufferIndex][i];
-            currentReceiveBufferIndex = (currentReceiveBufferIndex + 1) % kNumCachedReceiveBuffers;
         }
     }
+    
+    currentReceiveBufferIndex = (currentReceiveBufferIndex + 1) % kNumCachedReceiveBuffers;
 }
 
 - (void)startAudioServer
