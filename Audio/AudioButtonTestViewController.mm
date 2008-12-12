@@ -47,7 +47,8 @@
 }
 
 // Implement viewDidLoad to do additional setup after loading the view.
-- (void)viewDidLoad {
+- (void) viewDidLoad 
+{
     NSLog(@"AudioButtonTestViewController viewDidLoad");
     [self myInit];
         
@@ -58,6 +59,13 @@
     [_ringModFreqSlider setMaximumValue:_ringModFreqParam->getMaxValue()];
     
     [super viewDidLoad];
+}
+
+- (void) viewWillAppear: (BOOL) animated
+{
+    NSLog(@"AudioButtonTestViewController::viewWillAppear");
+    // init the appropriate segment for waveform selection UISegmentedControl
+    [_waveformSelector setSelectedSegmentIndex:_audioEngine->getSynth()->getWaveform()];
 }
 
 - (IBAction) ringModFreqSliderChanged: (id) sender
