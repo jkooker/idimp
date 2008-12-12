@@ -9,7 +9,7 @@
 #import "NetworkViewController.h"
 
 NSString *headers[] = {
-    @"Network",             // NetworkSection
+    @"",             // NetworkSection
     @"Audio Destination",   // PairingSection
     @""
 };
@@ -130,7 +130,7 @@ enum NetworkTableViewSections {
             if (!theCell)
             {
                 theCell = [[UITableViewCell alloc] initWithFrame:CGRectZero reuseIdentifier:serverSwitchCellID];
-                theCell.text = @"Server";
+                theCell.text = @"Network";
                 theCell.accessoryType = UITableViewCellAccessoryNone;
                 
                 // add switch

@@ -27,10 +27,12 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [currentViewController viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [currentViewController viewWillDisappear:animated];
 }
 
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
