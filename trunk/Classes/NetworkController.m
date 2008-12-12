@@ -283,7 +283,7 @@ static NetworkController *sharedNetworkController = nil;
 #pragma mark AsyncUdpSocket Delegate Methods
 - (void)onUdpSocket:(AsyncUdpSocket *)sock didSendDataWithTag:(long)tag
 {
-    NSLog(@"%@ %s", [self class], _cmd);
+    //NSLog(@"%@ %s", [self class], _cmd);
 }
 
 - (void)onUdpSocket:(AsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error
