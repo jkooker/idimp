@@ -28,6 +28,10 @@ enum AsyncUdpSocketError
 };
 typedef enum AsyncUdpSocketError AsyncUdpSocketError;
 
+/**
+ * AsyncUdpSocket class from the public domain.
+ * http://code.google.com/p/cocoaasyncsocket/
+ */
 @interface AsyncUdpSocket : NSObject
 {
 	CFSocketRef theSocket4;            // IPv4 socket
