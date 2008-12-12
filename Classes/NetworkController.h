@@ -33,6 +33,7 @@ typedef struct DMPDataPacket {
 @interface NetworkController : NSObject {
     AsyncUdpSocket *socket;
     NSNetService *netService;
+    BOOL serviceIsPublishing;
     NSNetServiceBrowser *browser;
     BOOL browserIsSearching;
     NSMutableArray *services; // Active NSNetServices
