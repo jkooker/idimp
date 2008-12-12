@@ -180,13 +180,21 @@ static NetworkController *sharedNetworkController = nil;
 #pragma mark Bonjour Controls
 - (void)startBonjourPublishing
 {
-    [netService publish];
+    if (!serviceIsPublishing)
+    {
+        [netService publish];
+        serviceIsPublishing = YES;
+    }
 }
 
 - (void)stopBonjourPublishing
 {
-    // Note: you must send a 'stop' for every 'publish' message, or it won't work.
-    [netService stop];
+    if (serviceIsPublishing)
+    {
+        // Note: you must send a 'stop' for every 'publish' message, or it won't work.
+        [netService stop];
+        serviceIsPublishing = NO;
+    }
 }
 
 - (void)startBonjourSearch
