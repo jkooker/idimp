@@ -13,7 +13,8 @@
 
 #import <AudioToolbox/AudioToolbox.h>
 
-// audio format constants
+// ---- audio format constants
+
 static const float AUDIO_SAMPLE_RATE              = 44100.0;
 static const int   AUDIO_NUM_CHANNELS             = 2;
 static const int   AUDIO_BIT_DEPTH_IN_BYTES       = 2;
@@ -35,7 +36,6 @@ static const float TWO_PI = (2 * PI);
 static const short AUDIO_MAX_AMPLITUDE = (1 << (AUDIO_BIT_DEPTH - 1)) - 1;
 
 /** 
- * \fn void AudioSamplesFloatToShort(const float* in, short* out, int numSamples)
  * This function converts an array of audio samples from floats in the 
  * range [-1.0, 1.0] to 16-bit signed shorts.
  * @param in the input array of floats
@@ -47,7 +47,6 @@ void AudioSamplesFloatToShort(const float* in,
                               int numSamples);
                               
 /** 
- * \fn void AudioSamplesShortToFloat(const short* in, float* out, int numSamples)
  * This function converts an array of audio samples from 16-bit signed shorts to 
  * floats in the range [-1.0, 1.0].
  * @param in the input array of shorts
@@ -59,7 +58,6 @@ void AudioSamplesShortToFloat(const short* in,
                               int numSamples);
                               
 /** 
- * \fn void AudioSamplesMixFloat2ToFloat(const float* in1, const float* in2, float* out1, int numSamples)
  * This function mixes two arrays of float audio samples into one array of floats.  Each input is scaled 
  * by 1/2 before summing to avoid clipping.
  * @param in1 the first input array of floats to be mixed
@@ -73,7 +71,6 @@ void AudioSamplesMixFloat2ToFloat(const float* in1,
                                   int numSamples);
                                   
 /** 
- * \fn void AudioSamplesMixFloat3ToFloat(const float* in1, const float* in2, const float* in3, float* out1, int numSamples)
  * This function mixes three arrays of float audio samples into one array of floats.  Each input is scaled 
  * by 1/3 before summing to avoid clipping.
  * @param in1 the first input array of floats to be mixed
@@ -89,7 +86,6 @@ void AudioSamplesMixFloat3ToFloat(const float* in1,
                                   int numSamples);
                                  
 /** 
- * \fn void AudioSamplesMixFloat2ToShort(const float* in1, const float* in2, short* out1, int numSamples)
  * This function mixes two arrays of float audio samples, each in the range [-1.0, 1.0] into one array of 
  * 16-bit signed shorts.  Each input is scaled by 1/2 before summing to avoid clipping.
  * @param in1 the first input array of floats to be mixed
@@ -103,7 +99,6 @@ void AudioSamplesMixFloat2ToShort(const float* in1,
                                   int numSamples);
                                  
 /** 
- * \fn void AudioSamplesMixFloat3ToShort(const float* in1, const float* in2, const float* in3, short* out1, int numSamples)
  * This function mixes three arrays of float audio samples, each in the range [-1.0, 1.0] into one array of 
  * 16-bit signed shorts.  Each input is scaled by 1/3 before summing to avoid clipping.
  * @param in1 the first input array of floats to be mixed
@@ -119,7 +114,6 @@ void AudioSamplesMixFloat3ToShort(const float* in1,
                                   int numSamples);
                               
 /** 
- * \fn void PopulateAudioDescription(AudioStreamBasicDescription& desc)
  * This is a helper function that populates the given AudioStreamBasicDescription struct with 
  * the correct parameters based on the format constants defined in AudioBasics.h
  * @param desc the AudioStreamBasicDescription struct to be populated
