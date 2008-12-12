@@ -215,7 +215,7 @@ public:
                                       AudioBufferList *ioData);
                                           
    /**
-    * playbackCallback is the method called when the audio output device wants to request audio samples for playback
+    * playbackCallback is the method called when the audio output device wants to request audio samples for playback.
     * Do not call this method directly.  Instead, to start/stop callbacks, use start() and stop().
     * @param inRefCon a reference to the AudioEngine instance that will process this callback.
     * @param ioActionFlags flags describing how an AudioUnit will render the audio data.
