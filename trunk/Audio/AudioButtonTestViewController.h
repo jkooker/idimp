@@ -1,10 +1,12 @@
-//
-//  AudioButtonTestViewController.h
-//  iDiMP
-//
-//  Created by Michelle Daniels on 11/2/08.
-//  Copyright UCSD 2008. All rights reserved.
-//
+/**
+ *  @file AudioButtonTestViewController.h
+ *  iDiMP
+ *
+ *  Created by Michelle Daniels on 11/2/08.
+ *  Copyright UCSD 2008. All rights reserved.
+ *
+ *  This file defines the interface for the AudioButtonTestViewController class.
+ */
 
 #import <UIKit/UIKit.h>
 #import "AudioEngine.h"
