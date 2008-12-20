@@ -1,0 +1,432 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1D3623260D0F684500981E51 /* iDiMPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* iDiMPAppDelegate.m */; };
+		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
+		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
+		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
+		280E754D0DD40C5E005A515E /* FlipsideView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 280E754A0DD40C5E005A515E /* FlipsideView.xib */; };
+		280E754E0DD40C5E005A515E /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 280E754B0DD40C5E005A515E /* MainView.xib */; };
+		280E754F0DD40C5E005A515E /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 280E754C0DD40C5E005A515E /* MainWindow.xib */; };
+		288765590DF743DE002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765580DF743DE002DB57D /* CoreGraphics.framework */; };
+		289233A60DB2D0840083E9F9 /* FlipsideView.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233A30DB2D0840083E9F9 /* FlipsideView.m */; };
+		289233A70DB2D0840083E9F9 /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233A50DB2D0840083E9F9 /* MainView.m */; };
+		289233AE0DB2D0DB0083E9F9 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233A90DB2D0DB0083E9F9 /* MainViewController.m */; };
+		289233AF0DB2D0DB0083E9F9 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233AB0DB2D0DB0083E9F9 /* RootViewController.m */; };
+		289233B00DB2D0DB0083E9F9 /* FlipsideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289233AD0DB2D0DB0083E9F9 /* FlipsideViewController.m */; };
+		32DA732A0EDE19F00038F6B8 /* AudioEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32DA73290EDE19F00038F6B8 /* AudioEngine.cpp */; };
+		32EF71900EF053D7004D4261 /* MasterAudioControls.xib in Resources */ = {isa = PBXBuildFile; fileRef = 32EF718F0EF053D7004D4261 /* MasterAudioControls.xib */; };
+		32EF71980EF05B1E004D4261 /* MasterAudioControlsViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 32EF71970EF05B1E004D4261 /* MasterAudioControlsViewController.mm */; };
+		32F871210EEDC9D00073FFAE /* TouchSynth.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32F871200EEDC9D00073FFAE /* TouchSynth.cpp */; };
+		32F872360EEDEE6D0073FFAE /* Oscillator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 32F872350EEDEE6D0073FFAE /* Oscillator.cpp */; };
+		9B6C40A20ED78A1D007E73EC /* AudioButtonTestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */; };
+		9B6C40C90ED78B7A007E73EC /* AudioBasics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */; };
+		9B6C40CB0ED78B7A007E73EC /* AudioButtonTestViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */; };
+		9B6C40D70ED78CBE007E73EC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6C40D60ED78CBE007E73EC /* AudioToolbox.framework */; };
+		9B6F0C230EF0921F00547213 /* NetworkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B6F0C220EF0921F00547213 /* NetworkView.xib */; };
+		9B873FA30ED67F360041A31B /* at_symbol.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B873FA20ED67F360041A31B /* at_symbol.png */; };
+		9BBA213A0EF1C377008C22EE /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BBA21390EF1C377008C22EE /* Default.png */; };
+		9BBCCF2F0EF16D870071DCE7 /* AboutView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BBCCF2E0EF16D870071DCE7 /* AboutView.xib */; };
+		9BBCCF360EF16ED30071DCE7 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BBCCF350EF16ED30071DCE7 /* AboutViewController.m */; };
+		9BBDB6060EF284960082DE4F /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BBDB6050EF284960082DE4F /* Icon.png */; };
+		9BEE4F680EF0966B00167384 /* NetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4F670EF0966B00167384 /* NetworkViewController.m */; };
+		9BEE4F6E0EF09C8900167384 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4F6D0EF09C8900167384 /* AsyncUdpSocket.m */; };
+		9BEE4FA70EF0BE5F00167384 /* NetworkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BEE4FA60EF0BE5F00167384 /* NetworkController.m */; };
+		9BEE50170EF0D5BF00167384 /* checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BEE50140EF0D5BF00167384 /* checkmark.png */; };
+		9BEE50180EF0D5BF00167384 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BEE50150EF0D5BF00167384 /* cloud.png */; };
+		9BEE50190EF0D5BF00167384 /* pencil.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BEE50160EF0D5BF00167384 /* pencil.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		1D3623240D0F684500981E51 /* iDiMPAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iDiMPAppDelegate.h; sourceTree = "<group>"; };
+		1D3623250D0F684500981E51 /* iDiMPAppDelegate.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = iDiMPAppDelegate.m; sourceTree = "<group>"; };
+		1D6058910D05DD3D006BFB54 /* iDiMP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iDiMP.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		280E754A0DD40C5E005A515E /* FlipsideView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FlipsideView.xib; sourceTree = "<group>"; };
+		280E754B0DD40C5E005A515E /* MainView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainView.xib; sourceTree = "<group>"; };
+		280E754C0DD40C5E005A515E /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
+		288765580DF743DE002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		289233A20DB2D0840083E9F9 /* FlipsideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlipsideView.h; path = Classes/FlipsideView.h; sourceTree = "<group>"; };
+		289233A30DB2D0840083E9F9 /* FlipsideView.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = FlipsideView.m; path = Classes/FlipsideView.m; sourceTree = "<group>"; };
+		289233A40DB2D0840083E9F9 /* MainView.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; name = MainView.h; path = Classes/MainView.h; sourceTree = "<group>"; };
+		289233A50DB2D0840083E9F9 /* MainView.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MainView.m; path = Classes/MainView.m; sourceTree = "<group>"; };
+		289233A80DB2D0DB0083E9F9 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = Classes/MainViewController.h; sourceTree = "<group>"; };
+		289233A90DB2D0DB0083E9F9 /* MainViewController.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MainViewController.m; path = Classes/MainViewController.m; sourceTree = "<group>"; };
+		289233AA0DB2D0DB0083E9F9 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		289233AB0DB2D0DB0083E9F9 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		289233AC0DB2D0DB0083E9F9 /* FlipsideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlipsideViewController.h; path = Classes/FlipsideViewController.h; sourceTree = "<group>"; };
+		289233AD0DB2D0DB0083E9F9 /* FlipsideViewController.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = FlipsideViewController.m; path = Classes/FlipsideViewController.m; sourceTree = "<group>"; };
+		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		32CA4F630368D1EE00C91783 /* iDiMP_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iDiMP_Prefix.pch; sourceTree = "<group>"; };
+		32DA73290EDE19F00038F6B8 /* AudioEngine.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = AudioEngine.cpp; sourceTree = "<group>"; };
+		32EF718F0EF053D7004D4261 /* MasterAudioControls.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MasterAudioControls.xib; sourceTree = "<group>"; };
+		32EF71960EF05B1E004D4261 /* MasterAudioControlsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterAudioControlsViewController.h; sourceTree = "<group>"; };
+		32EF71970EF05B1E004D4261 /* MasterAudioControlsViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterAudioControlsViewController.mm; sourceTree = "<group>"; };
+		32F8711F0EEDC9D00073FFAE /* TouchSynth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TouchSynth.h; sourceTree = "<group>"; };
+		32F871200EEDC9D00073FFAE /* TouchSynth.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; path = TouchSynth.cpp; sourceTree = "<group>"; };
+		32F872350EEDEE6D0073FFAE /* Oscillator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Oscillator.cpp; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AudioButtonTestViewController.xib; sourceTree = "<group>"; };
+		9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioBasics.cpp; sourceTree = "<group>"; };
+		9B6C40BF0ED78B7A007E73EC /* AudioBasics.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = AudioBasics.h; sourceTree = "<group>"; };
+		9B6C40C20ED78B7A007E73EC /* AudioButtonTestViewController.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = AudioButtonTestViewController.h; sourceTree = "<group>"; };
+		9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AudioButtonTestViewController.mm; sourceTree = "<group>"; };
+		9B6C40C40ED78B7A007E73EC /* AudioEffect.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = AudioEffect.h; sourceTree = "<group>"; };
+		9B6C40C70ED78B7A007E73EC /* Oscillator.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = Oscillator.h; sourceTree = "<group>"; };
+		9B6C40C80ED78B7A007E73EC /* Wavefile.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = Wavefile.h; sourceTree = "<group>"; };
+		9B6C40CE0ED78BD8007E73EC /* AudioEngine.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = AudioEngine.h; sourceTree = "<group>"; };
+		9B6C40D60ED78CBE007E73EC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
+		9B6F0C220EF0921F00547213 /* NetworkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NetworkView.xib; sourceTree = "<group>"; };
+		9B873FA20ED67F360041A31B /* at_symbol.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = at_symbol.png; path = Graphics/at_symbol.png; sourceTree = "<group>"; };
+		9BBA21390EF1C377008C22EE /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Graphics/Default.png; sourceTree = "<group>"; };
+		9BBCCF2E0EF16D870071DCE7 /* AboutView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutView.xib; sourceTree = "<group>"; };
+		9BBCCF340EF16ED30071DCE7 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
+		9BBCCF350EF16ED30071DCE7 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		9BBDB6050EF284960082DE4F /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = Graphics/Icon.png; sourceTree = "<group>"; };
+		9BEE4F660EF0966B00167384 /* NetworkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkViewController.h; path = Classes/NetworkViewController.h; sourceTree = "<group>"; };
+		9BEE4F670EF0966B00167384 /* NetworkViewController.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = NetworkViewController.m; path = Classes/NetworkViewController.m; sourceTree = "<group>"; };
+		9BEE4F6C0EF09C8900167384 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AsyncUdpSocket.h; path = Classes/AsyncUdpSocket.h; sourceTree = "<group>"; };
+		9BEE4F6D0EF09C8900167384 /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AsyncUdpSocket.m; path = Classes/AsyncUdpSocket.m; sourceTree = "<group>"; };
+		9BEE4FA50EF0BE5F00167384 /* NetworkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkController.h; path = Classes/NetworkController.h; sourceTree = "<group>"; };
+		9BEE4FA60EF0BE5F00167384 /* NetworkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkController.m; path = Classes/NetworkController.m; sourceTree = "<group>"; };
+		9BEE50140EF0D5BF00167384 /* checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = checkmark.png; path = Graphics/checkmark.png; sourceTree = "<group>"; };
+		9BEE50150EF0D5BF00167384 /* cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = cloud.png; path = Graphics/cloud.png; sourceTree = "<group>"; };
+		9BEE50160EF0D5BF00167384 /* pencil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pencil.png; path = Graphics/pencil.png; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1D60588F0D05DD3D006BFB54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
+				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
+				288765590DF743DE002DB57D /* CoreGraphics.framework in Frameworks */,
+				9B6C40D70ED78CBE007E73EC /* AudioToolbox.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Application Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				289233AA0DB2D0DB0083E9F9 /* RootViewController.h */,
+				289233AB0DB2D0DB0083E9F9 /* RootViewController.m */,
+				1D3623240D0F684500981E51 /* iDiMPAppDelegate.h */,
+				1D3623250D0F684500981E51 /* iDiMPAppDelegate.m */,
+				9BBCCF340EF16ED30071DCE7 /* AboutViewController.h */,
+				9BBCCF350EF16ED30071DCE7 /* AboutViewController.m */,
+			);
+			name = "Application Controllers";
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D6058910D05DD3D006BFB54 /* iDiMP.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		281C6CD70DB2D82200F60ACC /* Flipside View */ = {
+			isa = PBXGroup;
+			children = (
+				289233A20DB2D0840083E9F9 /* FlipsideView.h */,
+				289233A30DB2D0840083E9F9 /* FlipsideView.m */,
+				289233AC0DB2D0DB0083E9F9 /* FlipsideViewController.h */,
+				289233AD0DB2D0DB0083E9F9 /* FlipsideViewController.m */,
+			);
+			name = "Flipside View";
+			sourceTree = "<group>";
+		};
+		289233A00DB2D0730083E9F9 /* Main View */ = {
+			isa = PBXGroup;
+			children = (
+				289233A40DB2D0840083E9F9 /* MainView.h */,
+				289233A50DB2D0840083E9F9 /* MainView.m */,
+				289233A80DB2D0DB0083E9F9 /* MainViewController.h */,
+				289233A90DB2D0DB0083E9F9 /* MainViewController.m */,
+			);
+			name = "Main View";
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
+			isa = PBXGroup;
+			children = (
+				9B6C40BD0ED78B7A007E73EC /* Audio */,
+				9BAE64960EF0882400B6DBEF /* Network */,
+				289233A00DB2D0730083E9F9 /* Main View */,
+				281C6CD70DB2D82200F60ACC /* Flipside View */,
+				080E96DDFE201D6D7F000001 /* Application Controllers */,
+				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = CustomTemplate;
+			sourceTree = "<group>";
+		};
+		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
+			isa = PBXGroup;
+			children = (
+				32CA4F630368D1EE00C91783 /* iDiMP_Prefix.pch */,
+				29B97316FDCFA39411CA2CEA /* main.m */,
+			);
+			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				32EF718F0EF053D7004D4261 /* MasterAudioControls.xib */,
+				9B6F0C220EF0921F00547213 /* NetworkView.xib */,
+				9B6C40A10ED78A1D007E73EC /* AudioButtonTestViewController.xib */,
+				9BBCCF2E0EF16D870071DCE7 /* AboutView.xib */,
+				280E754A0DD40C5E005A515E /* FlipsideView.xib */,
+				280E754B0DD40C5E005A515E /* MainView.xib */,
+				280E754C0DD40C5E005A515E /* MainWindow.xib */,
+				9B873FA20ED67F360041A31B /* at_symbol.png */,
+				9BEE50140EF0D5BF00167384 /* checkmark.png */,
+				9BEE50150EF0D5BF00167384 /* cloud.png */,
+				9BEE50160EF0D5BF00167384 /* pencil.png */,
+				8D1107310486CEB800E47090 /* Info.plist */,
+				9BBDB6050EF284960082DE4F /* Icon.png */,
+				9BBA21390EF1C377008C22EE /* Default.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9B6C40D60ED78CBE007E73EC /* AudioToolbox.framework */,
+				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
+				1D30AB110D05D00D00671497 /* Foundation.framework */,
+				288765580DF743DE002DB57D /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9B6C40BD0ED78B7A007E73EC /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				32F8711F0EEDC9D00073FFAE /* TouchSynth.h */,
+				32F871200EEDC9D00073FFAE /* TouchSynth.cpp */,
+				9B6C40BE0ED78B7A007E73EC /* AudioBasics.cpp */,
+				9B6C40BF0ED78B7A007E73EC /* AudioBasics.h */,
+				9B6C40C20ED78B7A007E73EC /* AudioButtonTestViewController.h */,
+				9B6C40C30ED78B7A007E73EC /* AudioButtonTestViewController.mm */,
+				32EF71960EF05B1E004D4261 /* MasterAudioControlsViewController.h */,
+				32EF71970EF05B1E004D4261 /* MasterAudioControlsViewController.mm */,
+				9B6C40C40ED78B7A007E73EC /* AudioEffect.h */,
+				9B6C40CE0ED78BD8007E73EC /* AudioEngine.h */,
+				32DA73290EDE19F00038F6B8 /* AudioEngine.cpp */,
+				9B6C40C70ED78B7A007E73EC /* Oscillator.h */,
+				32F872350EEDEE6D0073FFAE /* Oscillator.cpp */,
+				9B6C40C80ED78B7A007E73EC /* Wavefile.h */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		9BAE64960EF0882400B6DBEF /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				9BEE4F6C0EF09C8900167384 /* AsyncUdpSocket.h */,
+				9BEE4F6D0EF09C8900167384 /* AsyncUdpSocket.m */,
+				9BEE4F660EF0966B00167384 /* NetworkViewController.h */,
+				9BEE4F670EF0966B00167384 /* NetworkViewController.m */,
+				9BEE4FA50EF0BE5F00167384 /* NetworkController.h */,
+				9BEE4FA60EF0BE5F00167384 /* NetworkController.m */,
+			);
+			name = Network;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1D6058900D05DD3D006BFB54 /* iDiMP */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iDiMP" */;
+			buildPhases = (
+				1D60588D0D05DD3D006BFB54 /* Resources */,
+				1D60588E0D05DD3D006BFB54 /* Sources */,
+				1D60588F0D05DD3D006BFB54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iDiMP;
+			productName = iDiMP;
+			productReference = 1D6058910D05DD3D006BFB54 /* iDiMP.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iDiMP" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				en,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1D6058900D05DD3D006BFB54 /* iDiMP */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1D60588D0D05DD3D006BFB54 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				280E754D0DD40C5E005A515E /* FlipsideView.xib in Resources */,
+				280E754E0DD40C5E005A515E /* MainView.xib in Resources */,
+				280E754F0DD40C5E005A515E /* MainWindow.xib in Resources */,
+				9B873FA30ED67F360041A31B /* at_symbol.png in Resources */,
+				9B6C40A20ED78A1D007E73EC /* AudioButtonTestViewController.xib in Resources */,
+				32EF71900EF053D7004D4261 /* MasterAudioControls.xib in Resources */,
+				9B6F0C230EF0921F00547213 /* NetworkView.xib in Resources */,
+				9BEE50170EF0D5BF00167384 /* checkmark.png in Resources */,
+				9BEE50180EF0D5BF00167384 /* cloud.png in Resources */,
+				9BEE50190EF0D5BF00167384 /* pencil.png in Resources */,
+				9BBCCF2F0EF16D870071DCE7 /* AboutView.xib in Resources */,
+				9BBA213A0EF1C377008C22EE /* Default.png in Resources */,
+				9BBDB6060EF284960082DE4F /* Icon.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1D60588E0D05DD3D006BFB54 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				1D3623260D0F684500981E51 /* iDiMPAppDelegate.m in Sources */,
+				289233A60DB2D0840083E9F9 /* FlipsideView.m in Sources */,
+				289233A70DB2D0840083E9F9 /* MainView.m in Sources */,
+				289233AE0DB2D0DB0083E9F9 /* MainViewController.m in Sources */,
+				289233AF0DB2D0DB0083E9F9 /* RootViewController.m in Sources */,
+				289233B00DB2D0DB0083E9F9 /* FlipsideViewController.m in Sources */,
+				9B6C40C90ED78B7A007E73EC /* AudioBasics.cpp in Sources */,
+				9B6C40CB0ED78B7A007E73EC /* AudioButtonTestViewController.mm in Sources */,
+				32DA732A0EDE19F00038F6B8 /* AudioEngine.cpp in Sources */,
+				32F871210EEDC9D00073FFAE /* TouchSynth.cpp in Sources */,
+				32F872360EEDEE6D0073FFAE /* Oscillator.cpp in Sources */,
+				32EF71980EF05B1E004D4261 /* MasterAudioControlsViewController.mm in Sources */,
+				9BEE4F680EF0966B00167384 /* NetworkViewController.m in Sources */,
+				9BEE4F6E0EF09C8900167384 /* AsyncUdpSocket.m in Sources */,
+				9BEE4FA70EF0BE5F00167384 /* NetworkController.m in Sources */,
+				9BBCCF360EF16ED30071DCE7 /* AboutViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1D6058940D05DD3E006BFB54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iDiMP_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_NAME = iDiMP;
+			};
+			name = Debug;
+		};
+		1D6058950D05DD3E006BFB54 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = iDiMP_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				PRODUCT_NAME = iDiMP;
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Michelle Daniels";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				PROVISIONING_PROFILE = DefaultProfileUuid;
+				SDKROOT = iphoneos2.1;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Michelle Daniels";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OBJC_CALL_CXX_CDTORS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				PROVISIONING_PROFILE = DefaultProfileUuid;
+				SDKROOT = iphoneos2.1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1D6058960D05DD3E006BFB54 /* Build configuration list for PBXNativeTarget "iDiMP" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1D6058940D05DD3E006BFB54 /* Debug */,
+				1D6058950D05DD3E006BFB54 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "iDiMP" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}
