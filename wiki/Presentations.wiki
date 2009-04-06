@@ -1,4 +1,5 @@
 #summary Links to In-Class Presentations
+#labels Featured
 
 ==Mid-Course Presentation==
 
